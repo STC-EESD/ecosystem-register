@@ -58,11 +58,13 @@ print(E)
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 rdggs = dggs.WGS84_003 
-print(rdggs)
+print("rdggs:")
+print( rdggs  )
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 WGS84_minus50 = Ellipsoid(a=WGS84_A, f=WGS84_F, radians=False, lon_0=-50)
-print(WGS84_minus50)
+print("WGS84_minus50:")
+print( WGS84_minus50  )
 
 rHEALPixCanada = RHEALPixDGGS(
     ellipsoid    = WGS84_minus50,
@@ -70,7 +72,12 @@ rHEALPixCanada = RHEALPixDGGS(
     south_square = 0,
     N_side       = 3
     )
-print(rHEALPixCanada)
+print("rHEALPixCanada:")
+print( rHEALPixCanada  )
+
+myGrid = rHEALPixCanada.grid(resolution = 2)
+print("myGrid:")
+print( myGrid  )
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
