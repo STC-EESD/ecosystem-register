@@ -75,9 +75,17 @@ rHEALPixCanada = RHEALPixDGGS(
 print("rHEALPixCanada:")
 print( rHEALPixCanada  )
 
-myGrid = rHEALPixCanada.grid(resolution = 2)
-print("myGrid:")
-print( myGrid  )
+myGrid0 = rHEALPixCanada.grid(resolution = 0)
+print("myGrid0:")
+print([str(x) for x in myGrid0])
+
+myGrid1 = rHEALPixCanada.grid(resolution = 1)
+print("myGrid1:")
+print([str(x) for x in myGrid1])
+
+myGrid2 = rHEALPixCanada.grid(resolution = 2)
+print("myGrid2:")
+print([str(x) for x in myGrid2])
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
