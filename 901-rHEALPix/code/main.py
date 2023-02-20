@@ -42,6 +42,8 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 from rhealpixdggs.ellipsoids import *  
 from rhealpixdggs.dggs       import *
 from rhealpixdggs            import dggs
+from geopandas               import GeoDataFrame
+from shapely.geometry        import Polygon
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 print("WGS84_A:" + str(WGS84_A))
@@ -81,11 +83,52 @@ print([str(x) for x in myGrid0])
 
 myGrid1 = rHEALPixCanada.grid(resolution = 1)
 print("myGrid1:")
-print([str(x) for x in myGrid1])
 
-myGrid2 = rHEALPixCanada.grid(resolution = 2)
-print("myGrid2:")
-print([str(x) for x in myGrid2])
+def _temp(x):
+    return Polygon(x.boundary(plane = False))
+
+print("[ _temp(x) for x in myGrid1]:")
+print( [ _temp(x) for x in myGrid1]  )
+
+print("[lambda x: Polygon(x.boundary(plane = False)) for x in myGrid1]:")
+print( [lambda x: Polygon(x.boundary(plane = False)) for x in myGrid1]  )
+
+print([str(x) for x in myGrid1])
+print([lambda x: x.boundary() for x in myGrid1])
+
+# myGrid2 = rHEALPixCanada.grid(resolution = 2)
+# print("myGrid2:")
+# print([str(x) for x in myGrid2])
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+myCell = rHEALPixCanada.cell(suid = ('N',4))
+print("myCell:")
+print( myCell  )
+
+print("myCell.boundary(plane = False):")
+print( myCell.boundary(plane = False)  )
+
+myPolygon = Polygon(myCell.boundary(plane = False))
+print("myPolygon:")
+print( myPolygon  )
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+print("[str(x) for x in myGrid1]:")
+print( [str(x) for x in myGrid1]  )
+
+# print("[lambda x: Polygon(x.boundary(plane = False)) for x in myGrid1]:")
+# print( [lambda x: Polygon(x.boundary(plane = False)) for x in myGrid1]  )
+
+d = {
+    'cellID':   [str(x) for x in myGrid1],
+    'geometry': [lambda x: Polygon(x.boundary(plane = False)) for x in myGrid1]
+    }
+print("d:")
+print( d  )
+
+gdf = GeoDataFrame(d, crs="EPSG:4326")
+print("gdf:")
+print( gdf  )
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
