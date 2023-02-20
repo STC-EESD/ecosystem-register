@@ -74,7 +74,8 @@ print([str(x) for x in myGrid0])
 
 # myGrid1 = rHEALPixCanada.grid(resolution = 1)
 # myGrid = rHEALPixCanada.grid(resolution = 2)
-myGrid = rHEALPixCanada.grid(resolution = 3)
+# myGrid = rHEALPixCanada.grid(resolution = 3)
+myGrid = rHEALPixCanada.grid(resolution = 4)
 
 i = 0
 myGDF = GeoDataFrame(columns=['cellID','geometry'])
