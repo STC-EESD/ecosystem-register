@@ -39,6 +39,8 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 # import seaborn as sns
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+import pandas
+
 from rhealpixdggs.ellipsoids import *  
 from rhealpixdggs.dggs       import *
 from rhealpixdggs            import dggs
@@ -74,6 +76,8 @@ rHEALPixCanada = RHEALPixDGGS(
     south_square = 0,
     N_side       = 3
     )
+print("type(rHEALPixCanada):")
+print( type(rHEALPixCanada)  )
 print("rHEALPixCanada:")
 print( rHEALPixCanada  )
 
@@ -82,54 +86,26 @@ print("myGrid0:")
 print([str(x) for x in myGrid0])
 
 myGrid1 = rHEALPixCanada.grid(resolution = 1)
-print("myGrid1:")
 
-def _temp(x):
-    return Polygon(x.boundary(plane = False))
-
-print("[ _temp(x) for x in myGrid1]:")
-print( [ _temp(x) for x in myGrid1]  )
-
-print("[lambda x: Polygon(x.boundary(plane = False)) for x in myGrid1]:")
-print( [lambda x: Polygon(x.boundary(plane = False)) for x in myGrid1]  )
-
-print([str(x) for x in myGrid1])
-print([lambda x: x.boundary() for x in myGrid1])
+i = 0
+myGDF = GeoDataFrame(columns=['cellID','geometry'])
+for myCell in myGrid1:
+    myData = {
+        'cellID':   str(myCell),
+        'geometry': Polygon(myCell.boundary(plane = False))
+        }
+    myRow = GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
+    myGDF = pandas.concat([myGDF, myRow])
+    i = i + 1
+print("myGDF:")
+print( myGDF  )
 
 # myGrid2 = rHEALPixCanada.grid(resolution = 2)
 # print("myGrid2:")
 # print([str(x) for x in myGrid2])
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-myCell = rHEALPixCanada.cell(suid = ('N',4))
-print("myCell:")
-print( myCell  )
-
-print("myCell.boundary(plane = False):")
-print( myCell.boundary(plane = False)  )
-
-myPolygon = Polygon(myCell.boundary(plane = False))
-print("myPolygon:")
-print( myPolygon  )
-
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-print("[str(x) for x in myGrid1]:")
-print( [str(x) for x in myGrid1]  )
-
-# print("[lambda x: Polygon(x.boundary(plane = False)) for x in myGrid1]:")
-# print( [lambda x: Polygon(x.boundary(plane = False)) for x in myGrid1]  )
-
-d = {
-    'cellID':   [str(x) for x in myGrid1],
-    'geometry': [lambda x: Polygon(x.boundary(plane = False)) for x in myGrid1]
-    }
-print("d:")
-print( d  )
-
-gdf = GeoDataFrame(d, crs="EPSG:4326")
-print("gdf:")
-print( gdf  )
-
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
