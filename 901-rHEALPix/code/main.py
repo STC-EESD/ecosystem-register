@@ -45,25 +45,12 @@ from rhealpixdggs.ellipsoids import *
 from rhealpixdggs.dggs       import *
 from rhealpixdggs            import dggs
 from geopandas               import GeoDataFrame
-from shapely.geometry        import Polygon
+from shapely.geometry        import Polygon, LinearRing, LineString
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 print("WGS84_A:" + str(WGS84_A))
 print("WGS84_F:" + str(WGS84_F))
 print("WGS84_E:" + str(WGS84_E))
-
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-ellps_1 = Ellipsoid(a=5, e=0.8) 
-print(ellps_1)
-
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-E = WGS84_ELLIPSOID 
-print(E)
-
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-rdggs = dggs.WGS84_003 
-print("rdggs:")
-print( rdggs  )
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 WGS84_minus50 = Ellipsoid(a=WGS84_A, f=WGS84_F, radians=False, lon_0=-50)
@@ -86,14 +73,17 @@ print("myGrid0:")
 print([str(x) for x in myGrid0])
 
 # myGrid1 = rHEALPixCanada.grid(resolution = 1)
-myGrid = rHEALPixCanada.grid(resolution = 2)
+# myGrid = rHEALPixCanada.grid(resolution = 2)
+myGrid = rHEALPixCanada.grid(resolution = 3)
 
 i = 0
 myGDF = GeoDataFrame(columns=['cellID','geometry'])
 for myCell in myGrid:
     myData = {
         'cellID':   str(myCell),
-        'geometry': Polygon(myCell.boundary(plane = False))
+        'geometry': LineString(myCell.boundary(plane = False))
+        # 'geometry': Polygon(myCell.boundary(plane = False))
+        # 'geometry': LinearRing(myCell.boundary(plane = False))
         }
     myRow = GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
     myGDF = pandas.concat([myGDF, myRow])
@@ -106,13 +96,6 @@ myGDF.to_file(
     driver   = 'ESRI Shapefile'
     )
 
-# print("myGrid2:")
-# print([str(x) for x in myGrid2])
-
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
 ##################################################
