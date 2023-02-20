@@ -85,11 +85,12 @@ myGrid0 = rHEALPixCanada.grid(resolution = 0)
 print("myGrid0:")
 print([str(x) for x in myGrid0])
 
-myGrid1 = rHEALPixCanada.grid(resolution = 1)
+# myGrid1 = rHEALPixCanada.grid(resolution = 1)
+myGrid = rHEALPixCanada.grid(resolution = 2)
 
 i = 0
 myGDF = GeoDataFrame(columns=['cellID','geometry'])
-for myCell in myGrid1:
+for myCell in myGrid:
     myData = {
         'cellID':   str(myCell),
         'geometry': Polygon(myCell.boundary(plane = False))
@@ -100,7 +101,11 @@ for myCell in myGrid1:
 print("myGDF:")
 print( myGDF  )
 
-# myGrid2 = rHEALPixCanada.grid(resolution = 2)
+myGDF.to_file(
+    filename = 'myGrid.shp',
+    driver   = 'ESRI Shapefile'
+    )
+
 # print("myGrid2:")
 # print([str(x) for x in myGrid2])
 
