@@ -1,6 +1,6 @@
 
 test.dggridR <- function(
-    resolutions  = seq(0,6,1),
+    resolutions  = seq(0,7,1),
     projection   = "ISEA",
     topology     = "HEXAGON",
     aperture     =    3,
