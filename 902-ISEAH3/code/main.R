@@ -40,7 +40,12 @@ n.cores  <- ifelse(test = is.macOS, yes = 2, no = parallel::detectCores() - 1);
 cat(paste0("\n# n.cores = ",n.cores,"\n"));
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-test.dggridR();
+test.dggridR(
+    resolutions  = seq(0,5,1),
+    pole_lat_deg =  79.20,
+    pole_lon_deg =  21.15,
+    azimuth_deg  = 345
+    );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
