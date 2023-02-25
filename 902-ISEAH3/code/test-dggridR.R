@@ -36,35 +36,6 @@ test.dggridR <- function(
         print( str(LIST.grid.specs)   );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        SF.grid.boundaries <- dggridR::dgearthgrid(
-            dggs = LIST.grid.specs
-            );
-
-        SF.grid.boundaries[,'geometry'] <- sf::st_cast(
-            x  = SF.grid.boundaries[,'geometry'],
-            to = "LINESTRING"
-            );
-
-        SF.grid.boundaries[,'n.vertices'] <- apply(
-            X      = SF.grid.boundaries,
-            MARGIN = 1,
-            FUN    = function(x) { return( length(x$geometry)/2 - 1 ) }
-            );
-
-        cat("\nstr(SF.grid.boundaries)\n");
-        print( str(SF.grid.boundaries)   );
-
-        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        SF.grid.pentagons <- SF.grid.boundaries[SF.grid.boundaries$n.vertices == 5,];
-        SF.grid.pentagons[,'geometry'] <- sf::st_cast(
-            x  = SF.grid.pentagons[,'geometry'],
-            to = "POLYGON"
-            );
-
-        cat("\nstr(SF.grid.pentagons)\n");
-        print( str(SF.grid.pentagons)   );
-
-        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         layer.name <- paste0(
             projection,
             toupper(substr(x = topology, start = 1, stop = 1)),
@@ -74,6 +45,29 @@ test.dggridR <- function(
             );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        SF.grid.polygons <- dggridR::dgearthgrid(
+            dggs = LIST.grid.specs
+            );
+        cat("\nstr(SF.grid.polygons)\n");
+        print( str(SF.grid.polygons)   );
+
+        SHP.output <- paste0("grid-",layer.name,"-polygons.shp");
+        sf::st_write(
+            obj    = SF.grid.polygons,
+            dsn    = SHP.output,
+            layer  = layer.name,
+            driver = "ESRI Shapefile"
+            );
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        SF.grid.boundaries <- SF.grid.polygons;
+        SF.grid.boundaries[,'geometry'] <- sf::st_cast(
+            x  = SF.grid.boundaries[,'geometry'],
+            to = "LINESTRING"
+            );
+        cat("\nstr(SF.grid.boundaries)\n");
+        print( str(SF.grid.boundaries)   );
+
         SHP.output <- paste0("grid-",layer.name,".shp");
         sf::st_write(
             obj    = SF.grid.boundaries,
@@ -81,6 +75,22 @@ test.dggridR <- function(
             layer  = layer.name,
             driver = "ESRI Shapefile"
             );
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        SF.grid.polygons[,'boundary'] <- sf::st_cast(
+            x  = SF.grid.polygons[,'geometry'],
+            to = "LINESTRING"
+            );
+
+        SF.grid.polygons[,'n.vertices'] <- apply(
+            X      = SF.grid.polygons,
+            MARGIN = 1,
+            FUN    = function(x) { return( length(x$boundary)/2 - 1 ) }
+            );
+
+        SF.grid.pentagons <- SF.grid.polygons[SF.grid.polygons$n.vertices == 5,];
+        cat("\nstr(SF.grid.pentagons)\n");
+        print( str(SF.grid.pentagons)   );
 
         SHP.output <- paste0("grid-",layer.name,"-pentagons.shp");
         sf::st_write(

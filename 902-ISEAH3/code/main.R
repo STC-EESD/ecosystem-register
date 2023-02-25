@@ -41,10 +41,10 @@ cat(paste0("\n# n.cores = ",n.cores,"\n"));
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 test.dggridR(
-    resolutions  = seq(0,5,1),
-    pole_lat_deg =  79.20,
-    pole_lon_deg =  21.15,
-    azimuth_deg  = 345
+    resolutions  = seq(0,7,1),
+    pole_lat_deg =   35, #   37, # 80.40,
+    pole_lon_deg = -175, # -178, # 40.30,
+    azimuth_deg  =    1  #  359  #  0  # 315
     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
