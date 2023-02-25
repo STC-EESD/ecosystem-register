@@ -1,6 +1,6 @@
 
 test.dggridR <- function(
-    resolutions  = c(0,1,2,3,4),
+    resolutions  = seq(0,6,1),
     projection   = "ISEA",
     topology     = "HEXAGON",
     aperture     =    3,
@@ -36,6 +36,11 @@ test.dggridR <- function(
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         SF.grid.boundaries <- dggridR::dgearthgrid(
             dggs = LIST.grid.specs
+            );
+
+        SF.grid.boundaries[,'geometry'] <- sf::st_cast(
+            x  = SF.grid.boundaries[,'geometry'],
+            to = "LINESTRING"
             );
 
         cat("\nstr(SF.grid.boundaries)\n");
