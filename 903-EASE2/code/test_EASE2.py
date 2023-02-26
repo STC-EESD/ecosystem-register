@@ -11,7 +11,7 @@ def test_EASE2():
     print( "\n########## " + thisFunctionName + "() starts ..." )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    myGrid = ease_grid.EASE2_grid(res = 100 * 1000)
+    myGrid = ease_grid.EASE2_grid(res = 36032.22084)
 
     print("\ntype(myGrid)\n")
     print(   type(myGrid)   )
@@ -35,7 +35,7 @@ def test_EASE2():
 
     myLons = myGrid.londim
     myLats = myGrid.latdim
-    
+
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     myGDF = GeoDataFrame(columns=['geomID','geometry'])
 
