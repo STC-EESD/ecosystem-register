@@ -36,8 +36,8 @@ def test_EASE2():
     i = 0
     for tempLongitude in myGrid.londim:
         myData = {
-            'geomID':   'parallel_' + '{:04d}'.format(i),
-            'geometry': LineString([Point(tempLongitude,y) for y in myGrid.londim])
+            'geomID':   'meridian_' + '{:04d}'.format(i),
+            'geometry': LineString([Point(tempLongitude,y) for y in myGrid.latdim])
             }
         myRow = GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
         myGDF = pandas.concat([myGDF, myRow])
@@ -46,7 +46,7 @@ def test_EASE2():
     j = i
     for tempLatitude in myGrid.latdim:
         myData = {
-            'geomID':   'meridian_' + '{:04d}'.format(j),
+            'geomID':   'parallel_' + '{:04d}'.format(j),
             'geometry': LineString([Point(x,tempLatitude) for x in myGrid.londim])
             }
         myRow = GeoDataFrame(index = [j], data = myData, crs = "EPSG:4326")
@@ -56,6 +56,7 @@ def test_EASE2():
     print("myGDF:")
     print( myGDF  )
 
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     myGDF.to_file(
         filename = 'myGrid.shp',
         driver   = 'ESRI Shapefile'
