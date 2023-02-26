@@ -31,7 +31,8 @@ def test_EASE2():
     print(   df_refinement   )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    df_refinement = df_refinement.iloc[0:2]
+    # retain only the first 3 rows (indexed by 0, 1, 2)
+    df_refinement = df_refinement.iloc[0:3]
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     for rowindex in df_refinement.index:
