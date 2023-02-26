@@ -1,5 +1,5 @@
 
-import pandas
+import numpy, pandas
 import ease_grid
 
 from geopandas        import GeoDataFrame
@@ -30,24 +30,30 @@ def test_EASE2():
     print(   myGrid.latdim   )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # myLons = numpy.append(myGrid.londim,myGrid.londim[0]) 
+    # myLats = numpy.append(myGrid.latdim,myGrid.latdim[0]) 
+
+    myLons = myGrid.londim
+    myLats = myGrid.latdim
+    
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     myGDF = GeoDataFrame(columns=['geomID','geometry'])
 
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     i = 0
-    for tempLongitude in myGrid.londim:
+    for tempLongitude in myLons:
         myData = {
             'geomID':   'meridian_' + '{:04d}'.format(i),
-            'geometry': LineString([Point(tempLongitude,y) for y in myGrid.latdim])
+            'geometry': LineString([Point(tempLongitude,y) for y in myLats])
             }
         myRow = GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
         myGDF = pandas.concat([myGDF, myRow])
         i = i + 1
 
     j = i
-    for tempLatitude in myGrid.latdim:
+    for tempLatitude in myLats:
         myData = {
             'geomID':   'parallel_' + '{:04d}'.format(j),
-            'geometry': LineString([Point(x,tempLatitude) for x in myGrid.londim])
+            'geometry': LineString([Point(x,tempLatitude) for x in myLons])
             }
         myRow = GeoDataFrame(index = [j], data = myData, crs = "EPSG:4326")
         myGDF = pandas.concat([myGDF, myRow])
