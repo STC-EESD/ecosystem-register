@@ -28,11 +28,11 @@ def test_eeBatchExport(google_drive_folder):
     );
 
     my_polygon = ee.Geometry.Polygon([[
-      [centroid_lon - 0.02, centroid_lat - 0.01],
-      [centroid_lon - 0.02, centroid_lat + 0.01],
-      [centroid_lon + 0.02, centroid_lat + 0.01],
-      [centroid_lon + 0.02, centroid_lat - 0.01],
-      [centroid_lon - 0.02, centroid_lat - 0.01]
+      [centroid_lon - 0.2, centroid_lat - 0.1],
+      [centroid_lon - 0.2, centroid_lat + 0.1],
+      [centroid_lon + 0.2, centroid_lat + 0.1],
+      [centroid_lon + 0.2, centroid_lat - 0.1],
+      [centroid_lon - 0.2, centroid_lat - 0.1]
     ]]);
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
