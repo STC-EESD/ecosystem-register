@@ -19,8 +19,8 @@ def test_eeBatchExport(google_drive_folder):
 
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    centroid_lon = -75.695;
-    centroid_lat =  45.424;
+    centroid_lon = -75.73;
+    centroid_lat =  45.41;
 
     my_point = ee.Geometry.Point(
       centroid_lon,
@@ -28,11 +28,11 @@ def test_eeBatchExport(google_drive_folder):
     );
 
     my_polygon = ee.Geometry.Polygon([[
-      [centroid_lon - 0.2, centroid_lat - 0.1],
-      [centroid_lon - 0.2, centroid_lat + 0.1],
-      [centroid_lon + 0.2, centroid_lat + 0.1],
-      [centroid_lon + 0.2, centroid_lat - 0.1],
-      [centroid_lon - 0.2, centroid_lat - 0.1]
+      [centroid_lon - 0.02, centroid_lat - 0.01],
+      [centroid_lon - 0.02, centroid_lat + 0.01],
+      [centroid_lon + 0.02, centroid_lat + 0.01],
+      [centroid_lon + 0.02, centroid_lat - 0.01],
+      [centroid_lon - 0.02, centroid_lat - 0.01]
     ]]);
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -46,7 +46,7 @@ def test_eeBatchExport(google_drive_folder):
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     filtered = ee.ImageCollection('COPERNICUS/S2_HARMONIZED') \
         .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',30)) \
-        .filter(ee.Filter.date('2019-02-01','2019-03-01')) \
+        .filter(ee.Filter.date('2022-07-01','2022-08-01')) \
         .filter(ee.Filter.bounds(my_polygon)) \
         .map(maskS2clouds)
 
