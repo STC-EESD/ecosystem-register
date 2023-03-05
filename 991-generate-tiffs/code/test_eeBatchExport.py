@@ -17,14 +17,33 @@ def test_eeBatchExport(google_drive_folder):
     # print("\nn_images (s2)");
     # print(   n_images      );
 
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    my_polygon = ee.Geometry.Polygon([[
-      [82.60642647743225, 27.163504378052510],
-      [82.60984897613525, 27.161852990137700],
-      [82.61088967323303, 27.163695288375266],
-      [82.60757446289062, 27.165174832309270]
-    ]])
 
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    centroid_lon = -75.695;
+    centroid_lat =  45.424;
+
+    my_point = ee.Geometry.Point(
+      centroid_lon,
+      centroid_lat
+    );
+
+    my_polygon = ee.Geometry.Polygon([[
+      [centroid_lon - 2, centroid_lat - 1],
+      [centroid_lon - 2, centroid_lat + 1],
+      [centroid_lon + 2, centroid_lat + 1],
+      [centroid_lon + 2, centroid_lat - 1],
+      [centroid_lon - 2, centroid_lat - 1]
+    ]]);
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # my_polygon = ee.Geometry.Polygon([[
+    #   [82.60642647743225, 27.163504378052510],
+    #   [82.60984897613525, 27.161852990137700],
+    #   [82.61088967323303, 27.163695288375266],
+    #   [82.60757446289062, 27.165174832309270]
+    # ]])
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     filtered = ee.ImageCollection('COPERNICUS/S2_HARMONIZED') \
         .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE',30)) \
         .filter(ee.Filter.date('2019-02-01','2019-03-01')) \
