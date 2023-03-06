@@ -92,6 +92,7 @@ cells_lower_parellel = rHEALPixCanada.cells_from_parallel(
     lam_max    = dct_extent['xmax'][0]
     )
 
+print("cells_lower_parellel")
 print([str(cell) for cell in cells_lower_parellel])
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
