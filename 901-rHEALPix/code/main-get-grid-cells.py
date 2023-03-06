@@ -86,10 +86,10 @@ print("grid_latitudes")
 print( grid_latitudes )
 
 cells_lower_parellel = rHEALPixCanada.cells_from_parallel(
-    resolution my_resolution,
-    phi      = dct_extent['ymin'][0],
-    lam_min  = dct_extent['xmin'][0],
-    lam_max  = dct_extent['xmax'][0]
+    resolution = my_resolution,
+    phi        = dct_extent['ymin'][0],
+    lam_min    = dct_extent['xmin'][0],
+    lam_max    = dct_extent['xmax'][0]
     )
 
 print("cells_lower_parellel")
