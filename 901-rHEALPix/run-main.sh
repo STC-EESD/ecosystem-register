@@ -28,7 +28,7 @@ fi
 googleDriveFolder=earthengine/ken
 
 ########################################################
-# myPythonScript=${codeDIR}/main.py
+# myPythonScript=${codeDIR}/main-generate-grids.py
 # stdoutFile=${outputDIR}/stdout.py.`basename ${myPythonScript} .py`
 # stderrFile=${outputDIR}/stderr.py.`basename ${myPythonScript} .py`
 # ${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} > ${stdoutFile} 2> ${stderrFile}
