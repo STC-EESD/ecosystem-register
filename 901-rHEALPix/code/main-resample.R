@@ -19,6 +19,7 @@ start.proc.time <- proc.time();
 setwd( output.directory );
 
 ##################################################
+require(jsonlite);
 require(raster);
 
 # source supporting R code
@@ -59,19 +60,19 @@ my.tiff <- grep(x = tiff.files, pattern = "0717", value = TRUE);
 cat("\nmy.tiff\n");
 print( my.tiff   );
 
-temp.stack  <- raster::stack(x = file.path(folder.tiff,my.tiff)); 
-temp.values <- cbind(
-    raster::coordinates(obj = temp.stack),
-    raster::getValues(  x   = temp.stack)
+original.stack  <- raster::stack(x = file.path(folder.tiff,my.tiff)); 
+original.values <- cbind(
+    raster::coordinates(obj = original.stack),
+    raster::getValues(  x   = original.stack)
     ); 
 
-cat("\nraster::crs(temp.stack)\n");
-print( raster::crs(temp.stack)   );
+cat("\nraster::crs(original.stack)\n");
+print( raster::crs(original.stack)   );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 proj4string.rHEALPix <- "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50";
 new.stack <- raster::projectRaster(
-    from   = temp.stack,
+    from   = original.stack,
     crs    = proj4string.rHEALPix,
     method = 'bilinear'
     ); 
@@ -83,6 +84,42 @@ new.values <- cbind(
 
 cat("\nraster::crs(new.stack)\n");
 print( raster::crs(new.stack)   );
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+proj4string.EPSG.4326 <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
+
+new.stack <- raster::projectRaster(
+    from   = original.stack,
+    crs    = proj4string.EPSG.4326,
+    method = 'bilinear'
+    ); 
+
+new.extent <- raster::extent(x = new.stack);
+
+cat("\nraster::crs(new.stack) -- EPSG.4326\n");
+print( raster::crs(new.stack) );
+
+cat("\nnew.extent -- EPSG.4326\n");
+print( new.extent );
+
+list.new.extent <- list(
+    'xmin' = new.extent@xmin, 
+    'xmax' = new.extent@xmax, 
+    'ymin' = new.extent@ymin,
+    'ymax' = new.extent@ymax
+    );
+
+new.json <- jsonlite::toJSON(list.new.extent) ;
+
+cat("\nnew.json -- EPSG.4326\n");
+print( new.json );
+
+# jsonlite::write_json(
+#     x    = new.json,
+#     path = "extent.json"
+#     );
+
+base::write(x = new.json, file = "extent.json");
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
