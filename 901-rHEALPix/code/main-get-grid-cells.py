@@ -72,7 +72,7 @@ print("rHEALPixCanada:")
 print( rHEALPixCanada  )
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-my_resolution  = 7;
+my_resolution  = 11;
 
 grid_latitudes = rHEALPixCanada.cell_latitudes(
     resolution = my_resolution,
@@ -82,8 +82,8 @@ grid_latitudes = rHEALPixCanada.cell_latitudes(
     plane      = False
     )
 
-print("grid_latitudes")
-print( grid_latitudes )
+print("len(grid_latitudes)")
+print( len(grid_latitudes) )
 
 cells_lower_parellel = rHEALPixCanada.cells_from_parallel(
     resolution = my_resolution,
@@ -93,7 +93,7 @@ cells_lower_parellel = rHEALPixCanada.cells_from_parallel(
     )
 
 print("cells_lower_parellel")
-print([str(cell) for cell in cells_lower_parellel])
+print(len([str(cell) for cell in cells_lower_parellel]))
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
