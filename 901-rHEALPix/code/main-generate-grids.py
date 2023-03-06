@@ -39,10 +39,10 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 # import seaborn as sns
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-from test_rHEALPix import test_rHEALPix
+from test_rHEALPix import generate_grid
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-test_rHEALPix()
+generate_grid()
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 

@@ -7,9 +7,9 @@ from rhealpixdggs            import dggs
 from geopandas               import GeoDataFrame
 from shapely.geometry        import Polygon, LinearRing, LineString
 
-def test_rHEALPix():
+def generate_grid():
 
-    thisFunctionName = "test_rHEALPix"
+    thisFunctionName = "generate_grid"
     print( "\n########## " + thisFunctionName + "() starts ..." )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -33,9 +33,9 @@ def test_rHEALPix():
     print("rHEALPixCanada:")
     print( rHEALPixCanada  )
 
-    myGrid0 = rHEALPixCanada.grid(resolution = 0)
-    print("myGrid0:")
-    print([str(x) for x in myGrid0])
+    # myGrid0 = rHEALPixCanada.grid(resolution = 0)
+    # print("myGrid0:")
+    # print([str(x) for x in myGrid0])
 
     # myGrid = rHEALPixCanada.grid(resolution = 0)
     # myGrid = rHEALPixCanada.grid(resolution = 1)
@@ -58,10 +58,10 @@ def test_rHEALPix():
     print("myGDF:")
     print( myGDF  )
 
-    myGDF.to_file(
-        filename = 'myGrid.shp',
-        driver   = 'ESRI Shapefile'
-        )
+    # myGDF.to_file(
+    #     filename = 'myGrid.shp',
+    #     driver   = 'ESRI Shapefile'
+    #     )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     print( "\n########## " + thisFunctionName + "() exits ..." )
