@@ -42,9 +42,11 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 from test_rHEALPix import generate_grid
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-generate_grid(
-    grid_resolution = 2
-    )
+grid_resolutions = range(0,5)
+for grid_resolution in grid_resolutions:
+    generate_grid(
+        grid_resolution = grid_resolution
+        )
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
