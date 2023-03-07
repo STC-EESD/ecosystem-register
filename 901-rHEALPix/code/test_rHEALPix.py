@@ -58,10 +58,10 @@ def generate_grid():
     print("myGDF:")
     print( myGDF  )
 
-    # myGDF.to_file(
-    #     filename = 'myGrid.shp',
-    #     driver   = 'ESRI Shapefile'
-    #     )
+    myGDF.to_file(
+        filename = 'myGrid.shp',
+        driver   = 'ESRI Shapefile'
+        )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     print( "\n########## " + thisFunctionName + "() exits ..." )

@@ -20,8 +20,9 @@ if [[ "${OSTYPE}" =~ .*"linux".* ]]; then
   # cp ${HOME}/.gee_environment_variables ${outputDIR}/code/gee_environment_variables.txt
   pythonBinDIR=${GEE_ENV_DIR}/bin
 else
-  pythonBinDIR=`which python`
-  pythonBinDIR=${pythonBinDIR//\/python/}
+  myEnvName=envTEST
+  myEnvFolder=`conda env list | egrep "${myEnvName}" | sed 's/[ ][ ]*/ /g' | cut -d' ' -f2,2`
+  pythonBinDIR=${myEnvFolder}/bin
 fi
 
 ########################################################
