@@ -61,34 +61,26 @@ def test_easepy():
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         myLats, myLons = myGrid.geodetic_grid 
 
-        print("\nmyLats\n")
-        print(   myLats   )
+        print("\nmyLats:\n")
+        print(   myLats    )
 
-        print("\nmyLons\n")
-        print(   myLons   )
+        print("\nmyLons:\n")
+        print(   myLons    )
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         myGDF = GeoDataFrame(columns=['geomID','geometry'])
 
-        i = 0
-        for tempLongitude in myLons:
-            myData = {
-                'geomID':   'meridian_' + '{:04d}'.format(i),
-                'geometry': LineString([Point(tempLongitude,y) for y in myLats])
-                }
-            myRow = GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
-            myGDF = pandas.concat([myGDF, myRow])
-            i = i + 1
+        for i in range(0,myLats.shape[0]):
+            for j in range(0,myLats.shape[1]):
+                tempLat = myLats[i,j]
+                tempLon = myLons[i,j];
+                myData = {
+                    'geomID':   'meridian_' + '{:04d}'.format(i),
+                    'geometry': Point(tempLon,tempLat)
+                    }
+                myRow = GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
+                myGDF = pandas.concat([myGDF, myRow])
 
-        j = i
-        for tempLatitude in myLats:
-            myData = {
-                'geomID':   'parallel_' + '{:04d}'.format(j),
-                'geometry': LineString([Point(x,tempLatitude) for x in myLons])
-                }
-            myRow = GeoDataFrame(index = [j], data = myData, crs = "EPSG:4326")
-            myGDF = pandas.concat([myGDF, myRow])
-            j = j + 1
 
         print("myGDF:")
         print( myGDF  )
