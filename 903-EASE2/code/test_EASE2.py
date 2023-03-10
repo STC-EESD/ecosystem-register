@@ -5,9 +5,9 @@ import ease_grid
 from geopandas        import GeoDataFrame
 from shapely.geometry import Point, Polygon, LinearRing, LineString
 
-def test_EASE2():
+def test_ease_grid():
 
-    thisFunctionName = "test_EASE2"
+    thisFunctionName = "test_ease_grid"
     print( "\n########## " + thisFunctionName + "() starts ..." )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -32,7 +32,7 @@ def test_EASE2():
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     # retain only the first 2 rows (indexed by 0, 1)
-    df_refinement = df_refinement.iloc[0:2]
+    df_refinement = df_refinement.iloc[0:1]
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     for rowindex in df_refinement.index:
