@@ -70,17 +70,18 @@ def test_easepy():
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         myGDF = GeoDataFrame(columns=['geomID','geometry'])
 
+        k = 0
         for i in range(0,myLats.shape[0]):
             for j in range(0,myLats.shape[1]):
-                tempLat = myLats[i,j]
+                tempLat = myLats[i,j];
                 tempLon = myLons[i,j];
                 myData = {
                     'geomID':   'meridian_' + '{:04d}'.format(i),
                     'geometry': Point(tempLon,tempLat)
                     }
-                myRow = GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
+                myRow = GeoDataFrame(index = [k], data = myData, crs = "EPSG:4326")
                 myGDF = pandas.concat([myGDF, myRow])
-
+                k = k + 1
 
         print("myGDF:")
         print( myGDF  )
