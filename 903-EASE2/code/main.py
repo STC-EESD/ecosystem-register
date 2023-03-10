@@ -40,9 +40,11 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 from test_EASE2 import test_ease_grid
+from test_EASE2 import test_easepy
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-test_ease_grid()
+# test_ease_grid()
+test_easepy()
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # WGS84_minus50 = Ellipsoid(a=WGS84_A, f=WGS84_F, radians=False, lon_0=-50)

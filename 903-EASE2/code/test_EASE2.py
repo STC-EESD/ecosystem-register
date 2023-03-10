@@ -1,10 +1,109 @@
 
 import numpy, pandas
-import ease_grid
+import ease_grid, easepy
 
 from geopandas        import GeoDataFrame
 from shapely.geometry import Point, Polygon, LinearRing, LineString
 
+##### ##### ##### ##### #####
+def test_easepy():
+
+    thisFunctionName = "test_easepy"
+    print( "\n########## " + thisFunctionName + "() starts ..." )
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    df_refinement = pandas.DataFrame(
+        data = {
+            'resolution': [0,1,2,3,4,5],
+            'refinement_ratio': [25,25,25,100,100,None],
+            'resolution_m': [
+                25000.0,
+                 5000.0,
+                 1000.0,
+                  100.0,
+                   10.0,
+                    1.0
+                ]
+            }
+        )
+
+    print("\ndf_refinement\n")
+    print(   df_refinement   )
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # retain only the first 2 rows (indexed by 0, 1)
+    df_refinement = df_refinement.iloc[0:1]
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    for rowindex in df_refinement.index:
+
+        resolution    = df_refinement.at[rowindex,'resolution'  ]
+        resolution_m  = df_refinement.at[rowindex,'resolution_m']
+
+        print('rowindex:' + str(rowindex) + ', resolution:' + str(resolution) +', resolution_m:' + str(resolution_m))
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        shp_output = 'grid-easepy-r'+str(resolution)+'.shp'
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        # myGrid = ease_grid.EASE2_grid(res = side_length)
+        myGrid = easepy.EaseGrid(
+            resolution_m = resolution_m,
+            projection   = "NorthHemi"
+            )
+
+        print("\ntype(myGrid)\n")
+        print(   type(myGrid)   )
+
+        print("\nmyGrid\n")
+        print(   myGrid   )
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        myLats, myLons = myGrid.geodetic_grid 
+
+        print("\nmyLats\n")
+        print(   myLats   )
+
+        print("\nmyLons\n")
+        print(   myLons   )
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        myGDF = GeoDataFrame(columns=['geomID','geometry'])
+
+        i = 0
+        for tempLongitude in myLons:
+            myData = {
+                'geomID':   'meridian_' + '{:04d}'.format(i),
+                'geometry': LineString([Point(tempLongitude,y) for y in myLats])
+                }
+            myRow = GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
+            myGDF = pandas.concat([myGDF, myRow])
+            i = i + 1
+
+        j = i
+        for tempLatitude in myLats:
+            myData = {
+                'geomID':   'parallel_' + '{:04d}'.format(j),
+                'geometry': LineString([Point(x,tempLatitude) for x in myLons])
+                }
+            myRow = GeoDataFrame(index = [j], data = myData, crs = "EPSG:4326")
+            myGDF = pandas.concat([myGDF, myRow])
+            j = j + 1
+
+        print("myGDF:")
+        print( myGDF  )
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        myGDF.to_file(
+            filename = shp_output,
+            driver   = 'ESRI Shapefile'
+            )
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    print( "\n########## " + thisFunctionName + "() exits ..." )
+    return( None )
+
+##### ##### ##### ##### #####
 def test_ease_grid():
 
     thisFunctionName = "test_ease_grid"
