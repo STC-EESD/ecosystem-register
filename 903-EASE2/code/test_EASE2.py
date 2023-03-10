@@ -32,7 +32,7 @@ def test_ease_grid():
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     # retain only the first 2 rows (indexed by 0, 1)
-    df_refinement = df_refinement.iloc[0:1]
+    df_refinement = df_refinement.iloc[0:2]
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     for rowindex in df_refinement.index:
