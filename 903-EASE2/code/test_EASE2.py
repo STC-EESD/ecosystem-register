@@ -247,7 +247,7 @@ def test_ease_grid():
         for tempLongitude in centroidLons:
             myData = {
                 'geomID':   'meridian_' + '{:04d}'.format(i),
-                'geometry': LineString([Point(tempLongitude,y) for y in centroidLats])
+                'geometry': LineString([ Point(tempLongitude,y) for y in centroidLats[::10] ])
                 }
             myRow = geopandas.GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
             gdfCentroids = pandas.concat([gdfCentroids, myRow])
@@ -257,7 +257,7 @@ def test_ease_grid():
         for tempLatitude in centroidLats:
             myData = {
                 'geomID':   'parallel_' + '{:04d}'.format(j),
-                'geometry': LineString([Point(x,tempLatitude) for x in centroidLons])
+                'geometry': LineString([ Point(x,tempLatitude) for x in centroidLons[::10] ])
                 }
             myRow = geopandas.GeoDataFrame(index = [j], data = myData, crs = "EPSG:4326")
             gdfCentroids = pandas.concat([gdfCentroids, myRow])
