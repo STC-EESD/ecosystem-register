@@ -78,19 +78,6 @@ def test_easepy():
                 )
             myGDF = pandas.concat([myGDF,tempGDF])
 
-        # k = 0
-        # for i in range(0,myLats.shape[0]):
-        #     for j in range(0,myLats.shape[1]):
-        #         tempLat = myLats[i,j];
-        #         tempLon = myLons[i,j];
-        #         myData = {
-        #             'geomID':   'ID_' + '{:04d}'.format(i) + '_' + '{:04d}'.format(i),
-        #             'geometry': Point(tempLon,tempLat)
-        #             }
-        #         myRow = geopandas.GeoDataFrame(index = [k], data = myData, crs = "EPSG:4326")
-        #         myGDF = pandas.concat([myGDF, myRow])
-        #         k = k + 1
-
         print("myGDF:")
         print( myGDF  )
 
