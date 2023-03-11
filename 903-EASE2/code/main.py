@@ -43,7 +43,7 @@ from test_EASE2 import test_ease_grid
 from test_EASE2 import test_easepy
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-# test_ease_grid()
+test_ease_grid()
 test_easepy()
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
