@@ -100,8 +100,24 @@ def test_easepy():
             )
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        myLons = gdfCentroids.geometry.x.round(decimals = 0).unique()
-        myLats = gdfCentroids.geometry.y.round(decimals = 0).unique()
+        myXs = numpy.sort(gdfCentroids.geometry.x.round(decimals = 0).unique())
+        myYs = numpy.sort(gdfCentroids.geometry.y.round(decimals = 0).unique())
+
+        side_length_x = numpy.unique((numpy.diff(myXs).round(decimals = 0)))
+        side_length_y = numpy.unique((numpy.diff(myYs).round(decimals = 0)))
+
+        myXs = myXs[:-1] + numpy.diff(myXs) / 2
+        myYs = myYs[:-1] + numpy.diff(myYs) / 2
+
+        myXs = numpy.concatenate(
+            (numpy.min(myXs) - side_length_x, myXs, numpy.max(myXs) + side_length_x),
+            axis = None
+            )
+
+        myYs = numpy.concatenate(
+            (numpy.min(myYs) - side_length_y, myYs, numpy.max(myYs) + side_length_y),
+            axis = None
+            )
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         myGDF = geopandas.GeoDataFrame(
@@ -110,10 +126,10 @@ def test_easepy():
             )
 
         i = 0
-        for tempLongitude in myLons:
+        for tempLongitude in myXs:
             myData = {
                 'geomID':   'meridian_' + '{:04d}'.format(i),
-                'geometry': LineString([ Point(tempLongitude,y) for y in myLats[::10] ])
+                'geometry': LineString([ Point(tempLongitude,y) for y in myYs[::10] ])
                 }
             myRow = geopandas.GeoDataFrame(index = [i], data = myData, crs = "EPSG:6931")
             myGDF = pandas.concat([myGDF, myRow])
@@ -121,10 +137,10 @@ def test_easepy():
 
         j = 0
         k = i
-        for tempLatitude in myLats:
+        for tempLatitude in myYs:
             myData = {
                 'geomID':   'parallel_' + '{:04d}'.format(j),
-                'geometry': LineString([ Point(x,tempLatitude) for x in myLons[::10] ])
+                'geometry': LineString([ Point(x,tempLatitude) for x in myXs[::10] ])
                 }
             myRow = geopandas.GeoDataFrame(index = [k], data = myData, crs = "EPSG:6931")
             myGDF = pandas.concat([myGDF, myRow])
