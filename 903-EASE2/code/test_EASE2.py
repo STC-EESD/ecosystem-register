@@ -146,7 +146,7 @@ def test_easepy():
         for tempLongitude in myXs:
             myData = {
                 'geomID':   'meridian_' + '{:04d}'.format(i),
-                'geometry': LineString([ Point(tempLongitude,y) for y in myYs[::10] ])
+                'geometry': LineString([ Point(tempLongitude,y) for y in myYs[::100] ])
                 }
             myRow = geopandas.GeoDataFrame(index = [i], data = myData, crs = "EPSG:6931")
             myGDF = pandas.concat([myGDF, myRow])
@@ -157,7 +157,7 @@ def test_easepy():
         for tempLatitude in myYs:
             myData = {
                 'geomID':   'parallel_' + '{:04d}'.format(j),
-                'geometry': LineString([ Point(x,tempLatitude) for x in myXs[::10] ])
+                'geometry': LineString([ Point(x,tempLatitude) for x in myXs[::100] ])
                 }
             myRow = geopandas.GeoDataFrame(index = [k], data = myData, crs = "EPSG:6931")
             myGDF = pandas.concat([myGDF, myRow])
@@ -264,7 +264,7 @@ def test_ease_grid():
         for tempLongitude in centroidLons:
             myData = {
                 'geomID':   'meridian_' + '{:04d}'.format(i),
-                'geometry': LineString([ Point(tempLongitude,y) for y in centroidLats[::10] ])
+                'geometry': LineString([ Point(tempLongitude,y) for y in centroidLats[::100] ])
                 }
             myRow = geopandas.GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
             gdfCentroids = pandas.concat([gdfCentroids, myRow])
@@ -274,7 +274,7 @@ def test_ease_grid():
         for tempLatitude in centroidLats:
             myData = {
                 'geomID':   'parallel_' + '{:04d}'.format(j),
-                'geometry': LineString([ Point(x,tempLatitude) for x in centroidLons[::10] ])
+                'geometry': LineString([ Point(x,tempLatitude) for x in centroidLons[::100] ])
                 }
             myRow = geopandas.GeoDataFrame(index = [j], data = myData, crs = "EPSG:4326")
             gdfCentroids = pandas.concat([gdfCentroids, myRow])
