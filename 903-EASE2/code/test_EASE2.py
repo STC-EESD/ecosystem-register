@@ -11,17 +11,34 @@ def test_easepy():
     print( "\n########## " + thisFunctionName + "() starts ..." )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # df_refinement = pandas.DataFrame(
+    #     data = {
+    #         'resolution': [0,1,2,3,4,5],
+    #         'refinement_ratio': [25,25,25,100,100,None],
+    #         'resolution_m': [
+    #             25000.0,
+    #              5000.0,
+    #              1000.0,
+    #               100.0,
+    #                10.0,
+    #                 1.0
+    #             ]
+    #         }
+    #     )
+
     df_refinement = pandas.DataFrame(
         data = {
-            'resolution': [0,1,2,3,4,5],
-            'refinement_ratio': [25,25,25,100,100,None],
+            'resolution': [0,1,2,3,4,5,6,7],
+            'refinement_ratio': [100,100,4,4,16,16,16,None],
             'resolution_m': [
                 25000.0,
-                 5000.0,
-                 1000.0,
-                  100.0,
-                   10.0,
-                    1.0
+                 2500.0,
+                  250.0,
+                  125.0,
+                   62.5,
+                   15.625,
+                    3.90625,
+                    0.9765625
                 ]
             }
         )
@@ -31,8 +48,7 @@ def test_easepy():
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     # retain only the first 2 rows (indexed by 0, 1)
-    # df_refinement = df_refinement.iloc[0:2]
-    df_refinement = df_refinement.iloc[0:1]
+    df_refinement = df_refinement.iloc[0:2]
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     for rowindex in df_refinement.index:
@@ -202,8 +218,7 @@ def test_ease_grid():
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     # retain only the first 2 rows (indexed by 0, 1)
-    # df_refinement = df_refinement.iloc[0:2]
-    df_refinement = df_refinement.iloc[0:1]
+    df_refinement = df_refinement.iloc[0:2]
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     for rowindex in df_refinement.index:
