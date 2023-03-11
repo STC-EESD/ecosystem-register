@@ -212,7 +212,7 @@ def test_ease_grid():
         print('rowindex:' + str(rowindex) + ', resolution:' + str(resolution) +', side_length:' + str(side_length))
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        shp_output = 'grid-EASE2-r'+str(resolution)+'.shp'
+        shp_output = 'grid-ease-grid-r'+str(resolution)+'.shp'
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         myGrid = ease_grid.EASE2_grid(res = side_length)
