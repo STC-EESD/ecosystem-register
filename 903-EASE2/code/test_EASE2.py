@@ -13,15 +13,16 @@ def test_easepy():
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     df_refinement = pandas.DataFrame(
         data = {
-            'resolution': [0,1,2,3,4,5],
-            'refinement_ratio': [25,25,25,100,100,None],
+            'resolution': [0,1,2,3,4,5,6],
+            'refinement_ratio': [25,25,25,100,100,100,None],
             'resolution_m': [
-                25000.0,
-                 5000.0,
-                 1000.0,
-                  100.0,
-                   10.0,
-                    1.0
+                250000.0,
+                 50000.0,
+                 10000.0,
+                  1000.0,
+                   100.0,
+                    10.0,
+                     1.0,
                 ]
             }
         )
@@ -80,6 +81,15 @@ def test_easepy():
 
         print("myGDF:")
         print( myGDF  )
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        myGDF = myGDF.to_crs(
+            epsg    = 6931,
+            inplace = False
+            )
+
+        print("myGDF (EPSG = 6931):")
+        print( myGDF )
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         myGDF.to_file(
