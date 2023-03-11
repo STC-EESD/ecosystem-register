@@ -59,43 +59,100 @@ def test_easepy():
         print(   myGrid   )
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        myLats, myLons = myGrid.geodetic_grid 
+        centroidLats, centroidLons = myGrid.geodetic_grid
 
-        print("\nmyLats:\n")
-        print(   myLats    )
+        print("\ncentroidLats:\n")
+        print(   centroidLats    )
 
-        print("\nmyLons:\n")
-        print(   myLons    )
-
-        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        myGDF = geopandas.GeoDataFrame(columns=['geomID','geometry'])
-
-        for i in range(0,myLons.shape[0]):
-            temp_DF = pandas.DataFrame({'lon': myLons[i,], 'lat': myLats[i,]})
-            tempGDF = geopandas.GeoDataFrame(
-                data     = temp_DF,
-                crs      = "EPSG:4326",
-                geometry = geopandas.points_from_xy(x = temp_DF.lon, y = temp_DF.lat)
-                )
-            myGDF = pandas.concat([myGDF,tempGDF])
-
-        print("myGDF:")
-        print( myGDF  )
+        print("\ncentroidLons:\n")
+        print(   centroidLons    )
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        myGDF = myGDF.to_crs(
+        gdfCentroids = geopandas.GeoDataFrame(
+            columns = ['geomID','geometry'],
+            crs     = "EPSG:4326"
+            )
+
+        temp_DF = pandas.DataFrame({
+            'lon': centroidLons[0,:],
+            'lat': centroidLats[0,:]
+            }) 
+        tempGDF = geopandas.GeoDataFrame(
+            data     = temp_DF,
+            crs      = "EPSG:4326",
+            geometry = geopandas.points_from_xy(x = temp_DF.lon, y = temp_DF.lat)
+            )
+        gdfCentroids = pandas.concat([gdfCentroids,tempGDF])
+
+        temp_DF = pandas.DataFrame({
+            'lon': centroidLons[:,0],
+            'lat': centroidLats[:,0]
+            })
+        tempGDF = geopandas.GeoDataFrame(
+            data     = temp_DF,
+            crs      = "EPSG:4326",
+            geometry = geopandas.points_from_xy(x = temp_DF.lon, y = temp_DF.lat)
+            )
+        gdfCentroids = pandas.concat([gdfCentroids,tempGDF])
+
+        gdfCentroids = gdfCentroids.to_crs(
             epsg    = 6931,
             inplace = False
             )
 
-        print("myGDF (EPSG = 6931):")
-        print( myGDF )
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        myLons = gdfCentroids.geometry.x.round(decimals = 0).unique()
+        myLats = gdfCentroids.geometry.y.round(decimals = 0).unique()
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        myGDF = geopandas.GeoDataFrame(
+            columns = ['geomID','geometry'],
+            crs     = "EPSG:6931"
+            )
+
+        i = 0
+        for tempLongitude in myLons:
+            myData = {
+                'geomID':   'meridian_' + '{:04d}'.format(i),
+                'geometry': LineString([Point(tempLongitude,y) for y in myLats])
+                }
+            myRow = geopandas.GeoDataFrame(index = [i], data = myData, crs = "EPSG:6931")
+            myGDF = pandas.concat([myGDF, myRow])
+            i = i + 1
+
+        j = 0
+        k = i
+        for tempLatitude in myLats:
+            myData = {
+                'geomID':   'parallel_' + '{:04d}'.format(j),
+                'geometry': LineString([Point(x,tempLatitude) for x in myLons])
+                }
+            myRow = geopandas.GeoDataFrame(index = [k], data = myData, crs = "EPSG:6931")
+            myGDF = pandas.concat([myGDF, myRow])
+            j = j + 1
+            k = k + 1
+
+
+        myGDF = myGDF.set_crs(
+            crs            = 6931,
+            allow_override = True
+            )
+
+        myGDF = myGDF.to_crs(
+            epsg    = 4326,
+            inplace = False
+            )
+
+        print("myGDF:")
+        print( myGDF  )
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         myGDF.to_file(
             filename = shp_output,
             driver   = 'ESRI Shapefile'
             )
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     print( "\n########## " + thisFunctionName + "() exits ..." )
@@ -162,40 +219,40 @@ def test_ease_grid():
         print(   myGrid.latdim   )
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        # myLons = numpy.append(myGrid.londim,myGrid.londim[0]) 
-        # myLats = numpy.append(myGrid.latdim,myGrid.latdim[0]) 
+        # centroidLons = numpy.append(myGrid.londim,myGrid.londim[0]) 
+        # centroidLats = numpy.append(myGrid.latdim,myGrid.latdim[0]) 
 
-        myLons = myGrid.londim
-        myLats = myGrid.latdim
+        centroidLons = myGrid.londim
+        centroidLats = myGrid.latdim
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        myGDF = geopandas.GeoDataFrame(columns=['geomID','geometry'])
+        gdfCentroids = geopandas.GeoDataFrame(columns=['geomID','geometry'])
 
         i = 0
-        for tempLongitude in myLons:
+        for tempLongitude in centroidLons:
             myData = {
                 'geomID':   'meridian_' + '{:04d}'.format(i),
-                'geometry': LineString([Point(tempLongitude,y) for y in myLats])
+                'geometry': LineString([Point(tempLongitude,y) for y in centroidLats])
                 }
             myRow = geopandas.GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
-            myGDF = pandas.concat([myGDF, myRow])
+            gdfCentroids = pandas.concat([gdfCentroids, myRow])
             i = i + 1
 
         j = i
-        for tempLatitude in myLats:
+        for tempLatitude in centroidLats:
             myData = {
                 'geomID':   'parallel_' + '{:04d}'.format(j),
-                'geometry': LineString([Point(x,tempLatitude) for x in myLons])
+                'geometry': LineString([Point(x,tempLatitude) for x in centroidLons])
                 }
             myRow = geopandas.GeoDataFrame(index = [j], data = myData, crs = "EPSG:4326")
-            myGDF = pandas.concat([myGDF, myRow])
+            gdfCentroids = pandas.concat([gdfCentroids, myRow])
             j = j + 1
 
-        print("myGDF:")
-        print( myGDF  )
+        print("gdfCentroids:")
+        print( gdfCentroids  )
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        myGDF.to_file(
+        gdfCentroids.to_file(
             filename = shp_output,
             driver   = 'ESRI Shapefile'
             )
