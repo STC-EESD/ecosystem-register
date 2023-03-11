@@ -1,8 +1,7 @@
 
-import numpy, pandas
+import numpy, pandas, geopandas
 import ease_grid, easepy
 
-from geopandas        import GeoDataFrame
 from shapely.geometry import Point, Polygon, LinearRing, LineString
 
 ##### ##### ##### ##### #####
@@ -68,20 +67,29 @@ def test_easepy():
         print(   myLons    )
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        myGDF = GeoDataFrame(columns=['geomID','geometry'])
+        myGDF = geopandas.GeoDataFrame(columns=['geomID','geometry'])
 
-        k = 0
-        for i in range(0,myLats.shape[0]):
-            for j in range(0,myLats.shape[1]):
-                tempLat = myLats[i,j];
-                tempLon = myLons[i,j];
-                myData = {
-                    'geomID':   'meridian_' + '{:04d}'.format(i),
-                    'geometry': Point(tempLon,tempLat)
-                    }
-                myRow = GeoDataFrame(index = [k], data = myData, crs = "EPSG:4326")
-                myGDF = pandas.concat([myGDF, myRow])
-                k = k + 1
+        for i in range(0,myLons.shape[0]):
+            temp_DF = pandas.DataFrame({'lon': myLons[i,], 'lat': myLats[i,]})
+            tempGDF = geopandas.GeoDataFrame(
+                data     = temp_DF,
+                crs      = "EPSG:4326",
+                geometry = geopandas.points_from_xy(x = temp_DF.lon, y = temp_DF.lat)
+                )
+            myGDF = pandas.concat([myGDF,tempGDF])
+
+        # k = 0
+        # for i in range(0,myLats.shape[0]):
+        #     for j in range(0,myLats.shape[1]):
+        #         tempLat = myLats[i,j];
+        #         tempLon = myLons[i,j];
+        #         myData = {
+        #             'geomID':   'ID_' + '{:04d}'.format(i) + '_' + '{:04d}'.format(i),
+        #             'geometry': Point(tempLon,tempLat)
+        #             }
+        #         myRow = geopandas.GeoDataFrame(index = [k], data = myData, crs = "EPSG:4326")
+        #         myGDF = pandas.concat([myGDF, myRow])
+        #         k = k + 1
 
         print("myGDF:")
         print( myGDF  )
@@ -164,7 +172,7 @@ def test_ease_grid():
         myLats = myGrid.latdim
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        myGDF = GeoDataFrame(columns=['geomID','geometry'])
+        myGDF = geopandas.GeoDataFrame(columns=['geomID','geometry'])
 
         i = 0
         for tempLongitude in myLons:
@@ -172,7 +180,7 @@ def test_ease_grid():
                 'geomID':   'meridian_' + '{:04d}'.format(i),
                 'geometry': LineString([Point(tempLongitude,y) for y in myLats])
                 }
-            myRow = GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
+            myRow = geopandas.GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
             myGDF = pandas.concat([myGDF, myRow])
             i = i + 1
 
@@ -182,7 +190,7 @@ def test_ease_grid():
                 'geomID':   'parallel_' + '{:04d}'.format(j),
                 'geometry': LineString([Point(x,tempLatitude) for x in myLons])
                 }
-            myRow = GeoDataFrame(index = [j], data = myData, crs = "EPSG:4326")
+            myRow = geopandas.GeoDataFrame(index = [j], data = myData, crs = "EPSG:4326")
             myGDF = pandas.concat([myGDF, myRow])
             j = j + 1
 
