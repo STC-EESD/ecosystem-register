@@ -13,16 +13,15 @@ def test_easepy():
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     df_refinement = pandas.DataFrame(
         data = {
-            'resolution': [0,1,2,3,4,5,6],
-            'refinement_ratio': [25,25,25,100,100,100,None],
+            'resolution': [0,1,2,3,4,5],
+            'refinement_ratio': [25,25,25,100,100,None],
             'resolution_m': [
-                250000.0,
-                 50000.0,
-                 10000.0,
-                  1000.0,
-                   100.0,
-                    10.0,
-                     1.0,
+                25000.0,
+                 5000.0,
+                 1000.0,
+                  100.0,
+                   10.0,
+                    1.0
                 ]
             }
         )
@@ -114,7 +113,7 @@ def test_easepy():
         for tempLongitude in myLons:
             myData = {
                 'geomID':   'meridian_' + '{:04d}'.format(i),
-                'geometry': LineString([Point(tempLongitude,y) for y in myLats])
+                'geometry': LineString([ Point(tempLongitude,y) for y in myLats[::10] ])
                 }
             myRow = geopandas.GeoDataFrame(index = [i], data = myData, crs = "EPSG:6931")
             myGDF = pandas.concat([myGDF, myRow])
@@ -125,7 +124,7 @@ def test_easepy():
         for tempLatitude in myLats:
             myData = {
                 'geomID':   'parallel_' + '{:04d}'.format(j),
-                'geometry': LineString([Point(x,tempLatitude) for x in myLons])
+                'geometry': LineString([ Point(x,tempLatitude) for x in myLons[::10] ])
                 }
             myRow = geopandas.GeoDataFrame(index = [k], data = myData, crs = "EPSG:6931")
             myGDF = pandas.concat([myGDF, myRow])
