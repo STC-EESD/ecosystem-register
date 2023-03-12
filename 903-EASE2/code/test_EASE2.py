@@ -26,22 +26,31 @@ def test_easepy():
     #         }
     #     )
 
-    df_refinement = pandas.DataFrame(
-        data = {
-            'resolution': [0,1,2,3,4,5,6,7],
-            'refinement_ratio': [100,100,4,4,16,16,16,None],
-            'resolution_m': [
-                25000.0,
-                 2500.0,
-                  250.0,
-                  125.0,
-                   62.5,
-                   15.625,
-                    3.90625,
-                    0.9765625
-                ]
-            }
-        )
+    # df_refinement = pandas.DataFrame(
+    #     data = {
+    #         'resolution': [0,1,2,3,4,5,6,7],
+    #         'refinement_ratio': [100,100,4,4,16,16,16,None],
+    #         'resolution_m': [
+    #             25000.0,
+    #              2500.0,
+    #               250.0,
+    #               125.0,
+    #                62.5,
+    #                15.625,
+    #                 3.90625,
+    #                 0.9765625
+    #             ]
+    #         }
+    #     )
+
+    sideLength0_m = 25000 * 720 
+    length_refinement_ratios = numpy.array([900, 2, 10, 10, 10, 10])
+
+    df_refinement = pandas.DataFrame({
+        'resolution':       [i for i in range(0,length_refinement_ratios.shape[0])],   
+        'refinement_ratio': length_refinement_ratios**2,
+        'resolution_m':     sideLength0_m / numpy.cumprod(length_refinement_ratios)
+        })
 
     print("\ndf_refinement\n")
     print(   df_refinement   )
