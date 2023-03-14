@@ -29,19 +29,19 @@ fi
 googleDriveFolder=earthengine/ken
 
 ########################################################
-myPythonScript=${codeDIR}/main-generate-grids.py
-stdoutFile=${outputDIR}/stdout.py.`basename ${myPythonScript} .py`
-stderrFile=${outputDIR}/stderr.py.`basename ${myPythonScript} .py`
-${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} > ${stdoutFile} 2> ${stderrFile}
+# myPythonScript=${codeDIR}/main-generate-grids.py
+# stdoutFile=${outputDIR}/stdout.py.`basename ${myPythonScript} .py`
+# stderrFile=${outputDIR}/stderr.py.`basename ${myPythonScript} .py`
+# ${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} > ${stdoutFile} 2> ${stderrFile}
 # sleep 2
 
 ##################################################
 
 ##################################################
-# myRscript=${codeDIR}/main-resample.R
-# stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
-# stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
-# R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
+myRscript=${codeDIR}/main-resample.R
+stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
+stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
+R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
 # sleep 2
 
 ########################################################
