@@ -9,7 +9,8 @@ from shapely.geometry        import Polygon, LinearRing, LineString
 
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-my_rHEALPix_crs = pyproj.crs.CRS("+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50")
+rHEALPix_proj4string = "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50"
+rHEALPix_crs_obj     = pyproj.crs.CRS(rHEALPix_proj4string)
 
 WGS84_minus50 = Ellipsoid(
     a       = WGS84_A,
@@ -82,8 +83,27 @@ def get_extent_point2grid(
         )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # gdf_covering_cells_planar['x'] = gdf_covering_cells_planar['geometry'].x
+    # gdf_covering_cells_planar['y'] = gdf_covering_cells_planar['geometry'].y
+
+    # print("\ngdf_covering_cells_planar")
+    # print(   gdf_covering_cells_planar )
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    dict_output = {
+        'proj4string': rHEALPix_proj4string,
+        'resolution':  grid_resolution,
+        # 'xmin':        gdf_covering_cells_planar['x'].min(),
+        # 'xmax':        gdf_covering_cells_planar['x'].max(),
+        # 'ymin':        gdf_covering_cells_planar['y'].min(),
+        # 'ymax':        gdf_covering_cells_planar['y'].max(),
+        'nrows':       dict_covering_cells_planar['nrows'],
+        'ncols':       dict_covering_cells_planar['ncols'],
+        }
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     print( "\n########## " + thisFunctionName + "() exits ..." )
-    return( None )
+    return( dict_output )
 
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
@@ -128,7 +148,7 @@ def get_covering_cells_planar(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     gdf_covering_cells = geopandas.GeoDataFrame(
         columns = ['cellID','geometry'],
-        crs     = my_rHEALPix_crs
+        crs     = rHEALPix_crs_obj
         )
 
     print("\ngdf_covering_cells:")
@@ -141,7 +161,7 @@ def get_covering_cells_planar(
                 'cellID':   str(myCell),
                 'geometry': LineString(myCell.boundary(plane = True))
                 }
-            myRow = GeoDataFrame(index = [i], data = myData, crs = my_rHEALPix_crs)
+            myRow = GeoDataFrame(index = [i], data = myData, crs = rHEALPix_crs_obj)
             gdf_covering_cells = pandas.concat([gdf_covering_cells, myRow])
             i = i + 1
 
@@ -224,7 +244,7 @@ def get_corner_cells_planar(
 
     gdf_corner_cells = geopandas.GeoDataFrame(
         columns = ['cellID','geometry'],
-        crs     = my_rHEALPix_crs
+        crs     = rHEALPix_crs_obj
         )
 
     i = 0
@@ -233,7 +253,7 @@ def get_corner_cells_planar(
             'cellID':   str(myCell),
             'geometry': LineString(myCell.boundary(plane = True))
             }
-        myRow = GeoDataFrame(index = [i], data = myData, crs = my_rHEALPix_crs)
+        myRow = GeoDataFrame(index = [i], data = myData, crs = rHEALPix_crs_obj)
         gdf_corner_cells = pandas.concat([gdf_corner_cells, myRow])
         i = i + 1
 
@@ -242,17 +262,17 @@ def get_corner_cells_planar(
 
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
-def get_point_extent(
-    shp_rhealpix_point_extent
-    ):
+# def get_point_extent(
+#     shp_rhealpix_point_extent
+#     ):
 
-    gdf_extent_planar = geopandas.read_file(shp_rhealpix_point_extent) 
+#     gdf_extent_planar = geopandas.read_file(shp_rhealpix_point_extent) 
 
-    gdf_extent_planar['lon'] = gdf_extent_planar['geometry'].x
-    gdf_extent_planar['lat'] = gdf_extent_planar['geometry'].y
+#     gdf_extent_planar['lon'] = gdf_extent_planar['geometry'].x
+#     gdf_extent_planar['lat'] = gdf_extent_planar['geometry'].y
 
-    print("\ngdf_extent_planar:")
-    print(   gdf_extent_planar  )
+#     print("\ngdf_extent_planar:")
+#     print(   gdf_extent_planar  )
 
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
