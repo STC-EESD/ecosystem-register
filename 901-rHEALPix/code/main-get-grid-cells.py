@@ -169,24 +169,12 @@ gdf_corner_cells = geopandas.GeoDataFrame(
 
 i = 0
 for myCell in corner_cells:
-    print("\nstr(myCell)")
-    print(   str(myCell) )
-    print("\ntype(myCell)")
-    print(   type(myCell) )
-    print("\nmyCell")
-    print(   myCell )
     myData = {
         'cellID':   str(myCell),
         'geometry': LineString(myCell.boundary(plane = False))
         }
-    print("\nmyData")
-    print(   myData )
     myRow = GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
-    print("\nmyRow")
-    print(   myRow )
     gdf_corner_cells = pandas.concat([gdf_corner_cells, myRow])
-    print("\ngdf_corner_cells")
-    print(   gdf_corner_cells )
     i = i + 1
 
 print("\ngdf_corner_cells:")
@@ -201,9 +189,9 @@ gdf_corner_cells.to_file(
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 parallel_cells = rHEALPixCanada.cells_from_parallel(
     resolution = int(resolution),
-    phi        = gdf_extent_epsg4326['lat'].min(),
-    lam_min    = gdf_extent_epsg4326['lon'].min(),
-    lam_max    = gdf_extent_epsg4326['lon'].max()
+    phi        = gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmin_ymin']['lat'].iloc[0], # gdf_extent_epsg4326['lat'].min(),
+    lam_min    = gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmin_ymin']['lon'].iloc[0], # gdf_extent_epsg4326['lon'].min(),
+    lam_max    = gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmax_ymin']['lon'].iloc[0]  # gdf_extent_epsg4326['lon'].max()
     )
 print("\nparallel_cells:")
 print(   parallel_cells  )
