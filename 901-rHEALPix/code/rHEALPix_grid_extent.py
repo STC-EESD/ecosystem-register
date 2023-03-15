@@ -46,12 +46,10 @@ def get_extent_point2grid(
         shp_point_extent_planar = shp_point_extent_planar,
         grid_resolution         = grid_resolution
         )
-
     print("\ngdf_corner_cells_planar")
     print(   gdf_corner_cells_planar )
 
     gdf_corner_cells_epsg4326 = gdf_corner_cells_planar.to_crs(epsg = 4326)
-
     print("\ngdf_corner_cells_epsg4326")
     print(   gdf_corner_cells_epsg4326 )
 
@@ -70,9 +68,10 @@ def get_extent_point2grid(
     print(   dict_covering_cells_planar )
 
     gdf_covering_cells_planar = dict_covering_cells_planar['gdf_covering_cells_planar']
+    print("\ngdf_covering_cells_planar")
+    print(   gdf_covering_cells_planar )
 
     gdf_covering_cells_epsg4326 = gdf_covering_cells_planar.to_crs(epsg = 4326)
-
     print("\ngdf_covering_cells_epsg4326")
     print(   gdf_covering_cells_epsg4326 )
 
