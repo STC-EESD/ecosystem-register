@@ -4,11 +4,13 @@ data.directory      <- normalizePath(command.arguments[1]);
 code.directory      <- normalizePath(command.arguments[2]);
 output.directory    <- normalizePath(command.arguments[3]);
 google.drive.folder <- command.arguments[4];
+resolution          <- command.arguments[5];
 
 cat("\ndata.directory:",      data.directory,      "\n");
 cat("\ncode.directory:",      code.directory,      "\n");
 cat("\noutput.directory:",    output.directory,    "\n");
 cat("\ngoogle.drive.folder:", google.drive.folder, "\n");
+cat("\nresolution:",          resolution,          "\n");
 
 print( format(Sys.time(),"%Y-%m-%d %T %Z") );
 
@@ -104,6 +106,7 @@ DF.extent.rHEALPix <- base::as.data.frame(base::matrix(
     nrow     = 4,
     ncol     = 2
     ));
+DF.extent.rHEALPix[,'label'] <- rownames(DF.extent.rHEALPix);
 
 SF.extent.rHEALPix <- sf::st_as_sf(
     x      = DF.extent.rHEALPix,
@@ -111,10 +114,16 @@ SF.extent.rHEALPix <- sf::st_as_sf(
     crs    = proj4string.rHEALPix 
     );
 
+cat("\nSF.extent.rHEALPix\n");
+print( SF.extent.rHEALPix   );
+
 SF.extent.EPSG.4326 <- sf::st_transform(
     x   = SF.extent.rHEALPix,
     crs = sf::st_crs(4326)
     );
+
+cat("\nSF.extent.EPSG.4326\n");
+print( SF.extent.EPSG.4326   );
 
 sf::st_write(
     obj = SF.extent.EPSG.4326,

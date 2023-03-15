@@ -38,7 +38,7 @@ def generate_grid(
     myGrid = rHEALPixCanada.grid(resolution = grid_resolution)
 
     i = 0
-    myGDF = GeoDataFrame(columns=['cellID','geometry'])
+    myGDF = GeoDataFrame(columns = ['cellID','geometry'], crs = "EPSG:4326")
     for myCell in myGrid:
         myData = {
             'cellID':   str(myCell),
