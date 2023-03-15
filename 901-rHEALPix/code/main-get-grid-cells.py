@@ -40,12 +40,12 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 # import seaborn (for improved graphics) if available
 # import seaborn as sns
 
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 import json
 
 from rHEALPix_grid_extent import get_extent_point2grid
 
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 shp_point_extent_planar = "extent-point-rHEALPix-planar.shp"
 
 dict_rhealpix_grid_extent = get_extent_point2grid(
@@ -55,14 +55,23 @@ dict_rhealpix_grid_extent = get_extent_point2grid(
 print("\ndict_rhealpix_grid_extent")
 print(   dict_rhealpix_grid_extent )
 
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 json_object = json.dumps(
-    obj    = dict_rhealpix_grid_extent,
+    obj    = dict_rhealpix_grid_extent['raster_extent'],
     indent = 4
     )
  
 # Writing to sample.json
 with open("extent-grid-rHEALPix-planar.json", "w") as outfile:
     outfile.write(json_object)
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+shp_output = 'rHEALPix-boundary-centroids-r' + '{:03d}'.format(int(resolution)) + '.shp'
+gdf_boundary_centroids = dict_rhealpix_grid_extent['boundary_centroids']
+gdf_boundary_centroids.to_file(
+    filename = shp_output,
+    driver   = 'ESRI Shapefile'
+    )
 
 # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -354,7 +363,7 @@ with open("extent-grid-rHEALPix-planar.json", "w") as outfile:
 # # print("cells_lower_parellel")
 # # print(len([str(cell) for cell in cells_lower_parellel]))
 
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
 ##################################################
 ##################################################
