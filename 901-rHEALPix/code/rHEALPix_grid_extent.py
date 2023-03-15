@@ -83,14 +83,15 @@ def get_extent_point2grid(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     dict_output = {
-        'proj4string': rHEALPix_proj4string,
-        'resolution':  int(grid_resolution),
-        'xmin':        dict_covering_cells_planar['xmin'],
-        'xmax':        dict_covering_cells_planar['xmax'],
-        'ymin':        dict_covering_cells_planar['ymin'],
-        'ymax':        dict_covering_cells_planar['ymax'],
-        'nrows':       dict_covering_cells_planar['nrows'],
-        'ncols':       dict_covering_cells_planar['ncols'],
+        'proj4string':        rHEALPix_proj4string,
+        'resolution':         int(grid_resolution),
+        'boundary_centroids': dict_covering_cells_planar['gdf_boundary_centroids'],
+        'xmin':               dict_covering_cells_planar['xmin'],
+        'xmax':               dict_covering_cells_planar['xmax'],
+        'ymin':               dict_covering_cells_planar['ymin'],
+        'ymax':               dict_covering_cells_planar['ymax'],
+        'nrows':              dict_covering_cells_planar['nrows'],
+        'ncols':              dict_covering_cells_planar['ncols'],
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -161,6 +162,32 @@ def get_covering_cells_planar(
     print(   gdf_covering_cells  )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    gdf_boundary_centroids = geopandas.GeoDataFrame(
+        columns = ['cellID','geometry'],
+        crs     = rHEALPix_crs_obj
+        )
+
+    i = 0
+    for myCell in covering_cells[0]:
+        myData = {
+            'cellID':   str(myCell),
+            'geometry': Point(myCell.centroid(plane = True))
+            }
+        myRow = geopandas.GeoDataFrame(index = [i], data = myData, crs = rHEALPix_crs_obj)
+        gdf_boundary_centroids = pandas.concat([gdf_boundary_centroids,myRow])
+        i = i + 1
+
+    for j in range(0,len(covering_cells)):
+        myCell = covering_cells[j][0]
+        myData = {
+            'cellID':   str(myCell),
+            'geometry': Point(myCell.centroid(plane = True))
+            }
+        myRow = geopandas.GeoDataFrame(index = [i], data = myData, crs = rHEALPix_crs_obj)
+        gdf_boundary_centroids = pandas.concat([gdf_boundary_centroids,myRow])
+        i = i + 1
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     gdf_boundary_cells = geopandas.GeoDataFrame(
         columns = ['cellID','geometry'],
         crs     = rHEALPix_crs_obj
@@ -222,7 +249,8 @@ def get_covering_cells_planar(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     dict_output = {
-        'gdf_covering_cells_planar': gdf_covering_cells,
+        # 'gdf_covering_cells_planar': gdf_covering_cells,
+        'gdf_boundary_centroids':  gdf_boundary_centroids,
         'xmin':  gdf_vertices['x'].min(),
         'xmax':  gdf_vertices['x'].max(),
         'ymin':  gdf_vertices['y'].min(),
