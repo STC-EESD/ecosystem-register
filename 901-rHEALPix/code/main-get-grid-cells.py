@@ -108,6 +108,97 @@ print("\nrHEALPixCanada:")
 print(   rHEALPixCanada  )
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+cell_xmin_ymin = rHEALPixCanada.cell_from_point(
+    resolution = int(resolution),
+    p          = (
+        gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmin_ymin']['lon'].iloc[0],
+        gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmin_ymin']['lat'].iloc[0]
+        ),
+    plane = False
+    )
+print("\ncell_xmin_ymin:")
+print(   cell_xmin_ymin  )
+
+cell_xmax_ymin = rHEALPixCanada.cell_from_point(
+    resolution = int(resolution),
+    p          = (
+        gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmax_ymin']['lon'].iloc[0],
+        gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmax_ymin']['lat'].iloc[0]
+        ),
+    plane = False
+    )
+print("\ncell_xmax_ymin:")
+print(   cell_xmax_ymin  )
+
+cell_xmax_ymax = rHEALPixCanada.cell_from_point(
+    resolution = int(resolution),
+    p          = (
+        gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmax_ymax']['lon'].iloc[0],
+        gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmax_ymax']['lat'].iloc[0]
+        ),
+    plane = False
+    )
+print("\ncell_xmax_ymax:")
+print(   cell_xmax_ymax  )
+
+cell_xmin_ymax = rHEALPixCanada.cell_from_point(
+    resolution = int(resolution),
+    p          = (
+        gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmin_ymax']['lon'].iloc[0],
+        gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmin_ymax']['lat'].iloc[0]
+        ),
+    plane = False
+    )
+print("\ncell_xmin_ymin:")
+print(   cell_xmin_ymin  )
+
+corner_cells = [
+    cell_xmin_ymin,
+    cell_xmax_ymin,
+    cell_xmax_ymax,
+    cell_xmin_ymax
+    ]
+
+print("\ncorner_cells:")
+print(   corner_cells  )
+
+gdf_corner_cells = geopandas.GeoDataFrame(
+    columns = ['cellID','geometry'],
+    crs     = "EPSG:4326"
+    )
+
+i = 0
+for myCell in corner_cells:
+    print("\nstr(myCell)")
+    print(   str(myCell) )
+    print("\ntype(myCell)")
+    print(   type(myCell) )
+    print("\nmyCell")
+    print(   myCell )
+    myData = {
+        'cellID':   str(myCell),
+        'geometry': LineString(myCell.boundary(plane = False))
+        }
+    print("\nmyData")
+    print(   myData )
+    myRow = GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
+    print("\nmyRow")
+    print(   myRow )
+    gdf_corner_cells = pandas.concat([gdf_corner_cells, myRow])
+    print("\ngdf_corner_cells")
+    print(   gdf_corner_cells )
+    i = i + 1
+
+print("\ngdf_corner_cells:")
+print(   gdf_corner_cells  )
+
+shp_output = 'rHEALPix-corner-cells-r' + '{:03d}'.format(int(resolution)) + '.shp'
+gdf_corner_cells.to_file(
+    filename = shp_output,
+    driver   = 'ESRI Shapefile'
+    )
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 parallel_cells = rHEALPixCanada.cells_from_parallel(
     resolution = int(resolution),
     phi        = gdf_extent_epsg4326['lat'].min(),
@@ -151,7 +242,7 @@ for myCell in parallel_cells:
         'geometry': LineString(myCell.boundary(plane = False))
         }
     myRow = GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
-    gdf_covering_cells = pandas.concat([gdf_parallel_cells, myRow])
+    gdf_parallel_cells = pandas.concat([gdf_parallel_cells, myRow])
     i = i + 1
 
 print("\ngdf_parallel_cells:")
@@ -179,7 +270,7 @@ for myCell in meridian_cells:
         'geometry': LineString(myCell.boundary(plane = False))
         }
     myRow = GeoDataFrame(index = [i], data = myData, crs = "EPSG:4326")
-    gdf_covering_cells = pandas.concat([gdf_meridian_cells, myRow])
+    gdf_meridian_cells = pandas.concat([gdf_meridian_cells, myRow])
     i = i + 1
 
 print("\ngdf_meridian_cells:")
