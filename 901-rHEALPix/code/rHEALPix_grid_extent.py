@@ -92,7 +92,7 @@ def get_extent_point2grid(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     dict_output = {
         'proj4string': rHEALPix_proj4string,
-        'resolution':  grid_resolution,
+        'resolution':  int(grid_resolution),
         # 'xmin':        gdf_covering_cells_planar['x'].min(),
         # 'xmax':        gdf_covering_cells_planar['x'].max(),
         # 'ymin':        gdf_covering_cells_planar['y'].min(),
