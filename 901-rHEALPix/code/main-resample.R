@@ -120,12 +120,12 @@ print( SF.extent.rHEALPix   );
 
 sf::st_write(
     obj = SF.extent.rHEALPix,
-    dsn = "my-extent-rHEALPix-plane.shp"
+    dsn = "extent-point-rHEALPix-planar.shp"
     );
 
 sf::st_write(
     obj = SF.extent.rHEALPix,
-    dsn = "my-extent-rHEALPix-plane.geojson"
+    dsn = "extent-point-rHEALPix-planar.geojson"
     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -139,12 +139,12 @@ print( SF.extent.EPSG.4326   );
 
 sf::st_write(
     obj = SF.extent.EPSG.4326,
-    dsn = "my-extent-EPSG-4326.shp"
+    dsn = "extent-point-EPSG-4326.shp"
     );
 
 sf::st_write(
     obj = SF.extent.EPSG.4326,
-    dsn = "my-extent-EPSG-4326.geojson"
+    dsn = "extent-point-EPSG-4326.geojson"
     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
