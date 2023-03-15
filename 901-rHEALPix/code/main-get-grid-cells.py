@@ -43,16 +43,6 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 import json
 
-# from rhealpixdggs.ellipsoids import *  
-# from rhealpixdggs.dggs       import *
-# from rhealpixdggs            import dggs
-
-# from rhealpixdggs.ellipsoids import *  
-# from rhealpixdggs.dggs       import *
-# from rhealpixdggs            import dggs
-# from geopandas               import GeoDataFrame
-# from shapely.geometry        import Polygon, LinearRing, LineString
-
 from rHEALPix_grid_extent import get_extent_point2grid
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
