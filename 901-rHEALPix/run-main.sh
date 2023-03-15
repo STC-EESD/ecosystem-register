@@ -36,19 +36,20 @@ googleDriveFolder=earthengine/ken
 # sleep 2
 
 ##################################################
+resolution=6
 
 ##################################################
 myRscript=${codeDIR}/main-resample.R
 stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
 stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
-R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
-# sleep 2
+R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
+sleep 2
 
 ########################################################
-# myPythonScript=${codeDIR}/main-get-grid-cells.py
-# stdoutFile=${outputDIR}/stdout.py.`basename ${myPythonScript} .py`
-# stderrFile=${outputDIR}/stderr.py.`basename ${myPythonScript} .py`
-# ${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} > ${stdoutFile} 2> ${stderrFile}
+myPythonScript=${codeDIR}/main-get-grid-cells.py
+stdoutFile=${outputDIR}/stdout.py.`basename ${myPythonScript} .py`
+stderrFile=${outputDIR}/stderr.py.`basename ${myPythonScript} .py`
+${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} > ${stdoutFile} 2> ${stderrFile}
 
 ##################################################
 exit
