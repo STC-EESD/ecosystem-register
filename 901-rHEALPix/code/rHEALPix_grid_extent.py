@@ -11,7 +11,12 @@ from shapely.geometry        import Polygon, LinearRing, LineString
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 my_rHEALPix_crs = pyproj.crs.CRS("+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50")
 
-WGS84_minus50 = Ellipsoid(a=WGS84_A, f=WGS84_F, radians=False, lon_0=-50)
+WGS84_minus50 = Ellipsoid(
+    a       = WGS84_A,
+    f       = WGS84_F,
+    radians = False,
+    lon_0   = -50
+    )
 print("\nWGS84_minus50:")
 print(   WGS84_minus50  )
 
@@ -57,10 +62,14 @@ def get_extent_point2grid(
         )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    gdf_covering_cells_planar = get_covering_cells_planar(
+    dict_covering_cells_planar = get_covering_cells_planar(
         shp_point_extent_planar = shp_point_extent_planar,
         grid_resolution         = grid_resolution
         )
+    print("\ndict_covering_cells_planar")
+    print(   dict_covering_cells_planar )
+
+    gdf_covering_cells_planar = dict_covering_cells_planar['gdf_covering_cells_planar']
 
     gdf_covering_cells_epsg4326 = gdf_covering_cells_planar.to_crs(epsg = 4326)
 
@@ -141,7 +150,15 @@ def get_covering_cells_planar(
     print(   gdf_covering_cells  )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    return( gdf_covering_cells )
+    dict_output = {
+        'gdf_covering_cells_planar': gdf_covering_cells,
+        'nrows':                     len(covering_cells),
+        'ncols':                     len(covering_cells[0])
+        }
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # return( gdf_covering_cells )
+    return( dict_output )
 
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
