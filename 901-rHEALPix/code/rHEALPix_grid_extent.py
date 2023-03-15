@@ -5,7 +5,7 @@ from rhealpixdggs.ellipsoids import *
 from rhealpixdggs.dggs       import *
 from rhealpixdggs            import dggs
 from geopandas               import GeoDataFrame
-from shapely.geometry        import Polygon, LinearRing, LineString
+from shapely.geometry        import Point, Polygon, LinearRing, LineString
 
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
@@ -31,7 +31,6 @@ print("\ntype(rHEALPixCanada):")
 print(   type(rHEALPixCanada)  )
 print("\nrHEALPixCanada:")
 print(   rHEALPixCanada  )
-
 
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 def get_extent_point2grid(
@@ -83,20 +82,13 @@ def get_extent_point2grid(
         )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    # gdf_covering_cells_planar['x'] = gdf_covering_cells_planar['geometry'].x
-    # gdf_covering_cells_planar['y'] = gdf_covering_cells_planar['geometry'].y
-
-    # print("\ngdf_covering_cells_planar")
-    # print(   gdf_covering_cells_planar )
-
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     dict_output = {
         'proj4string': rHEALPix_proj4string,
         'resolution':  int(grid_resolution),
-        # 'xmin':        gdf_covering_cells_planar['x'].min(),
-        # 'xmax':        gdf_covering_cells_planar['x'].max(),
-        # 'ymin':        gdf_covering_cells_planar['y'].min(),
-        # 'ymax':        gdf_covering_cells_planar['y'].max(),
+        'xmin':        dict_covering_cells_planar['xmin'],
+        'xmax':        dict_covering_cells_planar['xmax'],
+        'ymin':        dict_covering_cells_planar['ymin'],
+        'ymax':        dict_covering_cells_planar['ymax'],
         'nrows':       dict_covering_cells_planar['nrows'],
         'ncols':       dict_covering_cells_planar['ncols'],
         }
@@ -112,20 +104,20 @@ def get_covering_cells_planar(
     grid_resolution = 8
     ):
 
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     gdf_extent_planar = geopandas.read_file(shp_point_extent_planar)
 
     gdf_extent_planar['x'] = gdf_extent_planar['geometry'].x
     gdf_extent_planar['y'] = gdf_extent_planar['geometry'].y
 
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     planar_xmin = gdf_extent_planar['x'].min()
     planar_xmax = gdf_extent_planar['x'].max()
 
     planar_ymin = gdf_extent_planar['y'].min()
     planar_ymax = gdf_extent_planar['y'].max()
 
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     corner_upper_left  = ( planar_xmin , planar_ymax )
     corner_lower_right = ( planar_xmax , planar_ymin )
 
@@ -135,7 +127,7 @@ def get_covering_cells_planar(
     print("\ncorner_lower_right (rHEALPix plane):")
     print(   corner_lower_right  )
 
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     covering_cells = rHEALPixCanada.cells_from_region(
         resolution = int(grid_resolution),
         ul         = corner_upper_left,
@@ -145,7 +137,7 @@ def get_covering_cells_planar(
     print("\ncovering_cells:")
     print(   covering_cells  )
 
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     gdf_covering_cells = geopandas.GeoDataFrame(
         columns = ['cellID','geometry'],
         crs     = rHEALPix_crs_obj
@@ -168,15 +160,78 @@ def get_covering_cells_planar(
     print("\ngdf_covering_cells:")
     print(   gdf_covering_cells  )
 
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    gdf_boundary_cells = geopandas.GeoDataFrame(
+        columns = ['cellID','geometry'],
+        crs     = rHEALPix_crs_obj
+        )
+
+    i = 0
+    for myCell in covering_cells[0]:
+        myData = {
+            'cellID':   str(myCell),
+            'geometry': LineString(myCell.boundary(plane = True))
+            }
+        myRow = geopandas.GeoDataFrame(index = [i], data = myData, crs = rHEALPix_crs_obj)
+        gdf_boundary_cells = pandas.concat([gdf_boundary_cells,myRow])
+        i = i + 1
+
+    for j in range(0,len(covering_cells)):
+        myCell = covering_cells[j][0]
+        myData = {
+            'cellID':   str(myCell),
+            'geometry': LineString(myCell.boundary(plane = True))
+            }
+        myRow = geopandas.GeoDataFrame(index = [i], data = myData, crs = rHEALPix_crs_obj)
+        gdf_boundary_cells = pandas.concat([gdf_boundary_cells,myRow])
+        i = i + 1
+
+    gdf_boundary_cells['points'] = gdf_boundary_cells.apply(lambda x: [y for y in x['geometry'].coords], axis = 1)
+
+    print("\ngdf_boundary_cells")
+    print(   gdf_boundary_cells )
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    gdf_vertices = geopandas.GeoDataFrame(
+        columns = ['cellID','vertexID','geometry'],
+        crs     = rHEALPix_crs_obj
+        )
+
+    cumul_n_vertices = 0
+    for i in range(0,gdf_boundary_cells.shape[0]):
+        temp_n_vertices = len(gdf_boundary_cells['points'][i])
+        tempDF  = pandas.DataFrame({
+            'cellID':   [gdf_boundary_cells['cellID'][i] for j in range(0,temp_n_vertices)],
+            'vertexID': [j                               for j in range(0,temp_n_vertices)]
+            })
+        tempGDF = GeoDataFrame(
+            data     = tempDF,
+            geometry = [Point(x) for x in gdf_boundary_cells['points'][i]],
+            crs      = rHEALPix_crs_obj
+            )
+        gdf_vertices = pandas.concat([gdf_vertices,tempGDF])
+        cumul_n_vertices = cumul_n_vertices + temp_n_vertices
+
+    gdf_vertices = gdf_vertices.set_index([pandas.Series([i for i in range(0,gdf_vertices.shape[0])])])
+
+    gdf_vertices['x'] = gdf_vertices['geometry'].x
+    gdf_vertices['y'] = gdf_vertices['geometry'].y
+
+    print("\ngdf_vertices")
+    print(   gdf_vertices )
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     dict_output = {
         'gdf_covering_cells_planar': gdf_covering_cells,
-        'nrows':                     len(covering_cells),
-        'ncols':                     len(covering_cells[0])
+        'xmin':  gdf_vertices['x'].min(),
+        'xmax':  gdf_vertices['x'].max(),
+        'ymin':  gdf_vertices['y'].min(),
+        'ymax':  gdf_vertices['y'].max(),
+        'nrows': len(covering_cells),
+        'ncols': len(covering_cells[0])
         }
 
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    # return( gdf_covering_cells )
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     return( dict_output )
 
 
