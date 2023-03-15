@@ -67,7 +67,7 @@ def get_extent_point2grid(
     print("\ndict_covering_cells_planar")
     print(   dict_covering_cells_planar )
 
-    gdf_covering_cells_planar = dict_covering_cells_planar['gdf_covering_cells_planar']
+    gdf_covering_cells_planar = dict_covering_cells_planar['covering_cells_planar']
     print("\ngdf_covering_cells_planar")
     print(   gdf_covering_cells_planar )
 
@@ -83,15 +83,8 @@ def get_extent_point2grid(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     dict_output = {
-        'proj4string':        rHEALPix_proj4string,
-        'resolution':         int(grid_resolution),
-        'boundary_centroids': dict_covering_cells_planar['gdf_boundary_centroids'],
-        'xmin':               dict_covering_cells_planar['xmin'],
-        'xmax':               dict_covering_cells_planar['xmax'],
-        'ymin':               dict_covering_cells_planar['ymin'],
-        'ymax':               dict_covering_cells_planar['ymax'],
-        'nrows':              dict_covering_cells_planar['nrows'],
-        'ncols':              dict_covering_cells_planar['ncols'],
+        'boundary_centroids': dict_covering_cells_planar['boundary_centroids'],
+        'raster_extent':      dict_covering_cells_planar['raster_extent']
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -249,14 +242,18 @@ def get_covering_cells_planar(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     dict_output = {
-        # 'gdf_covering_cells_planar': gdf_covering_cells,
-        'gdf_boundary_centroids':  gdf_boundary_centroids,
-        'xmin':  gdf_vertices['x'].min(),
-        'xmax':  gdf_vertices['x'].max(),
-        'ymin':  gdf_vertices['y'].min(),
-        'ymax':  gdf_vertices['y'].max(),
-        'nrows': len(covering_cells),
-        'ncols': len(covering_cells[0])
+        'covering_cells_planar': gdf_covering_cells,
+        'boundary_centroids':    gdf_boundary_centroids,
+        'raster_extent': {
+            'proj4string': rHEALPix_proj4string,
+            'resolution':  int(grid_resolution),
+            'xmin':        gdf_vertices['x'].min(),
+            'xmax':        gdf_vertices['x'].max(),
+            'ymin':        gdf_vertices['y'].min(),
+            'ymax':        gdf_vertices['y'].max(),
+            'nrows':       len(covering_cells),
+            'ncols':       len(covering_cells[0])
+            }
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
