@@ -72,6 +72,26 @@ print("\ngdf_extent_epsg4326:")
 print(   gdf_extent_epsg4326  )
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+# corner_upper_left  = (
+#     gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmin_ymax']['lon'].iloc[0],
+#     gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmin_ymax']['lat'].iloc[0]
+#     )
+
+# corner_lower_right = (
+#     gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmax_ymin']['lon'].iloc[0],
+#     gdf_extent_epsg4326.loc[gdf_extent_epsg4326['label'] == 'xmax_ymin']['lat'].iloc[0]
+#     )
+
+corner_upper_left  = ( gdf_extent_epsg4326['lon'].min() , gdf_extent_epsg4326['lat'].max() )
+corner_lower_right = ( gdf_extent_epsg4326['lon'].max() , gdf_extent_epsg4326['lat'].min() )
+
+print("\ncorner_upper_left:")
+print(   corner_upper_left  )
+
+print("\ncorner_lower_right:")
+print(   corner_lower_right  )
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 WGS84_minus50 = Ellipsoid(a=WGS84_A, f=WGS84_F, radians=False, lon_0=-50)
 print("\nWGS84_minus50:")
 print(   WGS84_minus50  )
@@ -88,15 +108,6 @@ print("\nrHEALPixCanada:")
 print(   rHEALPixCanada  )
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-corner_upper_left  = ( gdf_extent_epsg4326['lon'].min() , gdf_extent_epsg4326['lat'].max() )
-corner_lower_right = ( gdf_extent_epsg4326['lon'].max() , gdf_extent_epsg4326['lat'].min() )
-
-print("\ncorner_upper_left:")
-print(   corner_upper_left  )
-
-print("\ncorner_lower_right:")
-print(   corner_lower_right  )
-
 parallel_cells = rHEALPixCanada.cells_from_parallel(
     resolution = int(resolution),
     phi        = gdf_extent_epsg4326['lat'].min(),
