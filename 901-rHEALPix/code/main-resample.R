@@ -108,6 +108,7 @@ DF.extent.rHEALPix <- base::as.data.frame(base::matrix(
     ));
 DF.extent.rHEALPix[,'label'] <- rownames(DF.extent.rHEALPix);
 
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 SF.extent.rHEALPix <- sf::st_as_sf(
     x      = DF.extent.rHEALPix,
     coords = c("x","y"),
@@ -117,6 +118,17 @@ SF.extent.rHEALPix <- sf::st_as_sf(
 cat("\nSF.extent.rHEALPix\n");
 print( SF.extent.rHEALPix   );
 
+sf::st_write(
+    obj = SF.extent.rHEALPix,
+    dsn = "my-extent-rHEALPix-plane.shp"
+    );
+
+sf::st_write(
+    obj = SF.extent.rHEALPix,
+    dsn = "my-extent-rHEALPix-plane.geojson"
+    );
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 SF.extent.EPSG.4326 <- sf::st_transform(
     x   = SF.extent.rHEALPix,
     crs = sf::st_crs(4326)
@@ -135,6 +147,7 @@ sf::st_write(
     dsn = "my-extent-EPSG-4326.geojson"
     );
 
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 my.raster.rHEALPix <- raster::projectRaster(
     from   = original.stack,
     crs    = proj4string.rHEALPix,
