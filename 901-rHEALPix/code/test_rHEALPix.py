@@ -7,6 +7,7 @@ from rhealpixdggs            import dggs
 from geopandas               import GeoDataFrame
 from shapely.geometry        import Polygon, LinearRing, LineString
 
+##### ##### ##### ##### #####
 def generate_grid(
     grid_resolution = 2
     ):
