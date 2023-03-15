@@ -43,25 +43,36 @@ logging.basicConfig(filename='log.debug',level=logging.DEBUG)
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 import json
 
-from rhealpixdggs.ellipsoids import *  
-from rhealpixdggs.dggs       import *
-from rhealpixdggs            import dggs
+# from rhealpixdggs.ellipsoids import *  
+# from rhealpixdggs.dggs       import *
+# from rhealpixdggs            import dggs
 
-from rhealpixdggs.ellipsoids import *  
-from rhealpixdggs.dggs       import *
-from rhealpixdggs            import dggs
-from geopandas               import GeoDataFrame
-from shapely.geometry        import Polygon, LinearRing, LineString
+# from rhealpixdggs.ellipsoids import *  
+# from rhealpixdggs.dggs       import *
+# from rhealpixdggs            import dggs
+# from geopandas               import GeoDataFrame
+# from shapely.geometry        import Polygon, LinearRing, LineString
 
 from rHEALPix_grid_extent import get_extent_point2grid
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-shp_point_extent_planar = "my-extent-rHEALPix-plane.shp"
+shp_point_extent_planar = "extent-point-rHEALPix-planar.shp"
 
-my_rhealpix_grid_extent = get_extent_point2grid(
+dict_rhealpix_grid_extent = get_extent_point2grid(
     shp_point_extent_planar = shp_point_extent_planar,
     grid_resolution         = resolution
     )
+print("\ndict_rhealpix_grid_extent")
+print(   dict_rhealpix_grid_extent )
+
+json_object = json.dumps(
+    obj    = dict_rhealpix_grid_extent,
+    indent = 4
+    )
+ 
+# Writing to sample.json
+with open("extent-grid-rHEALPix-planar.json", "w") as outfile:
+    outfile.write(json_object)
 
 # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
