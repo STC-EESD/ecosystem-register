@@ -52,7 +52,7 @@ def get_extent_point2grid(
     print("\ngdf_corner_cells_epsg4326")
     print(   gdf_corner_cells_epsg4326 )
 
-    shp_output = 'rHEALPix-corner-cells-r' + '{:03d}'.format(int(grid_resolution)) + '.shp'
+    shp_output = 'epsg4326-corner-cells-r' + '{:03d}'.format(int(grid_resolution)) + '.shp'
     gdf_corner_cells_epsg4326.to_file(
         filename = shp_output,
         driver   = 'ESRI Shapefile'
@@ -74,7 +74,7 @@ def get_extent_point2grid(
     print("\ngdf_covering_cells_epsg4326")
     print(   gdf_covering_cells_epsg4326 )
 
-    shp_output = 'rHEALPix-covering-cells-r' + '{:03d}'.format(int(grid_resolution)) + '.shp'
+    shp_output = 'epsg4326-covering-cells-r' + '{:03d}'.format(int(grid_resolution)) + '.shp'
     gdf_covering_cells_epsg4326.to_file(
         filename = shp_output,
         driver   = 'ESRI Shapefile'

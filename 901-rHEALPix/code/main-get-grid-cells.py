@@ -61,21 +61,36 @@ json_object = json.dumps(
     indent = 4
     )
  
-# Writing to sample.json
 with open("extent-grid-rHEALPix-planar.json", "w") as outfile:
     outfile.write(json_object)
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-shp_output = 'rHEALPix-boundary-centroids-r' + '{:03d}'.format(int(resolution)) + '.shp'
 gdf_boundary_centroids = dict_rhealpix_grid_extent['boundary_centroids']
+
+shp_output = 'rHEALPix-planar-boundary-centroids-r' + '{:03d}'.format(int(resolution)) + '.shp'
+gdf_boundary_centroids.to_file(
+    filename = shp_output,
+    driver   = 'ESRI Shapefile'
+    )
+
+shp_output = 'epsg4326-boundary-centroids-r' + '{:03d}'.format(int(resolution)) + '.shp'
+gdf_boundary_centroids = gdf_boundary_centroids.to_crs(epsg = 4326)
 gdf_boundary_centroids.to_file(
     filename = shp_output,
     driver   = 'ESRI Shapefile'
     )
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-shp_output = 'rHEALPix-bounding-vertices-r' + '{:03d}'.format(int(resolution)) + '.shp'
 gdf_bounding_vertices = dict_rhealpix_grid_extent['bounding_vertices']
+
+shp_output = 'rHEALPix-planar-bounding-vertices-r' + '{:03d}'.format(int(resolution)) + '.shp'
+gdf_bounding_vertices.to_file(
+    filename = shp_output,
+    driver   = 'ESRI Shapefile'
+    )
+
+shp_output = 'epsg4326-bounding-vertices-r' + '{:03d}'.format(int(resolution)) + '.shp'
+gdf_bounding_vertices = gdf_bounding_vertices.to_crs(epsg = 4326)
 gdf_bounding_vertices.to_file(
     filename = shp_output,
     driver   = 'ESRI Shapefile'
