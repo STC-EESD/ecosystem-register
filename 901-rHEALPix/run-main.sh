@@ -27,6 +27,7 @@ fi
 
 ########################################################
 googleDriveFolder=earthengine/ken
+resolution=6
 
 ########################################################
 # myPythonScript=${codeDIR}/main-generate-grids.py
@@ -36,20 +37,25 @@ googleDriveFolder=earthengine/ken
 # sleep 2
 
 ##################################################
-resolution=6
+# myRscript=${codeDIR}/main-get-extent-point-rHEALPix-planar.R
+# stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
+# stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
+# R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
+# sleep 2
+
+########################################################
+# myPythonScript=${codeDIR}/main-get-extent-grid-rHEALPix-planar.py
+# stdoutFile=${outputDIR}/stdout.py.`basename ${myPythonScript} .py`
+# stderrFile=${outputDIR}/stderr.py.`basename ${myPythonScript} .py`
+# ${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} > ${stdoutFile} 2> ${stderrFile}
+# sleep 2
 
 ##################################################
-myRscript=${codeDIR}/main-get-extent-point-rHEALPix-planar.R
+myRscript=${codeDIR}/main-reproject.R
 stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
 stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
 R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
 sleep 2
-
-########################################################
-myPythonScript=${codeDIR}/main-get-extent-grid-rHEALPix-planar.py
-stdoutFile=${outputDIR}/stdout.py.`basename ${myPythonScript} .py`
-stderrFile=${outputDIR}/stderr.py.`basename ${myPythonScript} .py`
-${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} > ${stdoutFile} 2> ${stderrFile}
 
 ##################################################
 exit
