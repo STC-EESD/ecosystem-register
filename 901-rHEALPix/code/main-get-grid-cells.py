@@ -73,6 +73,14 @@ gdf_boundary_centroids.to_file(
     driver   = 'ESRI Shapefile'
     )
 
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+shp_output = 'rHEALPix-bounding-vertices-r' + '{:03d}'.format(int(resolution)) + '.shp'
+gdf_bounding_vertices = dict_rhealpix_grid_extent['bounding_vertices']
+gdf_bounding_vertices.to_file(
+    filename = shp_output,
+    driver   = 'ESRI Shapefile'
+    )
+
 # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###

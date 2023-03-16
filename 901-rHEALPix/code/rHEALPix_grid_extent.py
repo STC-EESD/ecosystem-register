@@ -7,7 +7,6 @@ from rhealpixdggs            import dggs
 from geopandas               import GeoDataFrame
 from shapely.geometry        import Point, Polygon, LinearRing, LineString
 
-
 ##### ##### ##### ##### ##### ##### ##### ##### ##### #####
 rHEALPix_proj4string = "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50"
 rHEALPix_crs_obj     = pyproj.crs.CRS(rHEALPix_proj4string)
@@ -84,7 +83,8 @@ def get_extent_point2grid(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     dict_output = {
         'boundary_centroids': dict_covering_cells_planar['boundary_centroids'],
-        'raster_extent':      dict_covering_cells_planar['raster_extent']
+        'bounding_vertices':  dict_covering_cells_planar['bounding_vertices' ],
+        'raster_extent':      dict_covering_cells_planar['raster_extent'     ]
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -241,9 +241,24 @@ def get_covering_cells_planar(
     print(   gdf_vertices )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    gdf_bounding_vertices = geopandas.GeoDataFrame(
+        data = pandas.DataFrame({
+            'label': ['xmin_ymin','xmax_ymin','xmax_ymax','xmin_ymax']
+            }),
+        geometry = [
+            Point( gdf_vertices['x'].min() , gdf_vertices['y'].min() ),
+            Point( gdf_vertices['x'].max() , gdf_vertices['y'].min() ),
+            Point( gdf_vertices['x'].max() , gdf_vertices['y'].max() ),
+            Point( gdf_vertices['x'].min() , gdf_vertices['y'].max() )
+            ],
+        crs = rHEALPix_crs_obj
+        )
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     dict_output = {
         'covering_cells_planar': gdf_covering_cells,
         'boundary_centroids':    gdf_boundary_centroids,
+        'bounding_vertices':     gdf_bounding_vertices,
         'raster_extent': {
             'proj4string': rHEALPix_proj4string,
             'resolution':  int(grid_resolution),
