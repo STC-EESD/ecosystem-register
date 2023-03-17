@@ -76,6 +76,16 @@ original.values <- cbind(
 cat("\nraster::crs(original.stack)\n");
 print( raster::crs(original.stack)   );
 
+png(
+    filename = "raster-original.png",
+    res    = 300,
+    width  =  16,
+    height =  16,
+    units  = "in"
+    );
+raster::plot(x = original.stack);
+dev.off();
+
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 JSN.grid.extent.rHEALPix.planar <- jsonlite::read_json("extent-grid-rHEALPix-planar.json");
 
@@ -103,6 +113,16 @@ raster::writeRaster(
     filename = "reprojected-to-rHEALPix-planar.tiff"
     );
 
+png(
+    filename = "raster-reprojected.png",
+    res    = 300,
+    width  =  16,
+    height =  16,
+    units  = "in"
+    );
+raster::plot(x = reprojected.stack);
+dev.off();
+
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 DF.raster <- cbind(
     raster::coordinates(reprojected.stack),
@@ -119,8 +139,9 @@ cat("\nDF.raster\n");
 print( DF.raster   );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-SF.boundary.centroids <- sf::st_read("rHEALPix-planar-boundary-centroids-r006.shp");
-SF.boundary.centroids <- cbind(SF.boundary.centroids,sf::st_coordinates(SF.boundary.centroids));
+SHP.boundary.centroids <- list.files(pattern = "rHEALPix-planar-boundary-centroids.+\\.shp");
+ SF.boundary.centroids <- sf::st_read(SHP.boundary.centroids);
+ SF.boundary.centroids <- cbind(SF.boundary.centroids,sf::st_coordinates(SF.boundary.centroids));
 sf::st_crs(SF.boundary.centroids) <- proj4string.rHEALPix;
 
 cat("\nSF.boundary.centroids\n");
