@@ -22,14 +22,10 @@ setwd( output.directory );
 
 ##################################################
 require(jsonlite);
-require(raster);
+require(terra);
 
 # source supporting R code
 code.files <- c(
-    # "getPyModule-ee.R",
-    # "test-ee-Authenticate.R",
-    # "test-ee-batch-export.R",
-    # "test-googledrive.R"
     );
 
 for ( code.file in code.files ) {
@@ -44,6 +40,10 @@ set.seed(my.seed);
 is.macOS <- grepl(x = sessionInfo()[['platform']], pattern = 'apple', ignore.case = TRUE);
 n.cores  <- ifelse(test = is.macOS, yes = 2, no = parallel::detectCores() - 1);
 cat(paste0("\n# n.cores = ",n.cores,"\n"));
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+proj4string.rHEALPix <- "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50";
+proj4string.epsg4326 <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 folder.tiff <- data.directory;
@@ -62,34 +62,33 @@ my.tiff <- grep(x = tiff.files, pattern = "0717", value = TRUE);
 cat("\nmy.tiff\n");
 print( my.tiff   );
 
-original.stack  <- raster::stack(x = file.path(folder.tiff,my.tiff)); 
-original.values <- cbind(
-    raster::coordinates(obj = original.stack),
-    raster::getValues(  x   = original.stack)
+original.raster  <- terra::rast(x = file.path(folder.tiff,my.tiff));
+original.values <- as.data.frame(
+    x     = original.raster,
+    xy    = TRUE,
+    na.rm = FALSE
     ); 
 
-cat("\nraster::crs(original.stack)\n");
-print( raster::crs(original.stack)   );
+cat("\nterra::crs(original.raster)\n");
+cat(   terra::crs(original.raster)   );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-proj4string.rHEALPix <- "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50";
-
-my.extent.rHEALPix <- raster::projectExtent(
-    object = original.stack,
-    crs    = proj4string.rHEALPix
+my.extent.rHEALPix <- terra::ext(
+    x = terra::project(
+        x      = original.raster,
+        y      = proj4string.rHEALPix,
+        method = 'bilinear'
+        )
     );
-
-cat("\nraster::crs(my.extent.rHEALPix)\n");
-print( raster::crs(my.extent.rHEALPix)   );
 
 cat("\nmy.extent.rHEALPix\n");
 print( my.extent.rHEALPix   );
 
-my.xmin.rHEALPix <- raster::xmin(raster::extent(my.extent.rHEALPix));
-my.xmax.rHEALPix <- raster::xmax(raster::extent(my.extent.rHEALPix));
+my.xmin.rHEALPix <- terra::xmin(my.extent.rHEALPix);
+my.xmax.rHEALPix <- terra::xmax(my.extent.rHEALPix);
 
-my.ymin.rHEALPix <- raster::ymin(raster::extent(my.extent.rHEALPix));
-my.ymax.rHEALPix <- raster::ymax(raster::extent(my.extent.rHEALPix));
+my.ymin.rHEALPix <- terra::ymin(my.extent.rHEALPix);
+my.ymax.rHEALPix <- terra::ymax(my.extent.rHEALPix);
 
 DF.extent.rHEALPix <- base::as.data.frame(base::matrix(
     data = c(
@@ -146,57 +145,6 @@ sf::st_write(
     obj = SF.extent.EPSG.4326,
     dsn = "extent-point-EPSG-4326.geojson"
     );
-
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-my.raster.rHEALPix <- raster::projectRaster(
-    from   = original.stack,
-    crs    = proj4string.rHEALPix,
-    method = 'bilinear'
-    ); 
-
-my.values.rHEALPix <- cbind(
-    raster::coordinates(obj = my.raster.rHEALPix),
-    raster::getValues(  x   = my.raster.rHEALPix)
-    );
-
-cat("\nraster::crs(my.raster.rHEALPix)\n");
-print( raster::crs(my.raster.rHEALPix)   );
-
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-proj4string.EPSG.4326 <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
-
-my.raster.rHEALPix <- raster::projectRaster(
-    from   = original.stack,
-    crs    = proj4string.EPSG.4326,
-    method = 'bilinear'
-    ); 
-
-new.extent <- raster::extent(x = my.raster.rHEALPix);
-
-cat("\nraster::crs(my.raster.rHEALPix) -- EPSG.4326\n");
-print( raster::crs(my.raster.rHEALPix) );
-
-cat("\nnew.extent -- EPSG.4326\n");
-print( new.extent );
-
-list.new.extent <- list(
-    'xmin' = new.extent@xmin, 
-    'xmax' = new.extent@xmax, 
-    'ymin' = new.extent@ymin,
-    'ymax' = new.extent@ymax
-    );
-
-new.json <- jsonlite::toJSON(list.new.extent) ;
-
-cat("\nnew.json -- EPSG.4326\n");
-print( new.json );
-
-# jsonlite::write_json(
-#     x    = new.json,
-#     path = "extent.json"
-#     );
-
-base::write(x = new.json, file = "extent.json");
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 

@@ -22,15 +22,11 @@ setwd( output.directory );
 
 ##################################################
 require(jsonlite);
-require(raster);
 require(sf);
+require(terra);
 
 # source supporting R code
 code.files <- c(
-    # "getPyModule-ee.R",
-    # "test-ee-Authenticate.R",
-    # "test-ee-batch-export.R",
-    # "test-googledrive.R"
     );
 
 for ( code.file in code.files ) {
@@ -67,14 +63,15 @@ my.tiff <- grep(x = tiff.files, pattern = "0717", value = TRUE);
 cat("\nmy.tiff\n");
 print( my.tiff   );
 
-original.stack  <- raster::stack(x = file.path(folder.tiff,my.tiff)); 
-original.values <- cbind(
-    raster::coordinates(obj = original.stack),
-    raster::getValues(  x   = original.stack)
+original.raster  <- terra::rast(x = file.path(folder.tiff,my.tiff)); 
+original.values <- as.data.frame(
+    x     = original.raster,
+    xy    = TRUE,
+    na.rm = FALSE
     ); 
 
-cat("\nraster::crs(original.stack)\n");
-print( raster::crs(original.stack)   );
+cat("\nterra::crs(original.raster)\n");
+print( terra::crs(original.raster)   );
 
 png(
     filename = "raster-original.png",
@@ -83,33 +80,33 @@ png(
     height =  16,
     units  = "in"
     );
-raster::plot(x = original.stack);
+terra::plot(x = original.raster);
 dev.off();
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 JSN.grid.extent.rHEALPix.planar <- jsonlite::read_json("extent-grid-rHEALPix-planar.json");
 
-my.raster.template <- raster::raster(
+my.raster.template <- terra::rast(
     crs   = JSN.grid.extent.rHEALPix.planar[['proj4string']],
-    xmn   = JSN.grid.extent.rHEALPix.planar[['xmin'       ]],
-    xmx   = JSN.grid.extent.rHEALPix.planar[['xmax'       ]],
-    ymn   = JSN.grid.extent.rHEALPix.planar[['ymin'       ]],
-    ymx   = JSN.grid.extent.rHEALPix.planar[['ymax'       ]],
+    xmin  = JSN.grid.extent.rHEALPix.planar[['xmin'       ]],
+    xmax  = JSN.grid.extent.rHEALPix.planar[['xmax'       ]],
+    ymin  = JSN.grid.extent.rHEALPix.planar[['ymin'       ]],
+    ymax  = JSN.grid.extent.rHEALPix.planar[['ymax'       ]],
     ncols = JSN.grid.extent.rHEALPix.planar[['ncols'      ]],
     nrows = JSN.grid.extent.rHEALPix.planar[['nrows'      ]]
     );
 
-reprojected.stack <- raster::projectRaster(
-    from   = original.stack,
-    to     = my.raster.template,
+reprojected.raster <- terra::project(
+    x      = original.raster,
+    y      = my.raster.template,
     method = "bilinear"
     );
 
-cat("\nraster::crs(reprojected.stack)\n");
-print( raster::crs(reprojected.stack)   );
+cat("\nterra::crs(reprojected.raster)\n");
+print( terra::crs(reprojected.raster)   );
 
-raster::writeRaster(
-    x        = reprojected.stack,
+terra::writeRaster(
+    x        = reprojected.raster,
     filename = "reprojected-to-rHEALPix-planar.tiff"
     );
 
@@ -120,20 +117,15 @@ png(
     height =  16,
     units  = "in"
     );
-raster::plot(x = reprojected.stack);
+terra::plot(x = reprojected.raster);
 dev.off();
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-DF.raster <- cbind(
-    raster::coordinates(reprojected.stack),
-    raster::values(     reprojected.stack)
-    );
-
-colnames(DF.raster) <- gsub(
-    x           = colnames(DF.raster),
-    pattern     = "^$",
-    replacement = "value"
-    );
+DF.raster <- as.data.frame(
+    x     = reprojected.raster,
+    xy    = TRUE,
+    na.rm = FALSE
+    ); 
 
 cat("\nDF.raster\n");
 print( DF.raster   );
@@ -173,8 +165,14 @@ DF.y.coords <- data.frame(
 DF.y.coords[,'diff'] <- DF.y.coords[,'reprojected'] - DF.y.coords[,'rHEALPixDGGS'];
 DF.y.coords[,'rel.diff'] <- 2 * abs(DF.y.coords[,'diff']) / ( abs(DF.y.coords[,'reprojected']) + abs(DF.y.coords[,'rHEALPixDGGS']) );
 
+cat("\nsummary(DF.x.coords)\n");
+print( summary(DF.x.coords)   );
+
 cat("\nDF.x.coords\n");
 print( DF.x.coords   );
+
+cat("\nsummary(DF.y.coords)\n");
+print( summary(DF.y.coords)   );
 
 cat("\nDF.y.coords\n");
 print( DF.y.coords   );
