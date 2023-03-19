@@ -46,6 +46,12 @@ cat(paste0("\n# n.cores = ",n.cores,"\n"));
 proj4string.rHEALPix <- "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50";
 proj4string.epsg4326 <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
 
+# NDVI.colour.palette <- rev(grDevices::terrain.colors(50));
+NDVI.colour.palette   <- grDevices::colorRampPalette(colors = c("gray25","green3"))(51);
+NDVI.values           <- seq(-1,1,0.04);
+
+colour.NA <- 'darkorange';
+
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 folder.tiff <- data.directory;
 folder.tiff <- gsub(x = folder.tiff, pattern = "github",   replacement = "gittmp"            );
@@ -76,12 +82,34 @@ print( terra::crs(original.raster)   );
 png(
     filename = "raster-original.png",
     res    = 300,
-    width  =  16,
-    height =  16,
+    width  =  12,
+    height =  12,
     units  = "in"
     );
-terra::plot(x = original.raster);
+terra::plot(
+    x     = original.raster,
+    col   = NDVI.colour.palette,
+    colNA = colour.NA
+    );
 dev.off();
+
+# my.ggplot <- ggplot2::ggplot();
+# # my.ggplot <- my.ggplot + ggspatial::layer_spatial(original.raster);
+# my.ggplot <- my.ggplot + ggplot2::geom_raster(data = original.raster);
+# my.ggplot <- my.ggplot + ggplot2::scale_fill_gradientn(
+#     colours  = NDVI.colour.palette,
+#     values   = NDVI.values,
+#     na.value = colour.NA
+#     );
+
+# ggplot2::ggsave(
+#     filename = "raster-original-ggplot2.png",
+#     plot     = my.ggplot,
+#     dpi      = 300,
+#     width    =  12,
+#     height   =  12,
+#     units    = "in"
+#     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 JSN.grid.extent.rHEALPix.planar <- jsonlite::read_json("extent-grid-rHEALPix-planar.json");
@@ -113,11 +141,15 @@ terra::writeRaster(
 png(
     filename = "raster-reprojected.png",
     res    = 300,
-    width  =  16,
-    height =  16,
+    width  =  12,
+    height =  12,
     units  = "in"
     );
-terra::plot(x = reprojected.raster);
+terra::plot(
+    x     = reprojected.raster,
+    col   = NDVI.colour.palette,
+    colNA = colour.NA
+    );
 dev.off();
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
