@@ -19,10 +19,12 @@ source ${HOME}/.gee_environment_variables
 if [[ "${OSTYPE}" =~ .*"linux".* ]]; then
   # cp ${HOME}/.gee_environment_variables ${outputDIR}/code/gee_environment_variables.txt
   pythonBinDIR=${GEE_ENV_DIR}/bin
+  RBinDIR=${pythonBinDIR}
 else
-  myEnvName=envTEST
-  myEnvFolder=`conda env list | egrep "${myEnvName}" | sed 's/[ ][ ]*/ /g' | cut -d' ' -f2,2`
-  pythonBinDIR=${myEnvFolder}/bin
+  pythonBinDIR=`which python`
+  pythonBinDIR=${pythonBinDIR//\/python/}
+  RBinDIR=`which R`
+  RBinDIR=${RBinDIR//\/R/}
 fi
 
 ########################################################
@@ -40,7 +42,7 @@ resolution=9
 myRscript=${codeDIR}/main-get-extent-point-rHEALPix-planar.R
 stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
 stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
-R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
+${RBinDIR}/R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
 sleep 2
 
 ########################################################
@@ -54,7 +56,7 @@ sleep 2
 myRscript=${codeDIR}/main-reproject.R
 stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
 stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
-R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
+${RBinDIR}/R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
 sleep 2
 
 ##################################################

@@ -19,10 +19,12 @@ source ${HOME}/.gee_environment_variables
 if [[ "${OSTYPE}" =~ .*"linux".* ]]; then
   # cp ${HOME}/.gee_environment_variables ${outputDIR}/code/gee_environment_variables.txt
   pythonBinDIR=${GEE_ENV_DIR}/bin
+  RBinDIR=${pythonBinDIR}
 else
-  myEnvName=envTEST
-  myEnvFolder=`conda env list | egrep "${myEnvName}" | sed 's/[ ][ ]*/ /g' | cut -d' ' -f2,2`
-  pythonBinDIR=${myEnvFolder}/bin
+  pythonBinDIR=`which python`
+  pythonBinDIR=${pythonBinDIR//\/python/}
+  RBinDIR=`which R`
+  RBinDIR=${RBinDIR//\/R/}
 fi
 
 ########################################################
@@ -41,7 +43,7 @@ ${pythonBinDIR}/python ${myPythonScript} ${dataDIR} ${codeDIR} ${outputDIR} ${go
 # myRscript=${codeDIR}/main.R
 # stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
 # stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
-# R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
+# ${RBinDIR}/R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
 
 ##################################################
 exit
