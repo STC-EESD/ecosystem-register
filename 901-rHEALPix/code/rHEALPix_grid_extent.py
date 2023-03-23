@@ -63,8 +63,8 @@ def get_extent_point2grid(
         shp_point_extent_planar = shp_point_extent_planar,
         grid_resolution         = grid_resolution
         )
-    print("\ndict_covering_cells_planar")
-    print(   dict_covering_cells_planar )
+    # print("\ndict_covering_cells_planar")
+    # print(   dict_covering_cells_planar )
 
     if grid_resolution < 10:
         gdf_covering_cells_planar = dict_covering_cells_planar['covering_cells_planar']
@@ -127,8 +127,8 @@ def get_covering_cells_planar(
         dr         = corner_lower_right,
         plane      = True
         )
-    print("\ncovering_cells:")
-    print(   covering_cells  )
+    # print("\ncovering_cells:")
+    # print(   covering_cells  )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     gdf_covering_cells = None
