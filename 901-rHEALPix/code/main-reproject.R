@@ -138,8 +138,12 @@ terra::writeRaster(
     filename = "reprojected-to-rHEALPix-planar.tiff"
     );
 
+output.png <- paste0(
+    "raster-reprojected-res-",
+    stringr::str_pad(string = as.character(resolution), width = 2, pad = "0"),
+    ".png");
 png(
-    filename = "raster-reprojected.png",
+    filename = output.png,
     res    = 300,
     width  =  12,
     height =  12,
