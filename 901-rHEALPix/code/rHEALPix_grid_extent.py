@@ -66,7 +66,7 @@ def get_extent_point2grid(
     print("\ndict_covering_cells_planar")
     print(   dict_covering_cells_planar )
 
-    if grid_resolution < 9:
+    if grid_resolution < 10:
         gdf_covering_cells_planar = dict_covering_cells_planar['covering_cells_planar']
         print("\ngdf_covering_cells_planar")
         print(   gdf_covering_cells_planar )
@@ -132,7 +132,7 @@ def get_covering_cells_planar(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     gdf_covering_cells = None
-    if grid_resolution < 9:
+    if grid_resolution < 10:
         gdf_covering_cells = geopandas.GeoDataFrame(
             columns = ['cellID','geometry'],
             crs     = rHEALPix_crs_obj
