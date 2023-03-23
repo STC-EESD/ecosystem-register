@@ -66,19 +66,18 @@ def get_extent_point2grid(
     print("\ndict_covering_cells_planar")
     print(   dict_covering_cells_planar )
 
-    gdf_covering_cells_planar = dict_covering_cells_planar['covering_cells_planar']
-    print("\ngdf_covering_cells_planar")
-    print(   gdf_covering_cells_planar )
-
-    gdf_covering_cells_epsg4326 = gdf_covering_cells_planar.to_crs(epsg = 4326)
-    print("\ngdf_covering_cells_epsg4326")
-    print(   gdf_covering_cells_epsg4326 )
-
-    shp_output = 'epsg4326-covering-cells-r' + '{:03d}'.format(int(grid_resolution)) + '.shp'
-    gdf_covering_cells_epsg4326.to_file(
-        filename = shp_output,
-        driver   = 'ESRI Shapefile'
-        )
+    if grid_resolution < 9:
+        gdf_covering_cells_planar = dict_covering_cells_planar['covering_cells_planar']
+        print("\ngdf_covering_cells_planar")
+        print(   gdf_covering_cells_planar )
+        gdf_covering_cells_epsg4326 = gdf_covering_cells_planar.to_crs(epsg = 4326)
+        print("\ngdf_covering_cells_epsg4326")
+        print(   gdf_covering_cells_epsg4326 )
+        shp_output = 'epsg4326-covering-cells-r' + '{:03d}'.format(int(grid_resolution)) + '.shp'
+        gdf_covering_cells_epsg4326.to_file(
+            filename = shp_output,
+            driver   = 'ESRI Shapefile'
+            )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     dict_output = {
@@ -132,27 +131,27 @@ def get_covering_cells_planar(
     print(   covering_cells  )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    gdf_covering_cells = geopandas.GeoDataFrame(
-        columns = ['cellID','geometry'],
-        crs     = rHEALPix_crs_obj
-        )
+    gdf_covering_cells = None
+    if grid_resolution < 9:
+        gdf_covering_cells = geopandas.GeoDataFrame(
+            columns = ['cellID','geometry'],
+            crs     = rHEALPix_crs_obj
+            )
 
-    print("\ngdf_covering_cells:")
-    print(   gdf_covering_cells  )
-
-    i = 0
-    for list_cells in covering_cells:
-        for myCell in list_cells:
-            myData = {
-                'cellID':   str(myCell),
-                'geometry': LineString(myCell.boundary(plane = True))
-                }
-            myRow = GeoDataFrame(index = [i], data = myData, crs = rHEALPix_crs_obj)
-            gdf_covering_cells = pandas.concat([gdf_covering_cells, myRow])
-            i = i + 1
-
-    print("\ngdf_covering_cells:")
-    print(   gdf_covering_cells  )
+        print("\ngdf_covering_cells:")
+        print(   gdf_covering_cells  )
+        i = 0
+        for list_cells in covering_cells:
+            for myCell in list_cells:
+                myData = {
+                    'cellID':   str(myCell),
+                    'geometry': LineString(myCell.boundary(plane = True))
+                    }
+                myRow = GeoDataFrame(index = [i], data = myData, crs = rHEALPix_crs_obj)
+                gdf_covering_cells = pandas.concat([gdf_covering_cells, myRow])
+                i = i + 1
+        print("\ngdf_covering_cells:")
+        print(   gdf_covering_cells  )
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     gdf_boundary_centroids = geopandas.GeoDataFrame(
