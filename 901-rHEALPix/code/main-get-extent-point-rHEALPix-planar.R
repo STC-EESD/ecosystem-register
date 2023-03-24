@@ -68,9 +68,54 @@ original.values <- as.data.frame(
     xy    = TRUE,
     na.rm = FALSE
     ); 
+cat("\noriginal.raster\n");
+print( original.raster   );
 
-cat("\nterra::crs(original.raster)\n");
-cat(   terra::crs(original.raster)   );
+my.extent.original <- terra::ext(x = original.raster);
+cat("\nmy.extent.original\n");
+print( my.extent.original   );
+
+my.xmin.original <- terra::xmin(my.extent.original);
+my.xmax.original <- terra::xmax(my.extent.original);
+
+my.ymin.original <- terra::ymin(my.extent.original);
+my.ymax.original <- terra::ymax(my.extent.original);
+
+DF.extent.original <- base::as.data.frame(base::matrix(
+    data = c(
+        my.xmin.original,my.ymin.original,
+        my.xmax.original,my.ymin.original,
+        my.xmax.original,my.ymax.original,
+        my.xmin.original,my.ymax.original
+        ),
+    dimnames = list(
+        c('xmin_ymin','xmax_ymin','xmax_ymax','xmin_ymax'),
+        c('x','y')
+        ),
+    byrow    = TRUE,
+    nrow     = 4,
+    ncol     = 2
+    ));
+DF.extent.original[,'label'] <- rownames(DF.extent.original);
+
+SF.extent.original <- sf::st_as_sf(
+    x      = DF.extent.original,
+    coords = c("x","y"),
+    crs    = proj4string.epsg4326
+    );
+
+cat("\nSF.extent.original\n");
+print( SF.extent.original   );
+
+sf::st_write(
+    obj = SF.extent.original,
+    dsn = "extent-point-original.shp"
+    );
+
+sf::st_write(
+    obj = SF.extent.original,
+    dsn = "extent-point-original.geojson"
+    );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 my.extent.rHEALPix <- terra::ext(
