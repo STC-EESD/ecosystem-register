@@ -101,7 +101,12 @@ DF.extent.original[,'label'] <- rownames(DF.extent.original);
 SF.extent.original <- sf::st_as_sf(
     x      = DF.extent.original,
     coords = c("x","y"),
-    crs    = proj4string.epsg4326
+    crs    = terra::crs(x = original.raster, proj = TRUE)
+    );
+
+SF.extent.original <- sf::st_transform(
+    x   = SF.extent.original,
+    crs = sf::st_crs(4326)
     );
 
 cat("\nSF.extent.original\n");
