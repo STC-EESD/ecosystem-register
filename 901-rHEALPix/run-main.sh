@@ -29,7 +29,8 @@ fi
 
 ########################################################
 googleDriveFolder=earthengine/ken
-resolution=9
+# resolution=9
+resolution=6
 
 ########################################################
 # myPythonScript=${codeDIR}/main-generate-grids.py
