@@ -1,0 +1,57 @@
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/annualCropInventory/supportdocument_documentdesupport/aci_crop_classifications_iac_classifications_des_cultures.csv
+unzipping: aci_crop_classifications_iac_classifications_des_cultures.csv.zip
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/annualCropInventory/data_donnees/tif/2021/aci_2021_ab_v2.zip
+unzipping: aci_2021_ab_v2.zip
+Archive:  aci_2021_ab_v2.zip
+  inflating: aci_2021_ab.tif         
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/annualCropInventory/data_donnees/tif/2021/aci_2021_bc_v2.zip
+unzipping: aci_2021_bc_v2.zip
+Archive:  aci_2021_bc_v2.zip
+  inflating: aci_2021_bc.tif         
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/annualCropInventory/data_donnees/tif/2021/aci_2021_mb_v1.zip
+unzipping: aci_2021_mb_v1.zip
+Archive:  aci_2021_mb_v1.zip
+  inflating: aci_2021_mb.tif         
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/annualCropInventory/data_donnees/tif/2021/aci_2021_nb_v1.zip
+unzipping: aci_2021_nb_v1.zip
+Archive:  aci_2021_nb_v1.zip
+  inflating: aci_2021_nb.tif         
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/annualCropInventory/data_donnees/tif/2021/aci_2021_nl_v1.zip
+unzipping: aci_2021_nl_v1.zip
+Archive:  aci_2021_nl_v1.zip
+  inflating: aci_2021_nl.tif         
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/annualCropInventory/data_donnees/tif/2021/aci_2021_ns_v1.zip
+unzipping: aci_2021_ns_v1.zip
+Archive:  aci_2021_ns_v1.zip
+  inflating: aci_2021_ns.tif         
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/annualCropInventory/data_donnees/tif/2021/aci_2021_on_v2.zip
+unzipping: aci_2021_on_v2.zip
+Archive:  aci_2021_on_v2.zip
+  inflating: aci_2021_on.tif         
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/annualCropInventory/data_donnees/tif/2021/aci_2021_pe_v1.zip
+unzipping: aci_2021_pe_v1.zip
+Archive:  aci_2021_pe_v1.zip
+  inflating: aci_2021_pe.tif         
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/annualCropInventory/data_donnees/tif/2021/aci_2021_qc_v1.zip
+unzipping: aci_2021_qc_v1.zip
+Archive:  aci_2021_qc_v1.zip
+  inflating: aci_2021_qc.tif         
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/annualCropInventory/data_donnees/tif/2021/aci_2021_sk_v2.zip
+unzipping: aci_2021_sk_v2.zip
+Archive:  aci_2021_sk_v2.zip
+  inflating: aci_2021_sk.tif         
+
+
+done
+
