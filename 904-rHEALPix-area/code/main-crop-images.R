@@ -27,6 +27,7 @@ require(terra);
 
 # source supporting R code
 code.files <- c(
+    "generate-rasters-provincial.R"
     );
 
 for ( code.file in code.files ) {
@@ -53,92 +54,75 @@ NDVI.values           <- seq(-1,1,0.04);
 colour.NA <- 'darkorange';
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-TIF.aci.2021.on <- file.path(data.directory,"2023-03-21.01","aci_2021_on","aci_2021_on.tif");
-cat("\nTIF.aci.2021.on\n");
-print( TIF.aci.2021.on   );
-
-aci.2021.on.raster <- terra::rast(x = TIF.aci.2021.on); 
-cat("\naci.2021.on.raster\n");
-print( aci.2021.on.raster   );
-
-png(
-    filename = "raster-ontario-aci-2021.png",
-    res    = 300,
-    width  =  12,
-    height =   8,
-    units  = "in"
+generate.rasters.provincial(
+    data.directory   = data.directory,
+    output.directory = "rasters-provincial"
     );
-terra::plot(
-    x     = aci.2021.on.raster,
-    # col = NDVI.colour.palette,
-    colNA = colour.NA
-    );
-dev.off();
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-folder.ottawa <- data.directory;
-folder.ottawa <- gsub(x =  folder.ottawa, pattern = "github",   replacement = "gittmp"            );
-folder.ottawa <- gsub(x =  folder.ottawa, pattern = "000-data", replacement = "991-generate-tiffs");
-folder.ottawa <- file.path(folder.ottawa,"output.2023-03-05.01");
-cat("\nfolder.ottawa\n");
-print( folder.ottawa   );
+# folder.ottawa <- data.directory;
+# folder.ottawa <- gsub(x =  folder.ottawa, pattern = "github",   replacement = "gittmp"            );
+# folder.ottawa <- gsub(x =  folder.ottawa, pattern = "000-data", replacement = "991-generate-tiffs");
+# folder.ottawa <- file.path(folder.ottawa,"output.2023-03-05.01");
+# cat("\nfolder.ottawa\n");
+# print( folder.ottawa   );
 
-tiff.files <- list.files(path = folder.ottawa, pattern = "\\.(tif|tiff)$");
-cat("\ntiff.files\n");
-print( tiff.files   );
+# tiff.files <- list.files(path = folder.ottawa, pattern = "\\.(tif|tiff)$");
+# cat("\ntiff.files\n");
+# print( tiff.files   );
 
-TIF.ottawa <- grep(x = tiff.files, pattern = "0717", value = TRUE);
+# TIF.ottawa <- grep(x = tiff.files, pattern = "0717", value = TRUE);
 
-ottawa.raster  <- terra::rast(x = file.path(folder.ottawa,TIF.ottawa)); 
-cat("\nottawa.raster\n");
-print( ottawa.raster   );
+# ottawa.raster  <- terra::rast(x = file.path(folder.ottawa,TIF.ottawa)); 
+# cat("\nottawa.raster\n");
+# print( ottawa.raster   );
 
-png(
-    filename = "raster-ottawa-ndvi.png",
-    res    = 300,
-    width  =  12,
-    height =  12,
-    units  = "in"
-    );
-terra::plot(
-    x     = ottawa.raster,
-    col   = NDVI.colour.palette,
-    colNA = colour.NA
-    );
-dev.off();
+# png(
+#     filename = "raster-ottawa-ndvi.png",
+#     res    = 300,
+#     width  =  12,
+#     height =  12,
+#     units  = "in"
+#     );
+# terra::plot(
+#     x     = ottawa.raster,
+#     col   = NDVI.colour.palette,
+#     colNA = colour.NA
+#     );
+# dev.off();
 
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-ottawa.raster.reprojected <- terra::project(
-    x = ottawa.raster,
-    y = terra::crs(x = aci.2021.on.raster)
-    );
-cat("\nottawa.raster.reprojected\n");
-print( ottawa.raster.reprojected   );
+# ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+# ottawa.raster.reprojected <- terra::project(
+#     x = ottawa.raster,
+#     y = terra::crs(x = aci.2021.on.raster)
+#     );
+# cat("\nottawa.raster.reprojected\n");
+# print( ottawa.raster.reprojected   );
 
-cat("\naci.2021.on.raster\n");
-print( aci.2021.on.raster   );
+# cat("\naci.2021.on.raster\n");
+# print( aci.2021.on.raster   );
 
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-aci.2021.ottawa.raster <- terra::crop(
-    x = aci.2021.on.raster,
-    y = ottawa.raster.reprojected
-    ); 
-cat("\naci.2021.ottawa.raster\n");
-print( aci.2021.ottawa.raster   );
+# ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+# aci.2021.ottawa.raster <- terra::crop(
+#     x = aci.2021.on.raster,
+#     y = ottawa.raster.reprojected
+#     ); 
+# cat("\naci.2021.ottawa.raster\n");
+# print( aci.2021.ottawa.raster   );
 
-png(
-    filename = "raster-ottawa-aci-2021.png",
-    res    = 300,
-    width  =  12,
-    height =  12,
-    units  = "in"
-    );
-terra::plot(
-    x     = aci.2021.ottawa.raster,
-    # col = NDVI.colour.palette,
-    colNA = colour.NA
-    );
-dev.off();
+# png(
+#     filename = "raster-ottawa-aci-2021.png",
+#     res    = 300,
+#     width  =  12,
+#     height =  12,
+#     units  = "in"
+#     );
+# terra::plot(
+#     x     = aci.2021.ottawa.raster,
+#     # col = NDVI.colour.palette,
+#     colNA = colour.NA
+#     );
+# dev.off();
 
 # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # JSN.grid.extent.rHEALPix.planar <- jsonlite::read_json("extent-grid-rHEALPix-planar.json");
