@@ -27,7 +27,9 @@ require(terra);
 
 # source supporting R code
 code.files <- c(
-    "generate-rasters-provincial.R"
+    "generate-rasters-provincial.R",
+    "generate-extents-aoi.R",
+    "get-aci-crop-classification.R"
     );
 
 for ( code.file in code.files ) {
@@ -43,6 +45,8 @@ is.macOS <- grepl(x = sessionInfo()[['platform']], pattern = 'apple', ignore.cas
 n.cores  <- ifelse(test = is.macOS, yes = 2, no = parallel::detectCores() - 1);
 cat(paste0("\n# n.cores = ",n.cores,"\n"));
 
+data.snapshot <-"2023-03-25.01";
+
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 proj4string.rHEALPix <- "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50";
 proj4string.epsg4326 <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
@@ -51,13 +55,40 @@ proj4string.epsg4326 <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
 NDVI.colour.palette   <- grDevices::colorRampPalette(colors = c("gray25","green3"))(51);
 NDVI.values           <- seq(-1,1,0.04);
 
-colour.NA <- 'darkorange';
+colour.NA <- 'black';
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-generate.rasters.provincial(
-    data.directory   = data.directory,
-    output.directory = "rasters-provincial"
+DF.aoi <- read.csv(
+    file = file.path(code.directory,"aoi.csv")
     );
+
+DF.aci.crop.classification <- get.aci.crop.classification(
+    data.directory = data.directory,
+    data.snapshot  = data.snapshot
+    );
+
+cat("\nstr(DF.aci.crop.classification)\n");
+print( str(DF.aci.crop.classification)   );
+
+cat("\nDF.aci.crop.classification\n");
+print( DF.aci.crop.classification   );
+
+generate.rasters.provincial(
+    DF.aci.crop.classification = DF.aci.crop.classification,
+    data.directory             = data.directory,
+    data.snapshot              = data.snapshot,
+    colour.NA                  = colour.NA,
+    output.directory           = "output-provinces"
+    );
+
+# generate.extents.aoi(
+#     DF.aoi           = DF.aoi,
+#     data.directory   = data.directory,
+#     data.snapshot    = data.snapshot,
+#     delta.lon        = 0.250, # 0.50
+#     delta.lat        = 0.125, # 0.25
+#     output.directory = "output-aoi"
+#     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # folder.ottawa <- data.directory;

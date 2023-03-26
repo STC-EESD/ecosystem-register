@@ -1,7 +1,10 @@
 
 generate.rasters.provincial <- function(
-    data.directory   = NULL,
-    output.directory = "rasters-provincial"
+    DF.aci.crop.classification = NULL,
+    data.directory             = NULL,
+    data.snapshot              = NULL,
+    colour.NA                  = 'black',
+    output.directory           = "output-provinces"
     ) {
 
     thisFunctionName <- "generate.rasters.provincial";
@@ -14,6 +17,23 @@ generate.rasters.provincial <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    temp.coltab <- data.frame(code = seq(0,255));
+    temp.coltab <- base::merge(
+        x     = temp.coltab,
+        y     = DF.aci.crop.classification[,c('code','red','green','blue')],
+        by    = 'code',
+        all.x = TRUE
+        );
+    temp.coltab[temp.coltab[,'code'] == 0, c('red','green','blue')] <- c(0,0,0);
+    colnames(temp.coltab) <- gsub(
+        x           = colnames(temp.coltab),
+        pattern     = "code",
+        replacement = "values"
+        );
+    temp.coltab[,'alpha'] <- 255;
+    temp.coltab <- temp.coltab[,c('red','green','blue','alpha')];
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     provincial.abbreviations <- c(
         'bc',
         'ab',
@@ -21,27 +41,26 @@ generate.rasters.provincial <- function(
         'mb',
         'on',
         'qc',
-        'ns',
         'nb',
-        'nl',
-        'pe'
+        'pe',
+        'ns',
+        'nl'
         );
 
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     for ( temp.province in provincial.abbreviations ) {
 
         cat("\n### province:",temp.province,"\n");
 
         TIF.aci.2021.province <- file.path(
             data.directory,
-            "2023-03-21.01",
-            paste0("aci_2021_",temp.province),
+            data.snapshot,
             paste0("aci_2021_",temp.province,".tif")
             );
         cat("\nTIF.aci.2021.province\n");
         print( TIF.aci.2021.province   );
 
-        temp.raster <- terra::rast(x = TIF.aci.2021.province); 
+        temp.raster <- terra::rast(x = TIF.aci.2021.province);
+        terra::coltab(temp.raster) <- temp.coltab;
         cat("\ntemp.raster\n");
         print( temp.raster   );
 
@@ -59,7 +78,6 @@ generate.rasters.provincial <- function(
             );
         terra::plot(
             x     = temp.raster,
-            # col = NDVI.colour.palette,
             colNA = colour.NA
             );
         dev.off();
