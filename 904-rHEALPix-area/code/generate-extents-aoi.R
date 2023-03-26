@@ -30,18 +30,6 @@ generate.extents.aoi <- function(
 
         cat("\n### aoi:",temp.aoi,", province:",temp.province,"\n");
 
-        TIF.aci.2021.province <- file.path(
-            data.directory,
-            data.snapshot,
-            paste0("aci_2021_",temp.province,".tif")
-            );
-        cat("\nTIF.aci.2021.province\n");
-        print( TIF.aci.2021.province   );
-
-        province.raster <- terra::rast(x = TIF.aci.2021.province); 
-        cat("\nprovince.raster\n");
-        print( province.raster   );
-
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         aoi.raster <- terra::rast(
             crs   = "epsg:4326",
@@ -59,6 +47,19 @@ generate.extents.aoi <- function(
             map.projection   = "lonlat",
             output.directory = output.directory
             );
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        TIF.aci.2021.province <- file.path(
+            data.directory,
+            data.snapshot,
+            paste0("aci_2021_",temp.province,".tif")
+            );
+        cat("\nTIF.aci.2021.province\n");
+        print( TIF.aci.2021.province   );
+
+        province.raster <- terra::rast(x = TIF.aci.2021.province); 
+        cat("\nprovince.raster\n");
+        print( province.raster   );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         aoi.raster <- terra::project(
