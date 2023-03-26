@@ -172,7 +172,7 @@ generate.extents.aoi_rHEALPix.extent <- function(
     cat("\nSF.extent.rHEALPix\n");
     print( SF.extent.rHEALPix   );
 
-    output.stem <- paste0("extent-point-",province,"-",aoi,"-rHEALPix-planar");
+    output.stem <- paste0("extent-point-rHEALPix-planar-",province,"-",aoi);
 
     sf::st_write(
         obj = SF.extent.rHEALPix,
@@ -193,7 +193,7 @@ generate.extents.aoi_rHEALPix.extent <- function(
     cat("\nSF.extent.EPSG.4326\n");
     print( SF.extent.EPSG.4326   );
 
-    output.stem <- paste0("extent-point-",province,"-",aoi,"-EPSG-4326");
+    output.stem <- paste0("extent-point-EPSG-4326-",province,"-",aoi);
 
     sf::st_write(
         obj = SF.extent.EPSG.4326,
