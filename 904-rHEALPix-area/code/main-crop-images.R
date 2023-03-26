@@ -80,7 +80,8 @@ DF.coltab <- base::merge(
     by    = 'code',
     all.x = TRUE
     );
-DF.coltab[DF.coltab[,'code'] == 0, c('red','green','blue')] <- c(0,0,0);
+DF.coltab[DF.coltab[,'code'] ==  0, c('red','green','blue')] <-   0 * c(1,1,1);
+DF.coltab[DF.coltab[,'code'] == 10, c('red','green','blue')] <- 255 * c(1,1,1);
 colnames(DF.coltab) <- gsub(
     x           = colnames(DF.coltab),
     pattern     = "code",
