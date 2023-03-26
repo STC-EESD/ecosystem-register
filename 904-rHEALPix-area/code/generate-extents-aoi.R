@@ -1,12 +1,13 @@
 
 generate.extents.aoi <- function(
-    DF.aoi           = NULL,
-    DF.coltab        = NULL,
-    data.directory   = NULL,
-    data.snapshot    = NULL,
-    delta.lon        = 1.00,
-    delta.lat        = 0.50,
-    output.directory = "output-aoi"
+    DF.aoi               = NULL,
+    DF.coltab            = NULL,
+    data.directory       = NULL,
+    data.snapshot        = NULL,
+    delta.lon            = 1.00,
+    delta.lat            = 0.50,
+    proj4string.rHEALPix = "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50",
+    output.directory     = "output-aoi"
     ) {
 
     thisFunctionName <- "generate.extents.aoi";
@@ -19,8 +20,8 @@ generate.extents.aoi <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    # for ( row.index in c(5,6) ) {
-    for ( row.index in seq(1,nrow(DF.aoi)) ) {
+    # for ( row.index in seq(1,nrow(DF.aoi)) ) {
+    for ( row.index in c(5,6) ) {
 
         temp.aoi      <- DF.aoi[row.index,'aoi'      ];
         temp.province <- DF.aoi[row.index,'province' ];
@@ -83,6 +84,15 @@ generate.extents.aoi <- function(
         dev.off();
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        generate.extents.aoi_rHEALPix.extent(
+            input.raster         = aoi.raster,
+            province             = temp.province,
+            aoi                  = temp.aoi,
+            proj4string.rHEALPix = proj4string.rHEALPix,
+            output.directory     = output.directory
+            );
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         aoi.cellsizes <- terra::cellSize(x = aoi.raster);
         DF.crosstab   <- terra::crosstab(c(aoi.raster,aoi.cellsizes));
 
@@ -110,3 +120,92 @@ generate.extents.aoi <- function(
     }
 
 ##################################################
+generate.extents.aoi_rHEALPix.extent <- function(
+    input.raster         = NULL,
+    province             = NULL,
+    aoi                  = NULL,
+    proj4string.rHEALPix = "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50",
+    output.directory     = "output-aoi"
+    ) {
+
+    my.extent.rHEALPix <- terra::ext(
+        x = terra::project(
+            x      = input.raster,
+            y      = proj4string.rHEALPix,
+            method = 'bilinear'
+            )
+        );
+
+    cat("\nmy.extent.rHEALPix\n");
+    print( my.extent.rHEALPix   );
+
+    my.xmin.rHEALPix <- terra::xmin(my.extent.rHEALPix);
+    my.xmax.rHEALPix <- terra::xmax(my.extent.rHEALPix);
+
+    my.ymin.rHEALPix <- terra::ymin(my.extent.rHEALPix);
+    my.ymax.rHEALPix <- terra::ymax(my.extent.rHEALPix);
+
+    DF.extent.rHEALPix <- base::as.data.frame(base::matrix(
+        data = c(
+            my.xmin.rHEALPix,my.ymin.rHEALPix,
+            my.xmax.rHEALPix,my.ymin.rHEALPix,
+            my.xmax.rHEALPix,my.ymax.rHEALPix,
+            my.xmin.rHEALPix,my.ymax.rHEALPix
+            ),
+        dimnames = list(
+            c('xmin_ymin','xmax_ymin','xmax_ymax','xmin_ymax'),
+            c('x','y')
+            ),
+        byrow    = TRUE,
+        nrow     = 4,
+        ncol     = 2
+        ));
+    DF.extent.rHEALPix[,'label'] <- rownames(DF.extent.rHEALPix);
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    SF.extent.rHEALPix <- sf::st_as_sf(
+        x      = DF.extent.rHEALPix,
+        coords = c("x","y"),
+        crs    = proj4string.rHEALPix 
+        );
+
+    cat("\nSF.extent.rHEALPix\n");
+    print( SF.extent.rHEALPix   );
+
+    output.stem <- paste0("extent-point-",province,"-",aoi,"-rHEALPix-planar");
+
+    sf::st_write(
+        obj = SF.extent.rHEALPix,
+        dsn = file.path(output.directory,paste0(output.stem,".shp"))
+        );
+
+    sf::st_write(
+        obj = SF.extent.rHEALPix,
+        dsn = file.path(output.directory,paste0(output.stem,".geojson"))
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    SF.extent.EPSG.4326 <- sf::st_transform(
+        x   = SF.extent.rHEALPix,
+        crs = sf::st_crs(4326)
+        );
+
+    cat("\nSF.extent.EPSG.4326\n");
+    print( SF.extent.EPSG.4326   );
+
+    output.stem <- paste0("extent-point-",province,"-",aoi,"-EPSG-4326");
+
+    sf::st_write(
+        obj = SF.extent.EPSG.4326,
+        dsn = file.path(output.directory,paste0(output.stem,".shp"))
+        );
+
+    sf::st_write(
+        obj = SF.extent.EPSG.4326,
+        dsn = file.path(output.directory,paste0(output.stem,".geojson"))
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    return( NULL );
+
+    }
