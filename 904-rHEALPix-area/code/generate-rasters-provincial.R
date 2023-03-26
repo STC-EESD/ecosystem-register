@@ -1,10 +1,10 @@
 
 generate.rasters.provincial <- function(
-    DF.aci.crop.classification = NULL,
-    data.directory             = NULL,
-    data.snapshot              = NULL,
-    colour.NA                  = 'black',
-    output.directory           = "output-provinces"
+    DF.coltab        = NULL,
+    data.directory   = NULL,
+    data.snapshot    = NULL,
+    colour.NA        = 'black',
+    output.directory = "output-provinces"
     ) {
 
     thisFunctionName <- "generate.rasters.provincial";
@@ -15,23 +15,6 @@ generate.rasters.provincial <- function(
     if ( !dir.exists(paths = output.directory) ) {
         dir.create(path = output.directory, recursive = TRUE);
         }
-
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    temp.coltab <- data.frame(code = seq(0,255));
-    temp.coltab <- base::merge(
-        x     = temp.coltab,
-        y     = DF.aci.crop.classification[,c('code','red','green','blue')],
-        by    = 'code',
-        all.x = TRUE
-        );
-    temp.coltab[temp.coltab[,'code'] == 0, c('red','green','blue')] <- c(0,0,0);
-    colnames(temp.coltab) <- gsub(
-        x           = colnames(temp.coltab),
-        pattern     = "code",
-        replacement = "values"
-        );
-    temp.coltab[,'alpha'] <- 255;
-    temp.coltab <- temp.coltab[,c('red','green','blue','alpha')];
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     provincial.abbreviations <- c(
@@ -60,7 +43,7 @@ generate.rasters.provincial <- function(
         print( TIF.aci.2021.province   );
 
         temp.raster <- terra::rast(x = TIF.aci.2021.province);
-        terra::coltab(temp.raster) <- temp.coltab;
+        terra::coltab(temp.raster) <- DF.coltab;
         cat("\ntemp.raster\n");
         print( temp.raster   );
 

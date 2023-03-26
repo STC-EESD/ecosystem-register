@@ -1,6 +1,7 @@
 
 generate.extents.aoi <- function(
     DF.aoi           = NULL,
+    DF.coltab        = NULL,
     data.directory   = NULL,
     data.snapshot    = NULL,
     delta.lon        = 1.00,
@@ -57,6 +58,7 @@ generate.extents.aoi <- function(
             x = province.raster,
             y = aoi.extent
             ); 
+        terra::coltab(aoi.raster) <- DF.coltab;
         cat("\naoi.raster\n");
         print( aoi.raster   );
 

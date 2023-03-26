@@ -73,22 +73,43 @@ print( str(DF.aci.crop.classification)   );
 cat("\nDF.aci.crop.classification\n");
 print( DF.aci.crop.classification   );
 
+DF.coltab <- data.frame(code = seq(0,255));
+DF.coltab <- base::merge(
+    x     = DF.coltab,
+    y     = DF.aci.crop.classification[,c('code','red','green','blue')],
+    by    = 'code',
+    all.x = TRUE
+    );
+DF.coltab[DF.coltab[,'code'] == 0, c('red','green','blue')] <- c(0,0,0);
+colnames(DF.coltab) <- gsub(
+    x           = colnames(DF.coltab),
+    pattern     = "code",
+    replacement = "values"
+    );
+DF.coltab[,'alpha'] <- 255;
+DF.coltab <- DF.coltab[,c('red','green','blue','alpha')];
+
+cat("\nDF.coltab\n");
+print( DF.coltab   );
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 generate.rasters.provincial(
-    DF.aci.crop.classification = DF.aci.crop.classification,
-    data.directory             = data.directory,
-    data.snapshot              = data.snapshot,
-    colour.NA                  = colour.NA,
-    output.directory           = "output-provinces"
+    DF.coltab        = DF.coltab,
+    data.directory   = data.directory,
+    data.snapshot    = data.snapshot,
+    colour.NA        = colour.NA,
+    output.directory = "output-provinces"
     );
 
-# generate.extents.aoi(
-#     DF.aoi           = DF.aoi,
-#     data.directory   = data.directory,
-#     data.snapshot    = data.snapshot,
-#     delta.lon        = 0.250, # 0.50
-#     delta.lat        = 0.125, # 0.25
-#     output.directory = "output-aoi"
-#     );
+generate.extents.aoi(
+    DF.aoi           = DF.aoi,
+    DF.coltab        = DF.coltab,
+    data.directory   = data.directory,
+    data.snapshot    = data.snapshot,
+    delta.lon        = 0.250, # 0.50
+    delta.lat        = 0.125, # 0.25
+    output.directory = "output-aoi"
+    );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # folder.ottawa <- data.directory;
