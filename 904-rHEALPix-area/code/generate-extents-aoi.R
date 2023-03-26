@@ -64,9 +64,13 @@ generate.extents.aoi <- function(
         print( aoi.raster   );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        output.png <- file.path(
-            output.directory,
-            paste0("raster-aci-2021-",temp.province,"-",temp.aoi,".png")
+        output.stem <- paste0("raster-buffered-",temp.province,"-",temp.aoi);
+        output.tiff <- file.path(output.directory,paste0(output.stem,".tiff"));
+        output.png  <- file.path(output.directory,paste0(output.stem,".png" ));
+
+        terra::writeRaster(
+            x        = aoi.raster,
+            filename = output.tiff
             );
 
         png(
@@ -103,7 +107,7 @@ generate.extents.aoi <- function(
 
         output.csv <- file.path(
             output.directory,
-            paste0("xtab-aci-2021-",temp.province,"-",temp.aoi,".csv")
+            paste0("xtab-",temp.province,"-",temp.aoi,".csv")
             );
         write.csv(
             file = output.csv, 
