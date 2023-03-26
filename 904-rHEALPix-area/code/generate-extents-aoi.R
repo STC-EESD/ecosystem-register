@@ -19,8 +19,8 @@ generate.extents.aoi <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    # for ( row.index in seq(1,nrow(DF.aoi)) ) {
-    for ( row.index in c(5,6) ) {
+    # for ( row.index in c(5,6) ) {
+    for ( row.index in seq(1,nrow(DF.aoi)) ) {
 
         temp.aoi      <- DF.aoi[row.index,'aoi'      ];
         temp.province <- DF.aoi[row.index,'province' ];
