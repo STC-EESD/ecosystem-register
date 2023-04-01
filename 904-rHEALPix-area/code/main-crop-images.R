@@ -28,6 +28,7 @@ require(terra);
 # source supporting R code
 code.files <- c(
     "generate-rasters-provincial.R",
+    "generate-rasters-utm-zones.R",
     "generate-extents-aoi.R",
     "get-aci-crop-classification.R"
     );
@@ -58,48 +59,17 @@ NDVI.values           <- seq(-1,1,0.04);
 colour.NA <- 'black';
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-DF.aoi <- read.csv(
-    file = file.path(code.directory,"aoi.csv")
-    );
-
-DF.aci.crop.classification <- get.aci.crop.classification(
-    data.directory = data.directory,
-    data.snapshot  = data.snapshot
-    );
-
-cat("\nstr(DF.aci.crop.classification)\n");
-print( str(DF.aci.crop.classification)   );
-
-cat("\nDF.aci.crop.classification\n");
-print( DF.aci.crop.classification   );
-
-DF.coltab <- data.frame(code = seq(0,255));
-DF.coltab <- base::merge(
-    x     = DF.coltab,
-    y     = DF.aci.crop.classification[,c('code','red','green','blue')],
-    by    = 'code',
-    all.x = TRUE
-    );
-DF.coltab[DF.coltab[,'code'] ==  0, c('red','green','blue')] <-   0 * c(1,1,1);
-DF.coltab[DF.coltab[,'code'] == 10, c('red','green','blue')] <- 255 * c(1,1,1);
-colnames(DF.coltab) <- gsub(
-    x           = colnames(DF.coltab),
-    pattern     = "code",
-    replacement = "values"
-    );
-DF.coltab[,'alpha'] <- 255;
-DF.coltab <- DF.coltab[,c('red','green','blue','alpha')];
-
-cat("\nDF.coltab\n");
-print( DF.coltab   );
-
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-generate.rasters.provincial(
+data.snapshot <-"2023-04-01.01";
+generate.rasters.utm.zones(
     DF.coltab        = DF.coltab,
     data.directory   = data.directory,
     data.snapshot    = data.snapshot,
     colour.NA        = colour.NA,
-    output.directory = "output-provinces"
+    output.directory = "output-utm-zones"
+    );
+
+DF.aoi <- read.csv(
+    file = file.path(code.directory,"aoi-semi-decadal-land-use-time-series.csv")
     );
 
 generate.extents.aoi(
@@ -112,6 +82,64 @@ generate.extents.aoi(
     output.directory = "output-aoi"
     );
 
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+# DF.aoi <- read.csv(
+#     file = file.path(code.directory,"aoi.csv")
+#     );
+
+# DF.aci.crop.classification <- get.aci.crop.classification(
+#     data.directory = data.directory,
+#     data.snapshot  = data.snapshot
+#     );
+
+# cat("\nstr(DF.aci.crop.classification)\n");
+# print( str(DF.aci.crop.classification)   );
+
+# cat("\nDF.aci.crop.classification\n");
+# print( DF.aci.crop.classification   );
+
+# DF.coltab <- data.frame(code = seq(0,255));
+# DF.coltab <- base::merge(
+#     x     = DF.coltab,
+#     y     = DF.aci.crop.classification[,c('code','red','green','blue')],
+#     by    = 'code',
+#     all.x = TRUE
+#     );
+# DF.coltab[DF.coltab[,'code'] ==  0, c('red','green','blue')] <-   0 * c(1,1,1);
+# DF.coltab[DF.coltab[,'code'] == 10, c('red','green','blue')] <- 255 * c(1,1,1);
+# colnames(DF.coltab) <- gsub(
+#     x           = colnames(DF.coltab),
+#     pattern     = "code",
+#     replacement = "values"
+#     );
+# DF.coltab[,'alpha'] <- 255;
+# DF.coltab <- DF.coltab[,c('red','green','blue','alpha')];
+
+# cat("\nDF.coltab\n");
+# print( DF.coltab   );
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+# generate.rasters.provincial(
+#     DF.coltab        = DF.coltab,
+#     data.directory   = data.directory,
+#     data.snapshot    = data.snapshot,
+#     colour.NA        = colour.NA,
+#     output.directory = "output-provinces"
+#     );
+
+# generate.extents.aoi(
+#     DF.aoi           = DF.aoi,
+#     DF.coltab        = DF.coltab,
+#     data.directory   = data.directory,
+#     data.snapshot    = data.snapshot,
+#     delta.lon        = 0.250, # 0.50
+#     delta.lat        = 0.125, # 0.25
+#     output.directory = "output-aoi"
+#     );
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # folder.ottawa <- data.directory;
 # folder.ottawa <- gsub(x =  folder.ottawa, pattern = "github",   replacement = "gittmp"            );

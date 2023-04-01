@@ -24,11 +24,11 @@ generate.extents.aoi <- function(
     for ( row.index in seq(1,nrow(DF.aoi)) ) {
 
         temp.aoi      <- DF.aoi[row.index,'aoi'      ];
-        temp.province <- DF.aoi[row.index,'province' ];
+        temp.utm.zone <- DF.aoi[row.index,'utmzone'  ];
         temp.lon      <- DF.aoi[row.index,'longitude'];
         temp.lat      <- DF.aoi[row.index,'latitude' ];
 
-        cat("\n### aoi:",temp.aoi,", province:",temp.province,"\n");
+        cat("\n### aoi:",temp.aoi,", UTM Zone:",temp.utm.zone,"\n");
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         aoi.raster <- terra::rast(
@@ -41,7 +41,7 @@ generate.extents.aoi <- function(
 
         generate.extents.aoi_extent(
             input.raster     = aoi.raster,
-            province         = temp.province,
+            utm.zone         = temp.utm.zone,
             aoi              = temp.aoi,
             proj4string      = terra::crs(x = aoi.raster, proj = TRUE),
             map.projection   = "lonlat",
@@ -49,35 +49,42 @@ generate.extents.aoi <- function(
             );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        TIF.aci.2021.province <- file.path(
+        temp.dir  <- paste0("LU2020_u",temp.utm.zone);
+        temp.tiff <- list.files(
+            path    = file.path(data.directory,data.snapshot,temp.dir),
+            pattern = "\\.tif$"
+            );
+
+        TIF.utm.zone <- file.path(
             data.directory,
             data.snapshot,
-            paste0("aci_2021_",temp.province,".tif")
+            temp.dir,
+            temp.tiff
             );
-        cat("\nTIF.aci.2021.province\n");
-        print( TIF.aci.2021.province   );
+        cat("\nTIF.utm.zone\n");
+        print( TIF.utm.zone   );
 
-        province.raster <- terra::rast(x = TIF.aci.2021.province); 
-        cat("\nprovince.raster\n");
-        print( province.raster   );
+        utm.zone.raster <- terra::rast(x = TIF.utm.zone); 
+        cat("\nutm.zone.raster\n");
+        print( utm.zone.raster   );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         aoi.raster <- terra::project(
             x = aoi.raster,
-            y = terra::crs(province.raster)
+            y = terra::crs(utm.zone.raster)
             );
         aoi.extent <- terra::ext(aoi.raster);
         aoi.raster <- terra::crop(
-            x = province.raster,
+            x = utm.zone.raster,
             y = aoi.extent
             ); 
-        terra::coltab(aoi.raster) <- DF.coltab;
+        # terra::coltab(aoi.raster) <- DF.coltab;
         cat("\naoi.raster\n");
         print( aoi.raster   );
 
         generate.extents.aoi_extent(
             input.raster     = aoi.raster,
-            province         = temp.province,
+            utm.zone         = temp.utm.zone,
             aoi              = temp.aoi,
             proj4string      = terra::crs(x = aoi.raster, proj = TRUE),
             map.projection   = "original",
@@ -86,7 +93,7 @@ generate.extents.aoi <- function(
 
         generate.extents.aoi_extent(
             input.raster     = aoi.raster,
-            province         = temp.province,
+            utm.zone         = temp.utm.zone,
             aoi              = temp.aoi,
             proj4string      = proj4string.rHEALPix,
             map.projection   = "rHEALPix-planar",
@@ -94,7 +101,7 @@ generate.extents.aoi <- function(
             );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        output.stem <- paste0("raster-buffered-",temp.province,"-",temp.aoi);
+        output.stem <- paste0("raster-buffered-",temp.utm.zone,"-",temp.aoi);
         output.tiff <- file.path(output.directory,paste0(output.stem,".tiff"));
         output.png  <- file.path(output.directory,paste0(output.stem,".png" ));
 
@@ -118,22 +125,22 @@ generate.extents.aoi <- function(
         dev.off();
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        aoi.cellsizes <- terra::cellSize(x = aoi.raster);
-        DF.crosstab   <- terra::crosstab(c(aoi.raster,aoi.cellsizes));
+        # aoi.cellsizes <- terra::cellSize(x = aoi.raster);
+        # DF.crosstab   <- terra::crosstab(c(aoi.raster,aoi.cellsizes));
 
-        cat("\nstr(DF.crosstab)\n");
-        print( str(DF.crosstab)   );
-        cat("\nDF.crosstab\n");
-        print( DF.crosstab   );
+        # cat("\nstr(DF.crosstab)\n");
+        # print( str(DF.crosstab)   );
+        # cat("\nDF.crosstab\n");
+        # print( DF.crosstab   );
 
-        output.csv <- file.path(
-            output.directory,
-            paste0("xtab-",temp.province,"-",temp.aoi,".csv")
-            );
-        write.csv(
-            file = output.csv, 
-            x    = DF.crosstab
-            );
+        # output.csv <- file.path(
+        #     output.directory,
+        #     paste0("xtab-",temp.province,"-",temp.aoi,".csv")
+        #     );
+        # write.csv(
+        #     file = output.csv, 
+        #     x    = DF.crosstab
+        #     );
 
         }
 
@@ -147,7 +154,7 @@ generate.extents.aoi <- function(
 ##################################################
 generate.extents.aoi_extent <- function(
     input.raster       = NULL,
-    province           = NULL,
+    utm.zone           = NULL,
     aoi                = NULL,
     proj4string.target = "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50",
     map.projection     = "rHEALPix-planar",
@@ -198,7 +205,7 @@ generate.extents.aoi_extent <- function(
     cat("\nSF.extent (target)\n");
     print( SF.extent );
 
-    output.stem <- paste0("extent-point-",map.projection,"-",province,"-",aoi);
+    output.stem <- paste0("extent-point-",map.projection,"-",utm.zone,"-",aoi);
 
     sf::st_write(
         obj = SF.extent,
@@ -219,7 +226,7 @@ generate.extents.aoi_extent <- function(
     cat("\nSF.extent (EPSG.4326)\n");
     print( SF.extent );
 
-    output.stem <- paste0("extent-point-",map.projection,"-",province,"-",aoi,"-lonlat");
+    output.stem <- paste0("extent-point-",map.projection,"-",utm.zone,"-",aoi,"-lonlat");
 
     sf::st_write(
         obj = SF.extent,
@@ -238,7 +245,7 @@ generate.extents.aoi_extent <- function(
 
 generate.extents.aoi_rHEALPix.extent <- function(
     input.raster         = NULL,
-    province             = NULL,
+    utm.zone             = NULL,
     aoi                  = NULL,
     proj4string.rHEALPix = "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50",
     output.directory     = "output-aoi"
@@ -288,7 +295,7 @@ generate.extents.aoi_rHEALPix.extent <- function(
     cat("\nSF.extent.rHEALPix\n");
     print( SF.extent.rHEALPix   );
 
-    output.stem <- paste0("extent-point-rHEALPix-planar-",province,"-",aoi);
+    output.stem <- paste0("extent-point-rHEALPix-planar-",utm.zone,"-",aoi);
 
     sf::st_write(
         obj = SF.extent.rHEALPix,
@@ -309,7 +316,7 @@ generate.extents.aoi_rHEALPix.extent <- function(
     cat("\nSF.extent.EPSG.4326\n");
     print( SF.extent.EPSG.4326   );
 
-    output.stem <- paste0("extent-point-EPSG-4326-",province,"-",aoi);
+    output.stem <- paste0("extent-point-EPSG-4326-",utm.zone,"-",aoi);
 
     sf::st_write(
         obj = SF.extent.EPSG.4326,
