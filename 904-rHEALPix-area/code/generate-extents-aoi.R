@@ -126,7 +126,10 @@ generate.extents.aoi <- function(
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         aoi.cellsizes <- terra::cellSize(x = aoi.raster);
-        DF.crosstab   <- terra::crosstab(c(aoi.raster,aoi.cellsizes));
+        DF.crosstab   <- terra::crosstab(
+            x      = c(aoi.cellsizes,aoi.raster),
+            digits = 5
+            );
 
         cat("\nstr(DF.crosstab)\n");
         print( str(DF.crosstab)   );
