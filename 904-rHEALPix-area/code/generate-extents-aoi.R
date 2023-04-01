@@ -125,22 +125,22 @@ generate.extents.aoi <- function(
         dev.off();
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        # aoi.cellsizes <- terra::cellSize(x = aoi.raster);
-        # DF.crosstab   <- terra::crosstab(c(aoi.raster,aoi.cellsizes));
+        aoi.cellsizes <- terra::cellSize(x = aoi.raster);
+        DF.crosstab   <- terra::crosstab(c(aoi.raster,aoi.cellsizes));
 
-        # cat("\nstr(DF.crosstab)\n");
-        # print( str(DF.crosstab)   );
-        # cat("\nDF.crosstab\n");
-        # print( DF.crosstab   );
+        cat("\nstr(DF.crosstab)\n");
+        print( str(DF.crosstab)   );
+        cat("\nDF.crosstab\n");
+        print( DF.crosstab   );
 
-        # output.csv <- file.path(
-        #     output.directory,
-        #     paste0("xtab-",temp.province,"-",temp.aoi,".csv")
-        #     );
-        # write.csv(
-        #     file = output.csv, 
-        #     x    = DF.crosstab
-        #     );
+        output.csv <- file.path(
+            output.directory,
+            paste0("xtab-",temp.utm.zone,"-",temp.aoi,".csv")
+            );
+        write.csv(
+            file = output.csv, 
+            x    = DF.crosstab
+            );
 
         }
 
