@@ -1,0 +1,235 @@
+
+downloading: http://www.cec.org/files/atlas_layers/1_terrestrial_ecosystems/1_01_4_land_cover_2010_250m/metadata.zip
+unzipping: metadata.zip
+Archive:  metadata.zip
+  inflating: NA_landcover_2010v2_250m_metadata.doc  
+
+downloading: http://www.cec.org/files/atlas_layers/1_terrestrial_ecosystems/1_01_4_land_cover_2010_250m/land_cover_2010v2_250m_tif.zip
+unzipping: land_cover_2010v2_250m_tif.zip
+Archive:  land_cover_2010v2_250m_tif.zip
+   creating: Land_cover_2010v2_250m_TIF/
+   creating: Land_cover_2010v2_250m_TIF/Hawaii_NALCMS_landcover_2010v3_250m/
+   creating: Land_cover_2010v2_250m_TIF/Hawaii_NALCMS_landcover_2010v3_250m/data/
+  inflating: Land_cover_2010v2_250m_TIF/Hawaii_NALCMS_landcover_2010v3_250m/data/Hawaii_NALCMS_landcover_2010v3_250m.tfw  
+  inflating: Land_cover_2010v2_250m_TIF/Hawaii_NALCMS_landcover_2010v3_250m/data/Hawaii_NALCMS_landcover_2010v3_250m.tif  
+  inflating: Land_cover_2010v2_250m_TIF/Hawaii_NALCMS_landcover_2010v3_250m/data/Hawaii_NALCMS_landcover_2010v3_250m.tif.aux.xml  
+  inflating: Land_cover_2010v2_250m_TIF/Hawaii_NALCMS_landcover_2010v3_250m/data/Hawaii_NALCMS_landcover_2010v3_250m.tif.ovr  
+ extracting: Land_cover_2010v2_250m_TIF/Hawaii_NALCMS_landcover_2010v3_250m/data/Hawaii_NALCMS_landcover_2010v3_250m.tif.vat.cpg  
+  inflating: Land_cover_2010v2_250m_TIF/Hawaii_NALCMS_landcover_2010v3_250m/data/Hawaii_NALCMS_landcover_2010v3_250m.tif.vat.dbf  
+  inflating: Land_cover_2010v2_250m_TIF/Hawaii_NALCMS_landcover_2010v3_250m/data/Hawaii_NALCMS_landcover_2010v3_250m.tif.xml  
+  inflating: Land_cover_2010v2_250m_TIF/Hawaii_NALCMS_landcover_2010v3_250m/NALCMS Class Definitions.doc  
+  inflating: Land_cover_2010v2_250m_TIF/Hawaii_NALCMS_landcover_2010v3_250m/NALCMS_legend_19class_english.lyrx  
+  inflating: Land_cover_2010v2_250m_TIF/Hawaii_NALCMS_landcover_2010v3_250m/NALCMS_legend_19class_french.lyrx  
+  inflating: Land_cover_2010v2_250m_TIF/Hawaii_NALCMS_landcover_2010v3_250m/NALCMS_legend_19class_spanish.lyrx  
+  inflating: Land_cover_2010v2_250m_TIF/NA_landcover_2010v2_250m_metadata.doc  
+   creating: Land_cover_2010v2_250m_TIF/NA_NALCMS_landcover_2010v2_250m/
+   creating: Land_cover_2010v2_250m_TIF/NA_NALCMS_landcover_2010v2_250m/data/
+  inflating: Land_cover_2010v2_250m_TIF/NA_NALCMS_landcover_2010v2_250m/data/NA_NALCMS_landcover_2010v2_250m.tfw  
+  inflating: Land_cover_2010v2_250m_TIF/NA_NALCMS_landcover_2010v2_250m/data/NA_NALCMS_landcover_2010v2_250m.tif  
+  inflating: Land_cover_2010v2_250m_TIF/NA_NALCMS_landcover_2010v2_250m/data/NA_NALCMS_landcover_2010v2_250m.tif.aux.xml  
+  inflating: Land_cover_2010v2_250m_TIF/NA_NALCMS_landcover_2010v2_250m/data/NA_NALCMS_landcover_2010v2_250m.tif.ovr  
+ extracting: Land_cover_2010v2_250m_TIF/NA_NALCMS_landcover_2010v2_250m/data/NA_NALCMS_landcover_2010v2_250m.tif.vat.cpg  
+  inflating: Land_cover_2010v2_250m_TIF/NA_NALCMS_landcover_2010v2_250m/data/NA_NALCMS_landcover_2010v2_250m.tif.vat.dbf  
+  inflating: Land_cover_2010v2_250m_TIF/NA_NALCMS_landcover_2010v2_250m/data/NA_NALCMS_landcover_2010v2_250m.tif.xml  
+  inflating: Land_cover_2010v2_250m_TIF/NA_NALCMS_landcover_2010v2_250m/NALCMS Class Definitions.doc  
+  inflating: Land_cover_2010v2_250m_TIF/NA_NALCMS_landcover_2010v2_250m/NALCMS_legend_19class_english.lyrx  
+  inflating: Land_cover_2010v2_250m_TIF/NA_NALCMS_landcover_2010v2_250m/NALCMS_legend_19class_french.lyrx  
+  inflating: Land_cover_2010v2_250m_TIF/NA_NALCMS_landcover_2010v2_250m/NALCMS_legend_19class_spanish.lyrx  
+  inflating: Land_cover_2010v2_250m_TIF/Release_Announcement_NALCMS_LC2010_LCC_2005-2010.doc  
+  inflating: Land_cover_2010v2_250m_TIF/Terms of use.doc  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u07.zip
+unzipping: LU2010_u07.zip
+Archive:  LU2010_u07.zip
+   creating: LU2010_u07/
+  inflating: LU2010_u07/LU2010_u07_v4_2022_02.tfw  
+  inflating: LU2010_u07/LU2010_u07_v4_2022_02.tif  
+  inflating: LU2010_u07/LU2010_u07_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u07/LU2010_u07_v4_2022_02.tif.clr  
+  inflating: LU2010_u07/LU2010_u07_v4_2022_02.tif.ovr  
+  inflating: LU2010_u07/LU2010_u07_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u07/LU2010_u07_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u08.zip
+unzipping: LU2010_u08.zip
+Archive:  LU2010_u08.zip
+   creating: LU2010_u08/
+  inflating: LU2010_u08/LU2010_u08_v4_2022_02.tfw  
+  inflating: LU2010_u08/LU2010_u08_v4_2022_02.tif  
+  inflating: LU2010_u08/LU2010_u08_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u08/LU2010_u08_v4_2022_02.tif.clr  
+  inflating: LU2010_u08/LU2010_u08_v4_2022_02.tif.ovr  
+  inflating: LU2010_u08/LU2010_u08_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u08/LU2010_u08_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u09.zip
+unzipping: LU2010_u09.zip
+Archive:  LU2010_u09.zip
+   creating: LU2010_u09/
+  inflating: LU2010_u09/LU2010_u09_v4_2022_02.tfw  
+  inflating: LU2010_u09/LU2010_u09_v4_2022_02.tif  
+  inflating: LU2010_u09/LU2010_u09_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u09/LU2010_u09_v4_2022_02.tif.clr  
+  inflating: LU2010_u09/LU2010_u09_v4_2022_02.tif.ovr  
+  inflating: LU2010_u09/LU2010_u09_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u09/LU2010_u09_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u10.zip
+unzipping: LU2010_u10.zip
+Archive:  LU2010_u10.zip
+   creating: LU2010_u10/
+  inflating: LU2010_u10/LU2010_u10_v4_2022_02.tfw  
+  inflating: LU2010_u10/LU2010_u10_v4_2022_02.tif  
+  inflating: LU2010_u10/LU2010_u10_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u10/LU2010_u10_v4_2022_02.tif.clr  
+  inflating: LU2010_u10/LU2010_u10_v4_2022_02.tif.ovr  
+  inflating: LU2010_u10/LU2010_u10_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u10/LU2010_u10_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u11.zip
+unzipping: LU2010_u11.zip
+Archive:  LU2010_u11.zip
+   creating: LU2010_u11/
+  inflating: LU2010_u11/LU2010_u11_v4_2022_02.tfw  
+  inflating: LU2010_u11/LU2010_u11_v4_2022_02.tif  
+  inflating: LU2010_u11/LU2010_u11_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u11/LU2010_u11_v4_2022_02.tif.clr  
+  inflating: LU2010_u11/LU2010_u11_v4_2022_02.tif.ovr  
+  inflating: LU2010_u11/LU2010_u11_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u11/LU2010_u11_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u12.zip
+unzipping: LU2010_u12.zip
+Archive:  LU2010_u12.zip
+   creating: LU2010_u12/
+  inflating: LU2010_u12/LU2010_u12_v4_2022_02.tfw  
+  inflating: LU2010_u12/LU2010_u12_v4_2022_02.tif  
+  inflating: LU2010_u12/LU2010_u12_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u12/LU2010_u12_v4_2022_02.tif.clr  
+  inflating: LU2010_u12/LU2010_u12_v4_2022_02.tif.ovr  
+  inflating: LU2010_u12/LU2010_u12_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u12/LU2010_u12_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u13.zip
+unzipping: LU2010_u13.zip
+Archive:  LU2010_u13.zip
+   creating: LU2010_u13/
+  inflating: LU2010_u13/LU2010_u13_v4_2022_02.tfw  
+  inflating: LU2010_u13/LU2010_u13_v4_2022_02.tif  
+  inflating: LU2010_u13/LU2010_u13_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u13/LU2010_u13_v4_2022_02.tif.clr  
+  inflating: LU2010_u13/LU2010_u13_v4_2022_02.tif.ovr  
+  inflating: LU2010_u13/LU2010_u13_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u13/LU2010_u13_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u14.zip
+unzipping: LU2010_u14.zip
+Archive:  LU2010_u14.zip
+   creating: LU2010_u14/
+  inflating: LU2010_u14/LU2010_u14_v4_2022_02.tfw  
+  inflating: LU2010_u14/LU2010_u14_v4_2022_02.tif  
+  inflating: LU2010_u14/LU2010_u14_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u14/LU2010_u14_v4_2022_02.tif.clr  
+  inflating: LU2010_u14/LU2010_u14_v4_2022_02.tif.ovr  
+  inflating: LU2010_u14/LU2010_u14_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u14/LU2010_u14_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u15.zip
+unzipping: LU2010_u15.zip
+Archive:  LU2010_u15.zip
+   creating: LU2010_u15/
+  inflating: LU2010_u15/LU2010_u15_v4_2022_02.tfw  
+  inflating: LU2010_u15/LU2010_u15_v4_2022_02.tif  
+  inflating: LU2010_u15/LU2010_u15_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u15/LU2010_u15_v4_2022_02.tif.clr  
+  inflating: LU2010_u15/LU2010_u15_v4_2022_02.tif.ovr  
+  inflating: LU2010_u15/LU2010_u15_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u15/LU2010_u15_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u16.zip
+unzipping: LU2010_u16.zip
+Archive:  LU2010_u16.zip
+   creating: LU2010_u16/
+  inflating: LU2010_u16/LU2010_u16_v4_2022_02.tfw  
+  inflating: LU2010_u16/LU2010_u16_v4_2022_02.tif  
+  inflating: LU2010_u16/LU2010_u16_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u16/LU2010_u16_v4_2022_02.tif.clr  
+  inflating: LU2010_u16/LU2010_u16_v4_2022_02.tif.ovr  
+  inflating: LU2010_u16/LU2010_u16_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u16/LU2010_u16_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u17.zip
+unzipping: LU2010_u17.zip
+Archive:  LU2010_u17.zip
+   creating: LU2010_u17/
+  inflating: LU2010_u17/LU2010_u17_v4_2022_02.tfw  
+  inflating: LU2010_u17/LU2010_u17_v4_2022_02.tif  
+  inflating: LU2010_u17/LU2010_u17_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u17/LU2010_u17_v4_2022_02.tif.clr  
+  inflating: LU2010_u17/LU2010_u17_v4_2022_02.tif.ovr  
+  inflating: LU2010_u17/LU2010_u17_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u17/LU2010_u17_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u18.zip
+unzipping: LU2010_u18.zip
+Archive:  LU2010_u18.zip
+   creating: LU2010_u18/
+  inflating: LU2010_u18/LU2010_u18_v4_2022_02.tfw  
+  inflating: LU2010_u18/LU2010_u18_v4_2022_02.tif  
+  inflating: LU2010_u18/LU2010_u18_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u18/LU2010_u18_v4_2022_02.tif.clr  
+  inflating: LU2010_u18/LU2010_u18_v4_2022_02.tif.ovr  
+  inflating: LU2010_u18/LU2010_u18_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u18/LU2010_u18_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u19.zip
+unzipping: LU2010_u19.zip
+Archive:  LU2010_u19.zip
+   creating: LU2010_u19/
+  inflating: LU2010_u19/LU2010_u19_v4_2022_02.tfw  
+  inflating: LU2010_u19/LU2010_u19_v4_2022_02.tif  
+  inflating: LU2010_u19/LU2010_u19_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u19/LU2010_u19_v4_2022_02.tif.clr  
+  inflating: LU2010_u19/LU2010_u19_v4_2022_02.tif.ovr  
+  inflating: LU2010_u19/LU2010_u19_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u19/LU2010_u19_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u20.zip
+unzipping: LU2010_u20.zip
+Archive:  LU2010_u20.zip
+   creating: LU2010_u20/
+  inflating: LU2010_u20/LU2010_u20_v4_2022_02.tfw  
+  inflating: LU2010_u20/LU2010_u20_v4_2022_02.tif  
+  inflating: LU2010_u20/LU2010_u20_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u20/LU2010_u20_v4_2022_02.tif.clr  
+  inflating: LU2010_u20/LU2010_u20_v4_2022_02.tif.ovr  
+  inflating: LU2010_u20/LU2010_u20_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u20/LU2010_u20_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u21.zip
+unzipping: LU2010_u21.zip
+Archive:  LU2010_u21.zip
+   creating: LU2010_u21/
+  inflating: LU2010_u21/LU2010_u21_v4_2022_02.tfw  
+  inflating: LU2010_u21/LU2010_u21_v4_2022_02.tif  
+  inflating: LU2010_u21/LU2010_u21_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u21/LU2010_u21_v4_2022_02.tif.clr  
+  inflating: LU2010_u21/LU2010_u21_v4_2022_02.tif.ovr  
+  inflating: LU2010_u21/LU2010_u21_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u21/LU2010_u21_v4_2022_02.tif.xml  
+
+downloading: https://agriculture.canada.ca/atlas/data_donnees/landuse/data_donnees/tif/2010/LU2010_u22.zip
+unzipping: LU2010_u22.zip
+Archive:  LU2010_u22.zip
+   creating: LU2010_u22/
+  inflating: LU2010_u22/LU2010_u22_v4_2022_02.tfw  
+  inflating: LU2010_u22/LU2010_u22_v4_2022_02.tif  
+  inflating: LU2010_u22/LU2010_u22_v4_2022_02.tif.aux.xml  
+  inflating: LU2010_u22/LU2010_u22_v4_2022_02.tif.clr  
+  inflating: LU2010_u22/LU2010_u22_v4_2022_02.tif.ovr  
+  inflating: LU2010_u22/LU2010_u22_v4_2022_02.tif.vat.dbf  
+  inflating: LU2010_u22/LU2010_u22_v4_2022_02.tif.xml  
+
+
+done
+
