@@ -111,14 +111,14 @@ SR.utm.zone <- terra::rast(x = TIF.utm.zone);
 cat("\nSR.utm.zone\n");
 print( SR.utm.zone   );
 
-temp.grid.point <- get.nearest.grid.point(
-    SF.point    = SF.ottawa.epsg.4326,
-    SR.utm.zone = SR.utm.zone,
-    mode        = 'centroid'
+SFC.grid.point <- get.nearest.grid.point(
+    SF.point  = SF.ottawa.epsg.4326,
+    SR.target = SR.utm.zone,
+    mode      = 'centroid'
     );
 
-cat("\ntemp.grid.point\n");
-print( temp.grid.point   );
+cat("\nSFC.grid.point\n");
+print( SFC.grid.point   );
 
 # SF.aoi <- sf::st_transform(
 #     x   = SF.aoi,
