@@ -114,7 +114,7 @@ print( SR.utm.zone   );
 SFC.grid.point <- get.nearest.grid.point(
     SF.point  = SF.ottawa.epsg.4326,
     SR.target = SR.utm.zone,
-    mode      = 'centroid'
+    mode      = 'vertex'
     );
 
 cat("\nSFC.grid.point\n");
