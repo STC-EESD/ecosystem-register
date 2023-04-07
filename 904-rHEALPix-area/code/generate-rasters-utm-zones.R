@@ -23,15 +23,26 @@ generate.rasters.utm.zones <- function(
         pad    = "0"
         ); 
 
-    for ( temp.zone.number in utm.zone.numbers ) {
+    for ( temp.utm.zone in utm.zone.numbers ) {
 
-        cat("\n### UTM Zone:",temp.zone.number,"\n");
+        cat("\n### UTM Zone:",temp.utm.zone,"\n");
 
-        temp.dir  <- paste0("LU2020_u",temp.zone.number);
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        temp.dir  <- paste0("LU20.+_u",temp.utm.zone,"$");
+        temp.dir <- list.files(
+            path    = file.path(data.directory,data.snapshot),
+            pattern = temp.dir
+            );
+
+        cat("\nfile.path(data.directory,data.snapshot,temp.dir)\n");
+        print( file.path(data.directory,data.snapshot,temp.dir)   );
+
         temp.tiff <- list.files(
             path    = file.path(data.directory,data.snapshot,temp.dir),
             pattern = "\\.tif$"
             );
+        cat("\ntemp.tiff\n");
+        print( temp.tiff   );
 
         TIF.utm.zone <- file.path(
             data.directory,
@@ -49,7 +60,7 @@ generate.rasters.utm.zones <- function(
 
         output.png <- file.path(
             output.directory,
-            paste0("raster-utm-zone-",temp.zone.number,".png")
+            paste0("raster-utm-zone-",temp.utm.zone,".png")
             );
 
         png(
