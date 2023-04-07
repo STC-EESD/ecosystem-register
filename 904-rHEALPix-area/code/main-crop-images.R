@@ -142,7 +142,9 @@ generate.extents.aoi(
     DF.coltab          = DF.coltab,
     data.directory     = data.directory,
     data.snapshot      = data.snapshot,
-    crosstab.precision = 7,
+    xncell             = 1000,
+    yncell             = 1000,
+    crosstab.precision =    7,
     output.directory   = "output-aoi"
     );
 
