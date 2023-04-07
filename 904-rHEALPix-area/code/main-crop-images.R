@@ -31,7 +31,8 @@ code.files <- c(
     "generate-rasters-utm-zones.R",
     "generate-extents-aoi.R",
     "get-aci-crop-classification.R",
-    "get-nearest-grid-point.R"
+    "get-nearest-grid-point.R",
+    "test-get-nearest-grid-point.R"
     );
 
 for ( code.file in code.files ) {
@@ -72,81 +73,27 @@ DF.aoi <- read.csv(
     file = file.path(code.directory,"aoi-semi-decadal-land-use-time-series.csv")
     );
 
-SF.aoi <- sf::st_as_sf(
-    x      = DF.aoi,
-    coords = c("longitude","latitude"),
-    crs    = sf::st_crs(4326)
-    );
-
-DF.ottawa <- DF.aoi[DF.aoi[,"aoi"] == "ottawa",];
-cat("\nDF.ottawa\n");
-print( DF.ottawa   );
-
-SF.epsg.4326.ottawa <- sf::st_as_sf(
-    x      = DF.ottawa,
-    crs    = sf::st_crs(4326),
-    coords = c("longitude","latitude")
-    );
-cat("\nSF.epsg.4326.ottawa\n");
-print( SF.epsg.4326.ottawa   );
-# SF.ottawa.utm <- sf::st_transform(
-#     x   = SF.epsg.4326.ottawa,
-#     crs = sf::st_crs(terra::crs(my.SpatRaster,proj = TRUE))
+# SF.aoi <- sf::st_as_sf(
+#     x      = DF.aoi,
+#     coords = c("longitude","latitude"),
+#     crs    = sf::st_crs(4326)
 #     );
 
-temp.dir  <- paste0("LU2010_u",DF.ottawa[,'utmzone']);
-temp.tiff <- list.files(
-    path    = file.path(data.directory,data.snapshot,temp.dir),
-    pattern = "\\.tif$"
+test_get.nearest.grid.point(
+    DF.aoi           = DF.aoi,
+    output.directory = "test-get-nearest-grid-points"
     );
 
-TIF.utm.zone <- file.path(
-    data.directory,
-    data.snapshot,
-    temp.dir,
-    temp.tiff
-    );
-cat("\nTIF.utm.zone\n");
-print( TIF.utm.zone   );
-
-SR.utm.zone <- terra::rast(x = TIF.utm.zone); 
-cat("\nSR.utm.zone\n");
-print( SR.utm.zone   );
-
-# SFC.grid.point <- get.nearest.grid.point(
-#     SF.point          = SF.epsg.4326.ottawa,
-#     SR.target         = SR.utm.zone,
-#     point.type        = 'vertex',
-#     half.side.length  = 150,
-#     save.shape.files  = TRUE,
-#     shape.file.prefix = "visualize-vertex"
+# generate.extents.aoi(
+#     DF.aoi             = DF.aoi,
+#     DF.coltab          = DF.coltab,
+#     data.directory     = data.directory,
+#     data.snapshot      = data.snapshot,
+#     xncell             = 1000,
+#     yncell             = 1000,
+#     crosstab.precision =    7,
+#     output.directory   = "output-aoi"
 #     );
-
-# cat("\nSFC.grid.point\n");
-# print( SFC.grid.point   );
-
-# SFC.grid.point <- get.nearest.grid.point(
-#     SF.point          = SF.epsg.4326.ottawa,
-#     SR.target         = SR.utm.zone,
-#     point.type        = 'centroid',
-#     half.side.length  = 150,
-#     save.shape.files  = TRUE,
-#     shape.file.prefix = "visualize-centroid"
-#     );
-
-# cat("\nSFC.grid.point\n");
-# print( SFC.grid.point   );
-
-generate.extents.aoi(
-    DF.aoi             = DF.aoi,
-    DF.coltab          = DF.coltab,
-    data.directory     = data.directory,
-    data.snapshot      = data.snapshot,
-    xncell             = 1000,
-    yncell             = 1000,
-    crosstab.precision =    7,
-    output.directory   = "output-aoi"
-    );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # DF.aoi <- read.csv(
