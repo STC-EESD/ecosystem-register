@@ -192,8 +192,8 @@ generate.extents.aoi <- function(
 
         cat("\nstr(DF.crosstab)\n");
         print( str(DF.crosstab)   );
-        cat("\nDF.crosstab\n");
-        print( DF.crosstab   );
+        cat("\nutils::head(x = DF.crosstab, n = 20L)\n");
+        print( utils::head(x = DF.crosstab, n = 20L)   );
 
         output.csv <- file.path(
             output.directory,
