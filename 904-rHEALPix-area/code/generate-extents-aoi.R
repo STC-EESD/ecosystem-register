@@ -103,43 +103,24 @@ generate.extents.aoi <- function(
             ymax = DF.nearest.grid.point[1,'Y'] + yncell * yres.utm.zone
             ));
 
-        SR.cropped <- terra::crop(
-            x = SR.utm.zone,
-            y = crop.extent
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        output.stem <- paste0("raster-buffered-",temp.utm.zone,"-",temp.aoi);
+        output.tiff <- file.path(output.directory,paste0(output.stem,".tiff"));
+        output.png  <- file.path(output.directory,paste0(output.stem,".png" ));
+
+        terra::crop(
+            x        = SR.utm.zone,
+            y        = crop.extent,
+            filename = output.png
             );
+        terra::crop(
+            x        = SR.utm.zone,
+            y        = crop.extent,
+            filename = output.tiff
+            );
+        SR.cropped <- terra::rast(output.tiff);
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        # aoi.raster <- terra::rast(
-        #     crs   = "epsg:4326",
-        #     xmin  = temp.lon - delta.lon,
-        #     xmax  = temp.lon + delta.lon,
-        #     ymin  = temp.lat - delta.lat,
-        #     ymax  = temp.lat + delta.lat
-        #     );
-
-        # generate.extents.aoi_extent(
-        #     input.raster     = aoi.raster,
-        #     utm.zone         = temp.utm.zone,
-        #     aoi              = temp.aoi,
-        #     proj4string      = terra::crs(x = aoi.raster, proj = TRUE),
-        #     map.projection   = "lonlat",
-        #     output.directory = output.directory
-        #     );
-
-        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        # aoi.raster <- terra::project(
-        #     x = aoi.raster,
-        #     y = terra::crs(SR.utm.zone)
-        #     );
-        # aoi.extent <- terra::ext(aoi.raster);
-        # aoi.raster <- terra::crop(
-        #     x = SR.utm.zone,
-        #     y = aoi.extent
-        #     ); 
-        # # terra::coltab(aoi.raster) <- DF.coltab;
-        # cat("\naoi.raster\n");
-        # print( aoi.raster   );
-
         generate.extents.aoi_extent(
             input.raster     = SR.cropped, # aoi.raster,
             utm.zone         = temp.utm.zone,
@@ -159,31 +140,12 @@ generate.extents.aoi <- function(
             );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        output.stem <- paste0("raster-buffered-",temp.utm.zone,"-",temp.aoi);
-        output.tiff <- file.path(output.directory,paste0(output.stem,".tiff"));
-        output.png  <- file.path(output.directory,paste0(output.stem,".png" ));
-
-        terra::writeRaster(
-            x        = SR.cropped, # aoi.raster,
-            filename = output.tiff
+        terra::cellSize(
+            x         = SR.cropped,
+            filename  = "tmp-cellSize.tiff"
             );
+        SR.cellsizes <- terra::rast("tmp-cellSize.tiff");
 
-        png(
-            filename = output.png,
-            res      = 300,
-            width    =  12,
-            height   =  10,
-            units    = "in"
-            );
-        terra::plot(
-            x     = SR.cropped, # aoi.raster,
-            # col = NDVI.colour.palette,
-            colNA = colour.NA
-            );
-        dev.off();
-
-        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        SR.cellsizes <- terra::cellSize(x = SR.cropped);
         DF.crosstab  <- terra::crosstab(
             x      = c(SR.cellsizes,SR.cropped),
             digits = crosstab.precision
@@ -202,6 +164,8 @@ generate.extents.aoi <- function(
             file = output.csv, 
             x    = DF.crosstab
             );
+
+        base::file.remove("tmp-cellSize.tiff");
 
         }
 
