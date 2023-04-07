@@ -4,10 +4,9 @@ generate.extents.aoi <- function(
     DF.coltab            = NULL,
     data.directory       = NULL,
     data.snapshot        = NULL,
-    # delta.lon          = 1.00,
-    # delta.lat          = 0.50,
     xncell               = 1000,
     yncell               = 1000,
+    crosstab.precision   =    4,
     proj4string.rHEALPix = "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50",
     output.directory     = "output-aoi"
     ) {
@@ -187,7 +186,7 @@ generate.extents.aoi <- function(
         SR.cellsizes <- terra::cellSize(x = SR.cropped);
         DF.crosstab  <- terra::crosstab(
             x      = c(SR.cellsizes,SR.cropped),
-            digits = 7
+            digits = crosstab.precision
             );
 
         cat("\nstr(DF.crosstab)\n");

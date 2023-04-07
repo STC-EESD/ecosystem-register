@@ -138,13 +138,12 @@ print( SR.utm.zone   );
 # print( SFC.grid.point   );
 
 generate.extents.aoi(
-    DF.aoi           = DF.aoi,
-    DF.coltab        = DF.coltab,
-    data.directory   = data.directory,
-    data.snapshot    = data.snapshot,
-    # delta.lon      = 0.250, # 0.50
-    # delta.lat      = 0.125, # 0.25
-    output.directory = "output-aoi"
+    DF.aoi             = DF.aoi,
+    DF.coltab          = DF.coltab,
+    data.directory     = data.directory,
+    data.snapshot      = data.snapshot,
+    crosstab.precision = 7,
+    output.directory   = "output-aoi"
     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
