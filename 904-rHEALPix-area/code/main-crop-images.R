@@ -115,11 +115,24 @@ cat("\nSR.utm.zone\n");
 print( SR.utm.zone   );
 
 SFC.grid.point <- get.nearest.grid.point(
-    SF.point         = SF.ottawa.epsg.4326,
-    SR.target        = SR.utm.zone,
-    point.type       = 'vertex',
-    half.side.length = 150,
-    save.shape.files = TRUE
+    SF.point          = SF.ottawa.epsg.4326,
+    SR.target         = SR.utm.zone,
+    point.type        = 'vertex',
+    half.side.length  = 150,
+    save.shape.files  = TRUE,
+    shape.file.prefix = "visualize-vertex"
+    );
+
+cat("\nSFC.grid.point\n");
+print( SFC.grid.point   );
+
+SFC.grid.point <- get.nearest.grid.point(
+    SF.point          = SF.ottawa.epsg.4326,
+    SR.target         = SR.utm.zone,
+    point.type        = 'centroid',
+    half.side.length  = 150,
+    save.shape.files  = TRUE,
+    shape.file.prefix = "visualize-centroid"
     );
 
 cat("\nSFC.grid.point\n");
