@@ -111,14 +111,22 @@ generate.extents.aoi <- function(
         terra::crop(
             x        = SR.utm.zone,
             y        = crop.extent,
-            filename = output.png
-            );
-        terra::crop(
-            x        = SR.utm.zone,
-            y        = crop.extent,
             filename = output.tiff
             );
         SR.cropped <- terra::rast(output.tiff);
+
+        png(
+            filename = output.png,
+            res      = 300,
+            width    =  12,
+            height   =  10,
+            units    = "in"
+            );
+        terra::plot(
+            x     = SR.cropped,
+            colNA = colour.NA
+            );
+        dev.off();
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         generate.extents.aoi_extent(
