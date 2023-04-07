@@ -47,7 +47,7 @@ is.macOS <- grepl(x = sessionInfo()[['platform']], pattern = 'apple', ignore.cas
 n.cores  <- ifelse(test = is.macOS, yes = 2, no = parallel::detectCores() - 1);
 cat(paste0("\n# n.cores = ",n.cores,"\n"));
 
-data.snapshot <-"2023-03-25.01";
+data.snapshot <-"2023-04-05.01";
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 proj4string.rHEALPix <- "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50";
@@ -60,7 +60,6 @@ NDVI.values           <- seq(-1,1,0.04);
 colour.NA <- 'black';
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-data.snapshot <-"2023-04-05.01";
 # generate.rasters.utm.zones(
 #     DF.coltab        = DF.coltab,
 #     data.directory   = data.directory,
@@ -83,15 +82,15 @@ DF.ottawa <- DF.aoi[DF.aoi[,"aoi"] == "ottawa",];
 cat("\nDF.ottawa\n");
 print( DF.ottawa   );
 
-SF.ottawa.epsg.4326 <- sf::st_as_sf(
+SF.epsg.4326.ottawa <- sf::st_as_sf(
     x      = DF.ottawa,
     crs    = sf::st_crs(4326),
     coords = c("longitude","latitude")
     );
-cat("\nSF.ottawa.epsg.4326\n");
-print( SF.ottawa.epsg.4326   );
+cat("\nSF.epsg.4326.ottawa\n");
+print( SF.epsg.4326.ottawa   );
 # SF.ottawa.utm <- sf::st_transform(
-#     x   = SF.ottawa.epsg.4326,
+#     x   = SF.epsg.4326.ottawa,
 #     crs = sf::st_crs(terra::crs(my.SpatRaster,proj = TRUE))
 #     );
 
@@ -114,44 +113,39 @@ SR.utm.zone <- terra::rast(x = TIF.utm.zone);
 cat("\nSR.utm.zone\n");
 print( SR.utm.zone   );
 
-SFC.grid.point <- get.nearest.grid.point(
-    SF.point          = SF.ottawa.epsg.4326,
-    SR.target         = SR.utm.zone,
-    point.type        = 'vertex',
-    half.side.length  = 150,
-    save.shape.files  = TRUE,
-    shape.file.prefix = "visualize-vertex"
-    );
-
-cat("\nSFC.grid.point\n");
-print( SFC.grid.point   );
-
-SFC.grid.point <- get.nearest.grid.point(
-    SF.point          = SF.ottawa.epsg.4326,
-    SR.target         = SR.utm.zone,
-    point.type        = 'centroid',
-    half.side.length  = 150,
-    save.shape.files  = TRUE,
-    shape.file.prefix = "visualize-centroid"
-    );
-
-cat("\nSFC.grid.point\n");
-print( SFC.grid.point   );
-
-# SF.aoi <- sf::st_transform(
-#     x   = SF.aoi,
-#     crs = sf::st_crs(terra::crs(my.SpatRaster, proj = TRUE))
+# SFC.grid.point <- get.nearest.grid.point(
+#     SF.point          = SF.epsg.4326.ottawa,
+#     SR.target         = SR.utm.zone,
+#     point.type        = 'vertex',
+#     half.side.length  = 150,
+#     save.shape.files  = TRUE,
+#     shape.file.prefix = "visualize-vertex"
 #     );
 
-# generate.extents.aoi(
-#     DF.aoi           = DF.aoi,
-#     DF.coltab        = DF.coltab,
-#     data.directory   = data.directory,
-#     data.snapshot    = data.snapshot,
-#     delta.lon        = 0.250, # 0.50
-#     delta.lat        = 0.125, # 0.25
-#     output.directory = "output-aoi"
+# cat("\nSFC.grid.point\n");
+# print( SFC.grid.point   );
+
+# SFC.grid.point <- get.nearest.grid.point(
+#     SF.point          = SF.epsg.4326.ottawa,
+#     SR.target         = SR.utm.zone,
+#     point.type        = 'centroid',
+#     half.side.length  = 150,
+#     save.shape.files  = TRUE,
+#     shape.file.prefix = "visualize-centroid"
 #     );
+
+# cat("\nSFC.grid.point\n");
+# print( SFC.grid.point   );
+
+generate.extents.aoi(
+    DF.aoi           = DF.aoi,
+    DF.coltab        = DF.coltab,
+    data.directory   = data.directory,
+    data.snapshot    = data.snapshot,
+    # delta.lon      = 0.250, # 0.50
+    # delta.lat      = 0.125, # 0.25
+    output.directory = "output-aoi"
+    );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # DF.aoi <- read.csv(
