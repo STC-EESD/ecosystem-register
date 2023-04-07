@@ -3,7 +3,8 @@ get.nearest.grid.point <- function(
     SF.point         = NULL,
     SR.target        = NULL,
     mode             = 'vertex', # 'centroid'
-    half.side.length = 1e3
+    half.side.length = 1e3,
+    save.shape.files = FALSE
     ) {
 
     thisFunctionName <- "generate.extents.aoi";
@@ -33,6 +34,9 @@ get.nearest.grid.point <- function(
         );
 
     DF.coords <- terra::crds(SR.cropped);
+    cat("\nhead(DF.coords)\n");
+    print( head(DF.coords)   );
+
     x.coords  <- sort(unique(DF.coords[,'x']));
     y.coords  <- sort(unique(DF.coords[,'y']));
 
@@ -53,6 +57,49 @@ get.nearest.grid.point <- function(
         );
     cat("\nSFC.output\n");
     print( SFC.output   );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    if ( save.shape.files ) {
+
+        SF.point.epsg.4326 <- sf::st_transform(
+            x   = SF.point,
+            crs = sf::st_crs(4326)
+            );
+
+        sf::st_write(
+            obj = SF.point.epsg.4326,
+            dsn = "point-given.shp"
+            );
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        SF.output.epsg.4326 <- sf::st_transform(
+            x   = SFC.output,
+            crs = sf::st_crs(4326)
+            );
+
+        sf::st_write(
+            obj = SF.output.epsg.4326,
+            dsn = paste0("point-nearest-",mode,".shp")
+            );
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        SF.coords <- sf::st_as_sf(
+            x      = as.data.frame(DF.coords),
+            crs    = sf::st_crs(terra::crs(SR.cropped, proj = TRUE)),
+            coords = c('x','y')
+            );
+
+        SF.coords <- sf::st_transform(
+            x   = SF.coords,
+            crs = sf::st_crs(4326)
+            );
+
+        sf::st_write(
+            obj = SF.coords,
+            dsn = "grid-centroids.shp"
+            );
+
+        }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
