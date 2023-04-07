@@ -80,6 +80,9 @@ SF.aoi <- sf::st_as_sf(
     );
 
 DF.ottawa <- DF.aoi[DF.aoi[,"aoi"] == "ottawa",];
+cat("\nDF.ottawa\n");
+print( DF.ottawa   );
+
 SF.ottawa.epsg.4326 <- sf::st_as_sf(
     x      = DF.ottawa,
     crs    = sf::st_crs(4326),
@@ -112,9 +115,11 @@ cat("\nSR.utm.zone\n");
 print( SR.utm.zone   );
 
 SFC.grid.point <- get.nearest.grid.point(
-    SF.point  = SF.ottawa.epsg.4326,
-    SR.target = SR.utm.zone,
-    mode      = 'vertex'
+    SF.point         = SF.ottawa.epsg.4326,
+    SR.target        = SR.utm.zone,
+    mode             = 'vertex',
+    half.side.length = 150,
+    save.shape.files = TRUE
     );
 
 cat("\nSFC.grid.point\n");
