@@ -30,7 +30,8 @@ code.files <- c(
     "generate-rasters-provincial.R",
     "generate-rasters-utm-zones.R",
     "generate-extents-aoi.R",
-    "get-aci-crop-classification.R"
+    "get-aci-crop-classification.R",
+    "get-nearest-grid-point.R"
     );
 
 for ( code.file in code.files ) {
@@ -59,28 +60,80 @@ NDVI.values           <- seq(-1,1,0.04);
 colour.NA <- 'black';
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-data.snapshot <-"2023-04-01.01";
-generate.rasters.utm.zones(
-    DF.coltab        = DF.coltab,
-    data.directory   = data.directory,
-    data.snapshot    = data.snapshot,
-    colour.NA        = colour.NA,
-    output.directory = "output-utm-zones"
-    );
+data.snapshot <-"2023-04-05.01";
+# generate.rasters.utm.zones(
+#     DF.coltab        = DF.coltab,
+#     data.directory   = data.directory,
+#     data.snapshot    = data.snapshot,
+#     colour.NA        = colour.NA,
+#     output.directory = "output-utm-zones"
+#     );
 
 DF.aoi <- read.csv(
     file = file.path(code.directory,"aoi-semi-decadal-land-use-time-series.csv")
     );
 
-generate.extents.aoi(
-    DF.aoi           = DF.aoi,
-    DF.coltab        = DF.coltab,
-    data.directory   = data.directory,
-    data.snapshot    = data.snapshot,
-    delta.lon        = 0.250, # 0.50
-    delta.lat        = 0.125, # 0.25
-    output.directory = "output-aoi"
+SF.aoi <- sf::st_as_sf(
+    x      = DF.aoi,
+    coords = c("longitude","latitude"),
+    crs    = sf::st_crs(4326)
     );
+
+DF.ottawa <- DF.aoi[DF.aoi[,"aoi"] == "ottawa",];
+SF.ottawa.epsg.4326 <- sf::st_as_sf(
+    x      = DF.ottawa,
+    crs    = sf::st_crs(4326),
+    coords = c("longitude","latitude")
+    );
+cat("\nSF.ottawa.epsg.4326\n");
+print( SF.ottawa.epsg.4326   );
+# SF.ottawa.utm <- sf::st_transform(
+#     x   = SF.ottawa.epsg.4326,
+#     crs = sf::st_crs(terra::crs(my.SpatRaster,proj = TRUE))
+#     );
+
+temp.dir  <- paste0("LU2010_u",DF.ottawa[,'utmzone']);
+temp.tiff <- list.files(
+    path    = file.path(data.directory,data.snapshot,temp.dir),
+    pattern = "\\.tif$"
+    );
+
+TIF.utm.zone <- file.path(
+    data.directory,
+    data.snapshot,
+    temp.dir,
+    temp.tiff
+    );
+cat("\nTIF.utm.zone\n");
+print( TIF.utm.zone   );
+
+SR.utm.zone <- terra::rast(x = TIF.utm.zone); 
+cat("\nSR.utm.zone\n");
+print( SR.utm.zone   );
+
+temp.grid.point <- get.nearest.grid.point(
+    SF.point    = SF.ottawa.epsg.4326,
+    SR.utm.zone = SR.utm.zone,
+    mode        = 'centroid'
+    );
+
+cat("\ntemp.grid.point\n");
+print( temp.grid.point   );
+
+# SF.aoi <- sf::st_transform(
+#     x   = SF.aoi,
+#     crs = sf::st_crs(terra::crs(my.SpatRaster, proj = TRUE))
+#     );
+
+# generate.extents.aoi(
+#     DF.aoi           = DF.aoi,
+#     DF.coltab        = DF.coltab,
+#     data.directory   = data.directory,
+#     data.snapshot    = data.snapshot,
+#     delta.lon        = 0.250, # 0.50
+#     delta.lat        = 0.125, # 0.25
+#     output.directory = "output-aoi"
+#     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # DF.aoi <- read.csv(
