@@ -1,10 +1,11 @@
 
 get.nearest.grid.point <- function(
-    SF.point         = NULL,
-    SR.target        = NULL,
-    point.type       = 'vertex', # 'centroid'
-    half.side.length = 1e3,
-    save.shape.files = FALSE
+    SF.point          = NULL,
+    SR.target         = NULL,
+    point.type        = 'vertex', # 'centroid'
+    half.side.length  = 1e3,
+    save.shape.files  = FALSE,
+    shape.file.prefix = NULL
     ) {
 
     thisFunctionName <- "get.nearest.grid.point";
@@ -58,10 +59,11 @@ get.nearest.grid.point <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     if ( save.shape.files ) {
         get.nearest.grid.point_save.shape.files(
-            SF.point   = SF.point,
-            SF.nearest = SF.output,
-            DF.coords  = DF.coords,
-            point.type = point.type
+            SF.point          = SF.point,
+            SF.nearest        = SF.output,
+            DF.coords         = DF.coords,
+            point.type        = point.type,
+            shape.file.prefix = shape.file.prefix
             );
         }
 
@@ -74,12 +76,27 @@ get.nearest.grid.point <- function(
 
 ##################################################
 get.nearest.grid.point_save.shape.files <- function(
-    SF.point   = NULL,
-    SF.nearest = NULL,
-    DF.coords  = NULL,
-    point.type = NULL
+    SF.point          = NULL,
+    SF.nearest        = NULL,
+    DF.coords         = NULL,
+    point.type        = NULL,
+    shape.file.prefix = NULL
     ) {
 
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    SHP.epsg.4326.point      <- "point-given.shp";
+    SHP.epsg.4326.nearest    <- paste0("point-nearest-grid-",point.type,".shp");
+    SHP.epsg.4326.centroids  <- "grid-cell-centroids.shp";
+    SHP.epsg.4326.grid.lines <- "grid-lines.shp"
+    
+    if ( !is.null(shape.file.prefix) ) {
+        SHP.epsg.4326.point      <- paste0(shape.file.prefix,"-",SHP.epsg.4326.point     );
+        SHP.epsg.4326.nearest    <- paste0(shape.file.prefix,"-",SHP.epsg.4326.nearest   );
+        SHP.epsg.4326.centroids  <- paste0(shape.file.prefix,"-",SHP.epsg.4326.centroids );
+        SHP.epsg.4326.grid.lines <- paste0(shape.file.prefix,"-",SHP.epsg.4326.grid.lines);
+        }
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SF.point.epsg.4326 <- sf::st_transform(
         x   = SF.point,
         crs = sf::st_crs(4326)
@@ -87,7 +104,7 @@ get.nearest.grid.point_save.shape.files <- function(
 
     sf::st_write(
         obj = SF.point.epsg.4326,
-        dsn = "point-given.shp"
+        dsn = SHP.epsg.4326.point
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -98,7 +115,7 @@ get.nearest.grid.point_save.shape.files <- function(
 
     sf::st_write(
         obj = SF.nearest.epsg.4326,
-        dsn = paste0("point-nearest-grid-",point.type,".shp")
+        dsn = SHP.epsg.4326.nearest
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -115,7 +132,7 @@ get.nearest.grid.point_save.shape.files <- function(
 
     sf::st_write(
         obj = SF.coords,
-        dsn = "grid-cell-centroids.shp"
+        dsn = SHP.epsg.4326.centroids
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -169,7 +186,7 @@ get.nearest.grid.point_save.shape.files <- function(
 
     sf::st_write(
         obj = SF.grid.lines,
-        dsn = "grid-lines.shp"
+        dsn = SHP.epsg.4326.grid.lines
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
