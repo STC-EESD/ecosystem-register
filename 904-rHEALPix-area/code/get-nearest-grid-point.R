@@ -2,7 +2,7 @@
 get.nearest.grid.point <- function(
     SF.point         = NULL,
     SR.target        = NULL,
-    mode             = c('vertex','centroid'),
+    mode             = 'vertex', # 'centroid'
     half.side.length = 1e3
     ) {
 
@@ -15,6 +15,8 @@ get.nearest.grid.point <- function(
         x   = SF.point,
         crs = sf::st_crs(terra::crs(SR.target, proj = TRUE))
         );
+    cat("\nSF.point.target.projection\n");
+    print( SF.point.target.projection   );
 
     temp.coords <- sf::st_coordinates(SF.point.target.projection);
     crop.extent <- terra::ext(terra::rast(
@@ -34,6 +36,11 @@ get.nearest.grid.point <- function(
     x.coords  <- unique(DF.coords[,'x']);
     y.coords  <- unique(DF.coords[,'y']);
 
+    if ( mode == 'vertex' ) {
+        x.coords <- x.coords[seq(1,length(x.coords)-1)] + diff(x.coords) / 2; 
+        y.coords <- y.coords[seq(1,length(y.coords)-1)] + diff(y.coords) / 2;
+        }
+
     abs.diff.x <- abs(x.coords - temp.coords[,'X']);
     abs.diff.y <- abs(y.coords - temp.coords[,'Y']);
 
@@ -46,21 +53,6 @@ get.nearest.grid.point <- function(
         );
     cat("\nSFC.output\n");
     print( SFC.output   );
-
-    # crop.extent <- terra::ext(terra::rast(
-    #     crs  = terra::crs(SR.target, proj = TRUE),
-    #     xmin = 445629.6 - 1e3,
-    #     xmax = 445629.6 + 1e3,
-    #     ymin = 5030368 - 1e3,
-    #     ymax = 5030368 + 1e3
-    #     ));
-
-    # SR.cropped <- terra::crop(
-    #     x = SR.target,
-    #     y = crop.extent
-    #     );
-
-    # DF.coords <- terra::crds(SR.cropped);
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
