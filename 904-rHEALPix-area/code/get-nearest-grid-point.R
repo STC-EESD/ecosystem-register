@@ -3,7 +3,7 @@ get.nearest.grid.point <- function(
     SF.point          = NULL,
     SR.target         = NULL,
     point.type        = 'vertex', # 'centroid'
-    half.side.length  = 1e3,
+    half.side.length  = 150,
     save.shape.files  = FALSE,
     shape.file.prefix = NULL
     ) {
