@@ -57,7 +57,6 @@ get.nearest.grid.point <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
     cat("\n### ~~~~~~~~~~~~~~~~~~~~ ###\n");
-    # return( c(temp.X,temp.Y) );
     return( SFC.output );
 
     }
