@@ -117,7 +117,7 @@ print( SR.utm.zone   );
 SFC.grid.point <- get.nearest.grid.point(
     SF.point         = SF.ottawa.epsg.4326,
     SR.target        = SR.utm.zone,
-    mode             = 'vertex',
+    point.type       = 'vertex',
     half.side.length = 150,
     save.shape.files = TRUE
     );
