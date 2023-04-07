@@ -33,8 +33,8 @@ get.nearest.grid.point <- function(
         );
 
     DF.coords <- terra::crds(SR.cropped);
-    x.coords  <- unique(DF.coords[,'x']);
-    y.coords  <- unique(DF.coords[,'y']);
+    x.coords  <- sort(unique(DF.coords[,'x']));
+    y.coords  <- sort(unique(DF.coords[,'y']));
 
     if ( mode == 'vertex' ) {
         x.coords <- x.coords[seq(1,length(x.coords)-1)] + diff(x.coords) / 2; 
