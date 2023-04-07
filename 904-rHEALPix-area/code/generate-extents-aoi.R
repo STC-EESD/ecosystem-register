@@ -4,8 +4,10 @@ generate.extents.aoi <- function(
     DF.coltab            = NULL,
     data.directory       = NULL,
     data.snapshot        = NULL,
-    delta.lon            = 1.00,
-    delta.lat            = 0.50,
+    # delta.lon          = 1.00,
+    # delta.lat          = 0.50,
+    xncell               = 1000,
+    yncell               = 1000,
     proj4string.rHEALPix = "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50",
     output.directory     = "output-aoi"
     ) {
@@ -20,8 +22,8 @@ generate.extents.aoi <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    # for ( row.index in c(5,6) ) {
-    for ( row.index in seq(1,nrow(DF.aoi)) ) {
+    # for ( row.index in seq(1,nrow(DF.aoi)) ) {
+    for ( row.index in c(5,6) ) {
 
         temp.aoi      <- DF.aoi[row.index,'aoi'      ];
         temp.utm.zone <- DF.aoi[row.index,'utmzone'  ];
@@ -32,18 +34,28 @@ generate.extents.aoi <- function(
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         DF.point <- DF.aoi[row.index,];
-        SF.point.epsg.4326 <- sf::st_as_sf(
+        SF.epsg.4326.point <- sf::st_as_sf(
             x      = DF.point,
             crs    = sf::st_crs(4326),
             coords = c("longitude","latitude")
             );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        temp.dir  <- paste0("LU2020_u",temp.utm.zone);
+        temp.dir  <- paste0("LU20.+_u",temp.utm.zone,"$");
+        temp.dir <- list.files(
+            path    = file.path(data.directory,data.snapshot),
+            pattern = temp.dir
+            );
+
+        cat("\nfile.path(data.directory,data.snapshot,temp.dir)\n");
+        print( file.path(data.directory,data.snapshot,temp.dir)   );
+
         temp.tiff <- list.files(
             path    = file.path(data.directory,data.snapshot,temp.dir),
             pattern = "\\.tif$"
             );
+        cat("\ntemp.tiff\n");
+        print( temp.tiff   );
 
         TIF.utm.zone <- file.path(
             data.directory,
@@ -58,31 +70,38 @@ generate.extents.aoi <- function(
         cat("\nSR.utm.zone\n");
         print( SR.utm.zone   );
 
-        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        generate.extents.aoi_nearest.grid.point(
-            SF.point    = SF.point.epsg.4326,
-            SR.utm.zone = SR.utm.zone
-            );
+        xres.utm.zone <- terra::xres(x = SR.utm.zone);
+        yres.utm.zone <- terra::yres(x = SR.utm.zone);
+
+        cat("\nxres.utm.zone\n");
+        print( xres.utm.zone   );
+
+        cat("\nyres.utm.zone\n");
+        print( yres.utm.zone   );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        DF.point <- DF.aoi[row.index,];
-        SF.point.epsg.4326 <- sf::st_as_sf(
-            x      = DF.point,
-            crs    = sf::st_crs(4326),
-            coords = c("longitude","latitude")
-            );
-        SF.point.utm <- sf::st_transform(
-            x   = SF.point.epsg.4326,
-            crs = sf::st_crs(terra::crs(SR.utm.zone, proj = TRUE))
+        SF.nearest.grid.point <- get.nearest.grid.point(
+            SF.point   = SF.epsg.4326.point,
+            SR.target  = SR.utm.zone,
+            point.type = 'vertex'
             );
 
-        temp.coords <- sf::st_coordinates(SF.point.utm);
+        cat("\nSF.nearest.grid.point\n");
+        print( SF.nearest.grid.point   );
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        DF.nearest.grid.point <- sf::st_coordinates(x = SF.nearest.grid.point);
+
+        cat("\nDF.nearest.grid.point\n");
+        print( DF.nearest.grid.point   );
+
+        temp.coords <- sf::st_coordinates(SF.nearest.grid.point);
         crop.extent <- terra::ext(terra::rast(
             crs  = terra::crs(SR.utm.zone, proj = TRUE),
-            xmin = temp.coords[,'X'] - 1e3,
-            xmax = temp.coords[,'X'] + 1e3,
-            ymin = temp.coords[,'Y'] - 1e3,
-            ymax = temp.coords[,'Y'] + 1e3
+            xmin = DF.nearest.grid.point[1,'X'] - xncell * xres.utm.zone,
+            xmax = DF.nearest.grid.point[1,'X'] + xncell * xres.utm.zone,
+            ymin = DF.nearest.grid.point[1,'Y'] - yncell * yres.utm.zone,
+            ymax = DF.nearest.grid.point[1,'Y'] + yncell * yres.utm.zone
             ));
 
         SR.cropped <- terra::crop(
@@ -90,74 +109,49 @@ generate.extents.aoi <- function(
             y = crop.extent
             );
 
-        DF.coords <- terra::crds(SR.cropped);
-        x.coords  <- unique(DF.coords[,'x']);
-        y.coords  <- unique(DF.coords[,'y']);
-
-        abs.diff.x <- abs(x.coords - temp.coords[,'X']);
-        abs.diff.y <- abs(y.coords - temp.coords[,'Y']);
-
-        temp.X <- x.coords[ which(abs.diff.x == min(abs.diff.x)) ];
-        temp.Y <- y.coords[ which(abs.diff.y == min(abs.diff.y)) ];
-
-        # crop.extent <- terra::ext(terra::rast(
-        #     crs  = terra::crs(SR.utm.zone, proj = TRUE),
-        #     xmin = 445629.6 - 1e3,
-        #     xmax = 445629.6 + 1e3,
-        #     ymin = 5030368 - 1e3,
-        #     ymax = 5030368 + 1e3
-        #     ));
-
-        # SR.cropped <- terra::crop(
-        #     x = SR.utm.zone,
-        #     y = crop.extent
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        # aoi.raster <- terra::rast(
+        #     crs   = "epsg:4326",
+        #     xmin  = temp.lon - delta.lon,
+        #     xmax  = temp.lon + delta.lon,
+        #     ymin  = temp.lat - delta.lat,
+        #     ymax  = temp.lat + delta.lat
         #     );
 
-        # DF.coords <- terra::crds(SR.cropped);
+        # generate.extents.aoi_extent(
+        #     input.raster     = aoi.raster,
+        #     utm.zone         = temp.utm.zone,
+        #     aoi              = temp.aoi,
+        #     proj4string      = terra::crs(x = aoi.raster, proj = TRUE),
+        #     map.projection   = "lonlat",
+        #     output.directory = output.directory
+        #     );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        aoi.raster <- terra::rast(
-            crs   = "epsg:4326",
-            xmin  = temp.lon - delta.lon,
-            xmax  = temp.lon + delta.lon,
-            ymin  = temp.lat - delta.lat,
-            ymax  = temp.lat + delta.lat
-            );
+        # aoi.raster <- terra::project(
+        #     x = aoi.raster,
+        #     y = terra::crs(SR.utm.zone)
+        #     );
+        # aoi.extent <- terra::ext(aoi.raster);
+        # aoi.raster <- terra::crop(
+        #     x = SR.utm.zone,
+        #     y = aoi.extent
+        #     ); 
+        # # terra::coltab(aoi.raster) <- DF.coltab;
+        # cat("\naoi.raster\n");
+        # print( aoi.raster   );
 
         generate.extents.aoi_extent(
-            input.raster     = aoi.raster,
+            input.raster     = SR.cropped, # aoi.raster,
             utm.zone         = temp.utm.zone,
             aoi              = temp.aoi,
-            proj4string      = terra::crs(x = aoi.raster, proj = TRUE),
-            map.projection   = "lonlat",
-            output.directory = output.directory
-            );
-
-        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        aoi.raster <- terra::project(
-            x = aoi.raster,
-            y = terra::crs(SR.utm.zone)
-            );
-        aoi.extent <- terra::ext(aoi.raster);
-        aoi.raster <- terra::crop(
-            x = SR.utm.zone,
-            y = aoi.extent
-            ); 
-        # terra::coltab(aoi.raster) <- DF.coltab;
-        cat("\naoi.raster\n");
-        print( aoi.raster   );
-
-        generate.extents.aoi_extent(
-            input.raster     = aoi.raster,
-            utm.zone         = temp.utm.zone,
-            aoi              = temp.aoi,
-            proj4string      = terra::crs(x = aoi.raster, proj = TRUE),
+            proj4string      = terra::crs(x = SR.cropped, proj = TRUE),
             map.projection   = "original",
             output.directory = output.directory
             );
 
         generate.extents.aoi_extent(
-            input.raster     = aoi.raster,
+            input.raster     = SR.cropped, # aoi.raster,
             utm.zone         = temp.utm.zone,
             aoi              = temp.aoi,
             proj4string      = proj4string.rHEALPix,
@@ -171,7 +165,7 @@ generate.extents.aoi <- function(
         output.png  <- file.path(output.directory,paste0(output.stem,".png" ));
 
         terra::writeRaster(
-            x        = aoi.raster,
+            x        = SR.cropped, # aoi.raster,
             filename = output.tiff
             );
 
@@ -183,16 +177,16 @@ generate.extents.aoi <- function(
             units    = "in"
             );
         terra::plot(
-            x     = aoi.raster,
+            x     = SR.cropped, # aoi.raster,
             # col = NDVI.colour.palette,
             colNA = colour.NA
             );
         dev.off();
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        aoi.cellsizes <- terra::cellSize(x = aoi.raster);
-        DF.crosstab   <- terra::crosstab(
-            x      = c(aoi.cellsizes,aoi.raster),
+        SR.cellsizes <- terra::cellSize(x = SR.cropped);
+        DF.crosstab  <- terra::crosstab(
+            x      = c(SR.cellsizes,SR.cropped),
             digits = 7
             );
 
