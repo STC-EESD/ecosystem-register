@@ -1,6 +1,8 @@
 
 test_get.nearest.grid.point <- function(
     DF.aoi           = NULL,
+    data.directory   = NULL,
+    data.snapshot    = NULL,
     output.directory = "test-get-nearest-grid-points"
     ) {
 
@@ -53,7 +55,7 @@ test_get.nearest.grid.point <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SFC.grid.point <- get.nearest.grid.point(
-        SF.point          = SF.epsg.4326.ottawa,
+        SF.poi            = SF.epsg.4326.ottawa,
         SR.target         = SR.utm.zone,
         point.type        = 'vertex',
         half.side.length  = 150,
@@ -65,7 +67,7 @@ test_get.nearest.grid.point <- function(
     print( SFC.grid.point   );
 
     SFC.grid.point <- get.nearest.grid.point(
-        SF.point          = SF.epsg.4326.ottawa,
+        SF.poi            = SF.epsg.4326.ottawa,
         SR.target         = SR.utm.zone,
         point.type        = 'centroid',
         half.side.length  = 150,

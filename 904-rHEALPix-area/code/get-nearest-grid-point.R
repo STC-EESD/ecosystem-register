@@ -1,6 +1,6 @@
 
 get.nearest.grid.point <- function(
-    SF.point          = NULL,
+    SF.poi            = NULL,
     SR.target         = NULL,
     point.type        = 'vertex', # 'centroid'
     half.side.length  = 150,
@@ -13,14 +13,14 @@ get.nearest.grid.point <- function(
     cat(paste0("\n",thisFunctionName,"() starts.\n\n"));
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    SF.point.target.projection <- sf::st_transform(
-        x   = SF.point,
+    SF.poi.target.projection <- sf::st_transform(
+        x   = SF.poi,
         crs = sf::st_crs(terra::crs(SR.target, proj = TRUE))
         );
-    cat("\nSF.point.target.projection\n");
-    print( SF.point.target.projection   );
+    cat("\nSF.poi.target.projection\n");
+    print( SF.poi.target.projection   );
 
-    temp.coords <- sf::st_coordinates(SF.point.target.projection);
+    temp.coords <- sf::st_coordinates(SF.poi.target.projection);
     crop.extent <- terra::ext(terra::rast(
         crs  = terra::crs(SR.target, proj = TRUE),
         xmin = temp.coords[,'X'] - half.side.length,
@@ -58,11 +58,14 @@ get.nearest.grid.point <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     if ( save.shape.files ) {
+        res.SR.cropped <- terra::res(SR.cropped);
         get.nearest.grid.point_save.shape.files(
-            SF.point          = SF.point,
+            SF.poi            = SF.poi,
             SF.nearest        = SF.output,
             DF.coords         = DF.coords,
             point.type        = point.type,
+            x.res             = res.SR.cropped[1],
+            y.res             = res.SR.cropped[2],
             shape.file.prefix = shape.file.prefix
             );
         }
@@ -76,10 +79,12 @@ get.nearest.grid.point <- function(
 
 ##################################################
 get.nearest.grid.point_save.shape.files <- function(
-    SF.point          = NULL,
+    SF.poi            = NULL,
     SF.nearest        = NULL,
     DF.coords         = NULL,
     point.type        = NULL,
+    x.res             = NULL,
+    y.res             = NULL,
     shape.file.prefix = NULL
     ) {
 
@@ -97,13 +102,13 @@ get.nearest.grid.point_save.shape.files <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    SF.point.epsg.4326 <- sf::st_transform(
-        x   = SF.point,
+    SF.poi.epsg.4326 <- sf::st_transform(
+        x   = SF.poi,
         crs = sf::st_crs(4326)
         );
 
     sf::st_write(
-        obj = SF.point.epsg.4326,
+        obj = SF.poi.epsg.4326,
         dsn = SHP.epsg.4326.point
         );
 
@@ -142,6 +147,19 @@ get.nearest.grid.point_save.shape.files <- function(
     x.coords <- x.coords[seq(1,length(x.coords)-1)] + diff(x.coords) / 2; 
     y.coords <- y.coords[seq(1,length(y.coords)-1)] + diff(y.coords) / 2;
 
+    x.coords <- c(
+        min(x.coords) - x.res,
+        x.coords,
+        max(x.coords) + x.res
+        );
+
+    y.coords <- c(
+        min(y.coords) - y.res,
+        y.coords,
+        max(y.coords) + y.res
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     min.x <- min(x.coords);
     max.x <- max(x.coords);
 
