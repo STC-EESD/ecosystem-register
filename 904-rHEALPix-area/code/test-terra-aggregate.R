@@ -105,12 +105,95 @@ test_terra.aggregate <- function(
     cat("\nstr(list.grid.cropped)\n");
     print( str(list.grid.cropped)   );
 
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     get.nearest.grid.point_save.shape.files(
         SF.poi            = SF.epsg.4326.ottawa,
         SF.nearest        = SF.grid.centre,
         list.grid.info    = list.grid.cropped,
-        shape.file.prefix = "SF"
+        shape.file.prefix = "SF-original"
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    TIF.cropped.f2 <- "SR-ottawa-cropped-f2.tiff";
+    PNG.cropped.f2 <- "SR-ottawa-cropped-f2.png";
+
+    print("A-1");
+
+    terra::aggregate(
+        x        = SR.cropped,
+        fact     = 2,
+        fun      = "modal",
+        filename = TIF.cropped.f2
+        );
+
+    print("A-2");
+
+    SR.cropped.f2 <- terra::rast(TIF.cropped.f2);
+
+    print("A-3");
+
+    cat("\nSR.cropped.f2\n");
+    print( SR.cropped.f2   );
+
+    png(
+        filename = PNG.cropped.f2,
+        res      = 300,
+        width    =  12,
+        height   =  10,
+        units    = "in"
+        );
+    terra::plot(
+        x     = SR.cropped.f2,
+        colNA = colour.NA
+        );
+    dev.off();
+
+    list.grid.cropped.f2 <- extract.grid.from.SpatRaster(
+        SR.input = SR.cropped.f2
+        );
+    cat("\nstr(list.grid.cropped.f2)\n");
+    print( str(list.grid.cropped.f2)   );
+
+    get.nearest.grid.point_save.shape.files(
+        list.grid.info    = list.grid.cropped.f2,
+        shape.file.prefix = "SF-f2"
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    TIF.cropped.f3 <- "SR-ottawa-cropped-f3.tiff";
+    PNG.cropped.f3 <- "SR-ottawa-cropped-f3.png";
+
+    terra::aggregate(
+        x        = SR.cropped,
+        fact     = 3,
+        fun      = "modal",
+        filename = TIF.cropped.f3
+        );
+    SR.cropped.f3 <- terra::rast(TIF.cropped.f3);
+    cat("\nSR.cropped.f3\n");
+    print( SR.cropped.f3   );
+
+    png(
+        filename = PNG.cropped.f3,
+        res      = 300,
+        width    =  12,
+        height   =  10,
+        units    = "in"
+        );
+    terra::plot(
+        x     = SR.cropped.f3,
+        colNA = colour.NA
+        );
+    dev.off();
+
+    list.grid.cropped.f3 <- extract.grid.from.SpatRaster(
+        SR.input = SR.cropped.f3
+        );
+    cat("\nstr(list.grid.cropped.f3)\n");
+    print( str(list.grid.cropped.f3)   );
+
+    get.nearest.grid.point_save.shape.files(
+        list.grid.info    = list.grid.cropped.f3,
+        shape.file.prefix = "SF-f3"
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
