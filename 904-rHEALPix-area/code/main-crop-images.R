@@ -87,7 +87,8 @@ test_terra.aggregate(
     data.directory   = data.directory,
     data.snapshot    = data.snapshot,
     point.type       = 'vertex',
-    half.side.length = 900,
+    x.ncell          = 60,
+    y.ncell          = 60,
     output.directory = "test-terra-aggregate"
     );
 

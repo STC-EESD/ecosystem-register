@@ -4,7 +4,8 @@ test_terra.aggregate <- function(
     data.directory    = NULL,
     data.snapshot     = NULL,
     point.type        = 'vertex', # 'centroid'
-    half.side.length  = 150,
+    x.ncell           = 6,
+    y.ncell           = 6,
     save.shape.files  = FALSE,
     shape.file.prefix = NULL,
     output.directory  = "test-terra-aggregate"
@@ -76,8 +77,8 @@ test_terra.aggregate <- function(
     get.sub.spatraster(
         SF.grid.centre = SF.grid.centre,
         SR.origin      = SR.utm.zone,
-        x.ncell        = half.side.length,
-        y.ncell        = half.side.length,
+        x.ncell        = x.ncell,
+        y.ncell        = y.ncell,
         TIF.output     = TIF.cropped
         );
     SR.cropped <- terra::rast(TIF.cropped);
