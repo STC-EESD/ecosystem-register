@@ -115,49 +115,6 @@ generate.extents.aoi <- function(
         dev.off();
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        # DF.nearest.grid.point <- sf::st_coordinates(x = SF.nearest.grid.point);
-
-        # cat("\nDF.nearest.grid.point\n");
-        # print( DF.nearest.grid.point   );
-
-        # temp.coords <- sf::st_coordinates(SF.nearest.grid.point);
-        # crop.extent <- terra::ext(terra::rast(
-        #     crs  = terra::crs(SR.utm.zone, proj = TRUE),
-        #     xmin = DF.nearest.grid.point[1,'X'] - x.ncell * xres.utm.zone,
-        #     xmax = DF.nearest.grid.point[1,'X'] + x.ncell * xres.utm.zone,
-        #     ymin = DF.nearest.grid.point[1,'Y'] - y.ncell * yres.utm.zone,
-        #     ymax = DF.nearest.grid.point[1,'Y'] + y.ncell * yres.utm.zone
-        #     ));
-
-        # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        # output.stem <- paste0("raster-buffered-",temp.utm.zone,"-",temp.aoi);
-        # output.tiff <- file.path(output.directory,paste0(output.stem,".tiff"));
-        # output.png  <- file.path(output.directory,paste0(output.stem,".png" ));
-
-        # terra::crop(
-        #     x        = SR.utm.zone,
-        #     y        = crop.extent,
-        #     filename = output.tiff
-        #     );
-        # SR.cropped <- terra::rast(output.tiff);
-
-        # png(
-        #     filename = output.png,
-        #     res      = 300,
-        #     width    =  12,
-        #     height   =  10,
-        #     units    = "in"
-        #     );
-        # terra::plot(
-        #     x     = SR.cropped,
-        #     colNA = colour.NA
-        #     );
-        # dev.off();
-
-        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         generate.extents.aoi_extent(
             input.raster     = SR.cropped, # aoi.raster,
             utm.zone         = temp.utm.zone,
