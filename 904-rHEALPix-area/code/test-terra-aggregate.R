@@ -116,21 +116,13 @@ test_terra.aggregate <- function(
     TIF.cropped.f2 <- "SR-ottawa-cropped-f2.tiff";
     PNG.cropped.f2 <- "SR-ottawa-cropped-f2.png";
 
-    print("A-1");
-
     terra::aggregate(
         x        = SR.cropped,
         fact     = 2,
         fun      = "modal",
         filename = TIF.cropped.f2
         );
-
-    print("A-2");
-
     SR.cropped.f2 <- terra::rast(TIF.cropped.f2);
-
-    print("A-3");
-
     cat("\nSR.cropped.f2\n");
     print( SR.cropped.f2   );
 
