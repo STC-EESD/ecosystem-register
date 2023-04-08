@@ -32,7 +32,9 @@ code.files <- c(
     "generate-extents-aoi.R",
     "get-aci-crop-classification.R",
     "get-nearest-grid-point.R",
+    "get-sub-spatraster.R",
     "test-get-nearest-grid-point.R"
+    # "test-terra-aggregate.R"
     );
 
 for ( code.file in code.files ) {
@@ -67,28 +69,42 @@ DF.aoi <- read.csv(
 
 test_get.nearest.grid.point(
     DF.aoi           = DF.aoi,
+    data.directory   = data.directory,
+    data.snapshot    = data.snapshot,
     output.directory = "test-get-nearest-grid-points"
     );
 
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-generate.rasters.utm.zones(
-    DF.coltab        = DF.coltab,
-    data.directory   = data.directory,
-    data.snapshot    = data.snapshot,
-    colour.NA        = colour.NA,
-    output.directory = "output-utm-zones"
-    );
+# test_get.sub.spatraster(
+#     DF.aoi           = DF.aoi,
+#     data.directory   = data.directory,
+#     data.snapshot    = data.snapshot,
+#     output.directory = "test-terra-aggregate"
+#     );
 
-generate.extents.aoi(
-    DF.aoi             = DF.aoi,
-    DF.coltab          = DF.coltab,
-    data.directory     = data.directory,
-    data.snapshot      = data.snapshot,
-    xncell             = 1000,
-    yncell             = 1000,
-    crosstab.precision =    7,
-    output.directory   = "output-aoi"
-    );
+# test_terra.aggregate(
+#     DF.aoi           = DF.aoi,
+#     output.directory = "test-terra-aggregate"
+#     );
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+# generate.rasters.utm.zones(
+#     DF.coltab        = DF.coltab,
+#     data.directory   = data.directory,
+#     data.snapshot    = data.snapshot,
+#     colour.NA        = colour.NA,
+#     output.directory = "output-utm-zones"
+#     );
+
+# generate.extents.aoi(
+#     DF.aoi             = DF.aoi,
+#     DF.coltab          = DF.coltab,
+#     data.directory     = data.directory,
+#     data.snapshot      = data.snapshot,
+#     xncell             = 1000,
+#     yncell             = 1000,
+#     crosstab.precision =    7,
+#     output.directory   = "output-aoi"
+#     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
