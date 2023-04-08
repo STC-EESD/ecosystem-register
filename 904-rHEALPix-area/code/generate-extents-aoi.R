@@ -96,8 +96,8 @@ generate.extents.aoi <- function(
         SR.cropped <- get.sub.spatraster(
             SF.grid.centre = SF.nearest.grid.point,
             SR.origin      = SR.utm.zone,
-            x.ncell         = x.ncell,
-            y.ncell         = y.ncell,
+            x.ncell        = x.ncell,
+            y.ncell        = y.ncell,
             TIF.output     = output.tiff
             );
 

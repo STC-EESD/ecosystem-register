@@ -33,7 +33,7 @@ code.files <- c(
     "generate-extents-aoi.R",
     "get-aci-crop-classification.R",
     "get-nearest-grid-point.R",
-    # "get-sub-spatraster.R",
+    "get-sub-spatraster.R",
     "test-get-nearest-grid-point.R",
     "test-terra-aggregate.R"
     );
@@ -82,12 +82,14 @@ test_get.nearest.grid.point(
 #     output.directory = "test-terra-aggregate"
 #     );
 
-# test_terra.aggregate(
-#     DF.aoi           = DF.aoi,
-#     data.directory   = data.directory,
-#     data.snapshot    = data.snapshot,
-#     output.directory = "test-terra-aggregate"
-#     );
+test_terra.aggregate(
+    DF.aoi           = DF.aoi,
+    data.directory   = data.directory,
+    data.snapshot    = data.snapshot,
+    point.type       = 'vertex',
+    half.side.length = 1800,
+    output.directory = "test-terra-aggregate"
+    );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # generate.rasters.utm.zones(
