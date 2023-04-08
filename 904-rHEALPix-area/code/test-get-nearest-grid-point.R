@@ -34,6 +34,7 @@ test_get.nearest.grid.point <- function(
     cat("\nSF.epsg.4326.ottawa\n");
     print( SF.epsg.4326.ottawa   );
 
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     temp.dir  <- paste0("LU2010_u",DF.ottawa[,'utmzone']);
     temp.tiff <- list.files(
         path    = file.path(data.directory,data.snapshot,temp.dir),
