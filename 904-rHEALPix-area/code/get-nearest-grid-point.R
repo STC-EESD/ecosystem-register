@@ -64,7 +64,6 @@ get.nearest.grid.point <- function(
         get.nearest.grid.point_save.shape.files(
             SF.poi            = SF.poi,
             SF.nearest        = SF.output,
-            point.type        = point.type,
             list.grid.info    = list.grid.info,
             shape.file.prefix = shape.file.prefix
             );
@@ -81,14 +80,13 @@ get.nearest.grid.point <- function(
 get.nearest.grid.point_save.shape.files <- function(
     SF.poi            = NULL,
     SF.nearest        = NULL,
-    point.type        = NULL,
     list.grid.info    = NULL,
     shape.file.prefix = NULL
     ) {
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SHP.epsg.4326.point      <- "point-given.shp";
-    SHP.epsg.4326.nearest    <- paste0("point-nearest-grid-",point.type,".shp");
+    SHP.epsg.4326.nearest    <- paste0("point-nearest-grid-point.shp");
     SHP.epsg.4326.centroids  <- "grid-cell-centroids.shp";
     SHP.epsg.4326.grid.lines <- "grid-lines.shp"
     
@@ -100,50 +98,51 @@ get.nearest.grid.point_save.shape.files <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    SF.poi.epsg.4326 <- sf::st_transform(
-        x   = SF.poi,
-        crs = sf::st_crs(4326)
-        );
-
-    sf::st_write(
-        obj = SF.poi.epsg.4326,
-        dsn = SHP.epsg.4326.point
-        );
-
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    SF.nearest.epsg.4326 <- sf::st_transform(
-        x   = SF.nearest,
-        crs = sf::st_crs(4326)
-        );
-
-    sf::st_write(
-        obj = SF.nearest.epsg.4326,
-        dsn = SHP.epsg.4326.nearest
-        );
+    if ( !is.null(SF.poi) ) {
+        SF.poi.epsg.4326 <- sf::st_transform(
+            x   = SF.poi,
+            crs = sf::st_crs(4326)
+            );
+        sf::st_write(
+            obj = SF.poi.epsg.4326,
+            dsn = SHP.epsg.4326.point
+            );
+        }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    SF.centroids <- list.grid.info[['centroids']];
-    SF.centroids <- sf::st_transform(
-        x   = SF.centroids,
-        crs = sf::st_crs(4326)
-        );
-
-    sf::st_write(
-        obj = SF.centroids,
-        dsn = SHP.epsg.4326.centroids
-        );
+    if ( !is.null(SF.nearest) ) {
+        SF.nearest.epsg.4326 <- sf::st_transform(
+            x   = SF.nearest,
+            crs = sf::st_crs(4326)
+            );
+        sf::st_write(
+            obj = SF.nearest.epsg.4326,
+            dsn = SHP.epsg.4326.nearest
+            );
+        }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    SF.grid.lines <- list.grid.info[['grid.lines']];
-    SF.grid.lines <- sf::st_transform(
-        x   = SF.grid.lines,
-        crs = sf::st_crs(4326)
-        );
-
-    sf::st_write(
-        obj = SF.grid.lines,
-        dsn = SHP.epsg.4326.grid.lines
-        );
+    if ( !is.null(list.grid.info) ) {
+        SF.centroids <- list.grid.info[['centroids']];
+        SF.centroids <- sf::st_transform(
+            x   = SF.centroids,
+            crs = sf::st_crs(4326)
+            );
+        sf::st_write(
+            obj = SF.centroids,
+            dsn = SHP.epsg.4326.centroids
+            );
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        SF.grid.lines <- list.grid.info[['grid.lines']];
+        SF.grid.lines <- sf::st_transform(
+            x   = SF.grid.lines,
+            crs = sf::st_crs(4326)
+            );
+        sf::st_write(
+            obj = SF.grid.lines,
+            dsn = SHP.epsg.4326.grid.lines
+            );
+        }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     return( NULL );
