@@ -24,18 +24,19 @@ extract.grid.from.SpatRaster <- function(
     x.coords <- x.coords[seq(1,length(x.coords)-1)] + diff(x.coords) / 2; 
     y.coords <- y.coords[seq(1,length(y.coords)-1)] + diff(y.coords) / 2;
 
-    resoln.SR.input <- terra::res(SR.input);
+    x.res.input <- terra::xres(x = SR.input);
+    y.res.input <- terra::yres(x = SR.input);
 
     x.coords <- c(
-        min(x.coords) - resoln.SR.input[1],
+        min(x.coords) - x.res.input,
         x.coords,
-        max(x.coords) + resoln.SR.input[1]
+        max(x.coords) + x.res.input
         );
 
     y.coords <- c(
-        min(y.coords) - resoln.SR.input[2],
+        min(y.coords) - y.res.input,
         y.coords,
-        max(y.coords) + resoln.SR.input[2]
+        max(y.coords) + y.res.input
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
