@@ -87,24 +87,24 @@ test_get.nearest.grid.point(
 #     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-# generate.rasters.utm.zones(
-#     DF.coltab        = DF.coltab,
-#     data.directory   = data.directory,
-#     data.snapshot    = data.snapshot,
-#     colour.NA        = colour.NA,
-#     output.directory = "output-utm-zones"
-#     );
+generate.rasters.utm.zones(
+    DF.coltab        = DF.coltab,
+    data.directory   = data.directory,
+    data.snapshot    = data.snapshot,
+    colour.NA        = colour.NA,
+    output.directory = "output-utm-zones"
+    );
 
-# generate.extents.aoi(
-#     DF.aoi             = DF.aoi,
-#     DF.coltab          = DF.coltab,
-#     data.directory     = data.directory,
-#     data.snapshot      = data.snapshot,
-#     xncell             = 1000,
-#     yncell             = 1000,
-#     crosstab.precision =    7,
-#     output.directory   = "output-aoi"
-#     );
+generate.extents.aoi(
+    DF.aoi             = DF.aoi,
+    DF.coltab          = DF.coltab,
+    data.directory     = data.directory,
+    data.snapshot      = data.snapshot,
+    x.ncell            = 1000,
+    y.ncell            = 1000,
+    crosstab.precision =    7,
+    output.directory   = "output-aoi"
+    );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
