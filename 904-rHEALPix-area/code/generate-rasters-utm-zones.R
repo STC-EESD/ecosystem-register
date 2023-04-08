@@ -23,6 +23,8 @@ generate.rasters.utm.zones <- function(
         pad    = "0"
         ); 
 
+
+    DF.levels <- data.frame();
     for ( temp.utm.zone in utm.zone.numbers ) {
 
         cat("\n### UTM Zone:",temp.utm.zone,"\n");
@@ -58,6 +60,12 @@ generate.rasters.utm.zones <- function(
         cat("\ntemp.raster\n");
         print( temp.raster   );
 
+        DF.levels <- rbind(
+            DF.levels,
+            terra::levels(temp.raster)[[1]]
+            );
+        DF.levels <- unique(DF.levels);
+
         output.png <- file.path(
             output.directory,
             paste0("raster-utm-zone-",temp.utm.zone,".png")
@@ -78,6 +86,14 @@ generate.rasters.utm.zones <- function(
         dev.off();
 
         }
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    DF.levels <- DF.levels[order(DF.levels[,'Value']),];
+    write.csv(
+        x         = DF.levels,
+        file      = file.path(output.directory,"DF-levels.csv"),
+        row.names = FALSE
+        );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
