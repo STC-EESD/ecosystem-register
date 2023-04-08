@@ -27,14 +27,15 @@ require(terra);
 
 # source supporting R code
 code.files <- c(
+    "extract-grid-from-SpatRaster.R",
     "generate-rasters-provincial.R",
     "generate-rasters-utm-zones.R",
     "generate-extents-aoi.R",
     "get-aci-crop-classification.R",
     "get-nearest-grid-point.R",
-    "get-sub-spatraster.R",
-    "test-get-nearest-grid-point.R"
-    # "test-terra-aggregate.R"
+    # "get-sub-spatraster.R",
+    "test-get-nearest-grid-point.R",
+    "test-terra-aggregate.R"
     );
 
 for ( code.file in code.files ) {
@@ -83,28 +84,30 @@ test_get.nearest.grid.point(
 
 # test_terra.aggregate(
 #     DF.aoi           = DF.aoi,
+#     data.directory   = data.directory,
+#     data.snapshot    = data.snapshot,
 #     output.directory = "test-terra-aggregate"
 #     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-generate.rasters.utm.zones(
-    DF.coltab        = DF.coltab,
-    data.directory   = data.directory,
-    data.snapshot    = data.snapshot,
-    colour.NA        = colour.NA,
-    output.directory = "output-utm-zones"
-    );
+# generate.rasters.utm.zones(
+#     DF.coltab        = DF.coltab,
+#     data.directory   = data.directory,
+#     data.snapshot    = data.snapshot,
+#     colour.NA        = colour.NA,
+#     output.directory = "output-utm-zones"
+#     );
 
-generate.extents.aoi(
-    DF.aoi             = DF.aoi,
-    DF.coltab          = DF.coltab,
-    data.directory     = data.directory,
-    data.snapshot      = data.snapshot,
-    x.ncell            = 1000,
-    y.ncell            = 1000,
-    crosstab.precision =    7,
-    output.directory   = "output-aoi"
-    );
+# generate.extents.aoi(
+#     DF.aoi             = DF.aoi,
+#     DF.coltab          = DF.coltab,
+#     data.directory     = data.directory,
+#     data.snapshot      = data.snapshot,
+#     x.ncell            = 1000,
+#     y.ncell            = 1000,
+#     crosstab.precision =    7,
+#     output.directory   = "output-aoi"
+#     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 

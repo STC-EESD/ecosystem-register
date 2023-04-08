@@ -58,14 +58,14 @@ get.nearest.grid.point <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     if ( save.shape.files ) {
-        res.SR.cropped <- terra::res(SR.cropped);
+        list.grid.info <- extract.grid.from.SpatRaster(
+            SR.input = SR.cropped
+            );
         get.nearest.grid.point_save.shape.files(
             SF.poi            = SF.poi,
             SF.nearest        = SF.output,
-            DF.coords         = DF.coords,
             point.type        = point.type,
-            x.res             = res.SR.cropped[1],
-            y.res             = res.SR.cropped[2],
+            list.grid.info    = list.grid.info,
             shape.file.prefix = shape.file.prefix
             );
         }
@@ -81,10 +81,8 @@ get.nearest.grid.point <- function(
 get.nearest.grid.point_save.shape.files <- function(
     SF.poi            = NULL,
     SF.nearest        = NULL,
-    DF.coords         = NULL,
     point.type        = NULL,
-    x.res             = NULL,
-    y.res             = NULL,
+    list.grid.info    = NULL,
     shape.file.prefix = NULL
     ) {
 
@@ -124,79 +122,19 @@ get.nearest.grid.point_save.shape.files <- function(
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    SF.coords <- sf::st_as_sf(
-        x      = as.data.frame(DF.coords),
-        crs    = sf::st_crs(SF.nearest),
-        coords = c('x','y')
-        );
-
-    SF.coords <- sf::st_transform(
-        x   = SF.coords,
+    SF.centroids <- list.grid.info[['centroids']];
+    SF.centroids <- sf::st_transform(
+        x   = SF.centroids,
         crs = sf::st_crs(4326)
         );
 
     sf::st_write(
-        obj = SF.coords,
+        obj = SF.centroids,
         dsn = SHP.epsg.4326.centroids
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    x.coords  <- sort(unique(DF.coords[,'x']));
-    y.coords  <- sort(unique(DF.coords[,'y']));
-
-    x.coords <- x.coords[seq(1,length(x.coords)-1)] + diff(x.coords) / 2; 
-    y.coords <- y.coords[seq(1,length(y.coords)-1)] + diff(y.coords) / 2;
-
-    x.coords <- c(
-        min(x.coords) - x.res,
-        x.coords,
-        max(x.coords) + x.res
-        );
-
-    y.coords <- c(
-        min(y.coords) - y.res,
-        y.coords,
-        max(y.coords) + y.res
-        );
-
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    min.x <- min(x.coords);
-    max.x <- max(x.coords);
-
-    min.y <- min(y.coords);
-    max.y <- max(y.coords);
-
-    list.linestrings <- list();
-
-    for ( i in seq(1,length(x.coords)) ) {
-        temp.linestring <- sf::st_linestring(matrix(
-            c(x.coords[i],min.y,x.coords[i],max.y),
-            ncol  = 2,
-            byrow = TRUE
-            ));
-        list.linestrings <- append(
-            list.linestrings,
-            list(temp.linestring)
-            );
-        }
-
-    for ( j in seq(1,length(y.coords)) ) {
-        temp.linestring <- sf::st_linestring(matrix(
-            c(min.x,y.coords[j],max.x,y.coords[j]),
-            ncol  = 2,
-            byrow = TRUE
-            ));
-        list.linestrings <- append(
-            list.linestrings,
-            list(temp.linestring)
-            );
-        }
-
-    SF.grid.lines <- sf::st_sfc(
-        list.linestrings,
-        crs = sf::st_crs(SF.nearest)
-        );
-
+    SF.grid.lines <- list.grid.info[['grid.lines']];
     SF.grid.lines <- sf::st_transform(
         x   = SF.grid.lines,
         crs = sf::st_crs(4326)
