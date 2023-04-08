@@ -109,7 +109,6 @@ test_terra.aggregate <- function(
     get.nearest.grid.point_save.shape.files(
         SF.poi            = SF.epsg.4326.ottawa,
         SF.nearest        = SF.grid.centre,
-        point.type        = point.type,
         list.grid.info    = list.grid.cropped,
         shape.file.prefix = "SF"
         );
