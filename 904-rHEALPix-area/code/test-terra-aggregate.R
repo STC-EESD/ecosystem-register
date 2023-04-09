@@ -8,12 +8,12 @@ test_terra.aggregate <- function(
     y.ncell           = 6,
     save.shape.files  = FALSE,
     shape.file.prefix = NULL,
-    output.directory  = "test-terra-aggregate"
+    output.directory  = 'test-terra-aggregate'
     ) {
 
-    thisFunctionName <- "test_terra.aggregate";
-    cat("\n### ~~~~~~~~~~~~~~~~~~~~ ###");
-    cat(paste0("\n",thisFunctionName,"() starts.\n\n"));
+    thisFunctionName <- 'test_terra.aggregate';
+    cat('\n### ~~~~~~~~~~~~~~~~~~~~ ###');
+    cat(paste0('\n',thisFunctionName,'() starts.\n\n'));
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     original.directory <- base::getwd();
@@ -23,24 +23,24 @@ test_terra.aggregate <- function(
         }
 
     base::setwd(output.directory);
-    cat("\nbase::getwd()\n");
+    cat('\nbase::getwd()\n');
     print( base::getwd()   );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    DF.ottawa <- DF.aoi[DF.aoi[,"aoi"] == "ottawa",];
-    cat("\nDF.ottawa\n");
+    DF.ottawa <- DF.aoi[DF.aoi[,'aoi'] == 'ottawa',];
+    cat('\nDF.ottawa\n');
     print( DF.ottawa   );
 
     SF.epsg.4326.ottawa <- sf::st_as_sf(
         x      = DF.ottawa,
         crs    = sf::st_crs(4326),
-        coords = c("longitude","latitude")
+        coords = c('longitude','latitude')
         );
-    cat("\nSF.epsg.4326.ottawa\n");
+    cat('\nSF.epsg.4326.ottawa\n');
     print( SF.epsg.4326.ottawa   );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    temp.dir  <- paste0("LU2010_u",DF.ottawa[,'utmzone']);
+    temp.dir  <- paste0('LU2010_u',DF.ottawa[,'utmzone']);
     temp.tiff <- list.files(
         path    = file.path(data.directory,data.snapshot,temp.dir),
         pattern = "\\.tif$"
@@ -52,11 +52,11 @@ test_terra.aggregate <- function(
         temp.dir,
         temp.tiff
         );
-    cat("\nTIF.utm.zone\n");
+    cat('\nTIF.utm.zone\n');
     print( TIF.utm.zone   );
 
     SR.utm.zone <- terra::rast(x = TIF.utm.zone); 
-    cat("\nSR.utm.zone\n");
+    cat('\nSR.utm.zone\n');
     print( SR.utm.zone   );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -68,12 +68,11 @@ test_terra.aggregate <- function(
         save.shape.files = FALSE
         );
 
-    cat("\nSF.grid.centre\n");
+    cat('\nSF.grid.centre\n');
     print( SF.grid.centre   );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    TIF.cropped <- "SR-ottawa-cropped.tiff";
-    PNG.cropped <- "SR-ottawa-cropped.png";
+    TIF.cropped <- 'SR-ottawa-cropped.tiff';
     get.sub.spatraster(
         SF.grid.centre = SF.grid.centre,
         SR.origin      = SR.utm.zone,
@@ -82,122 +81,78 @@ test_terra.aggregate <- function(
         TIF.output     = TIF.cropped
         );
     SR.cropped <- terra::rast(TIF.cropped);
-    cat("\nSR.cropped\n");
+    cat('\nSR.cropped\n');
     print( SR.cropped   );
 
-    png(
-        filename = PNG.cropped,
-        res      = 300,
-        width    =  12,
-        height   =  10,
-        units    = "in"
-        );
-    terra::plot(
-        x     = SR.cropped,
-        colNA = colour.NA
-        );
-    dev.off();
-
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    list.grid.cropped <- extract.grid.from.SpatRaster(
-        SR.input = SR.cropped
-        );
-    cat("\nstr(list.grid.cropped)\n");
-    print( str(list.grid.cropped)   );
-
-    get.nearest.grid.point_save.shape.files(
-        SF.poi            = SF.epsg.4326.ottawa,
-        SF.nearest        = SF.grid.centre,
-        list.grid.info    = list.grid.cropped,
-        shape.file.prefix = "SF-original"
-        );
-
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    TIF.cropped.f2 <- "SR-ottawa-cropped-f2.tiff";
-    PNG.cropped.f2 <- "SR-ottawa-cropped-f2.png";
-
-    terra::aggregate(
-        x        = SR.cropped,
-        fact     = 2,
-        fun      = "modal",
-        filename = TIF.cropped.f2
-        );
-    SR.cropped.f2 <- terra::rast(TIF.cropped.f2);
-    cat("\nSR.cropped.f2\n");
-    print( SR.cropped.f2   );
-
-    png(
-        filename = PNG.cropped.f2,
-        res      = 300,
-        width    =  12,
-        height   =  10,
-        units    = "in"
-        );
-    terra::plot(
-        x     = SR.cropped.f2,
-        colNA = colour.NA
-        );
-    dev.off();
-
-    list.grid.cropped.f2 <- extract.grid.from.SpatRaster(
-        SR.input = SR.cropped.f2
-        );
-    cat("\nstr(list.grid.cropped.f2)\n");
-    print( str(list.grid.cropped.f2)   );
-
-    get.nearest.grid.point_save.shape.files(
-        list.grid.info    = list.grid.cropped.f2,
-        shape.file.prefix = "SF-f2"
-        );
-
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    TIF.cropped.f3 <- "SR-ottawa-cropped-f3.tiff";
-    PNG.cropped.f3 <- "SR-ottawa-cropped-f3.png";
-
-    terra::aggregate(
-        x        = SR.cropped,
-        fact     = 3,
-        fun      = "modal",
-        filename = TIF.cropped.f3
-        );
-    SR.cropped.f3 <- terra::rast(TIF.cropped.f3);
-    cat("\nSR.cropped.f3\n");
-    print( SR.cropped.f3   );
-
-    png(
-        filename = PNG.cropped.f3,
-        res      = 300,
-        width    =  12,
-        height   =  10,
-        units    = "in"
-        );
-    terra::plot(
-        x     = SR.cropped.f3,
-        colNA = colour.NA
-        );
-    dev.off();
-
-    list.grid.cropped.f3 <- extract.grid.from.SpatRaster(
-        SR.input = SR.cropped.f3
-        );
-    cat("\nstr(list.grid.cropped.f3)\n");
-    print( str(list.grid.cropped.f3)   );
-
-    get.nearest.grid.point_save.shape.files(
-        list.grid.info    = list.grid.cropped.f3,
-        shape.file.prefix = "SF-f3"
-        );
+    for ( aggregation.factor in seq(1,3) ) {
+        temp.stem <- paste0("SF-f",aggregation.factor);
+        test_terra.aggregate_inner(
+            SR.input           = SR.cropped,
+            aggregation.factor = aggregation.factor,
+            TIF.output         = paste0(temp.stem,'.tiff'),
+            PNG.output         = paste0(temp.stem,'.png' ),
+            SHP.prefix         = temp.stem
+            );
+        }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     base::setwd(original.directory);
-    cat("\nbase::getwd()\n");
+    cat('\nbase::getwd()\n');
     print( base::getwd()   );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    cat(paste0("\n",thisFunctionName,"() quits."));
-    cat("\n### ~~~~~~~~~~~~~~~~~~~~ ###\n");
+    cat(paste0('\n',thisFunctionName,'() quits.'));
+    cat('\n### ~~~~~~~~~~~~~~~~~~~~ ###\n');
     return( NULL );
 
     }
 
 ##################################################
+test_terra.aggregate_inner <- function(
+    SR.input           = NULL,
+    aggregation.factor = NULL,
+    TIF.output         = NULL,
+    PNG.output         = NULL,
+    SHP.prefix         = NULL
+    ) {
+
+    if ( aggregation.factor > 1 ) {
+        terra::aggregate(
+            x        = SR.input,
+            fact     = aggregation.factor,
+            fun      = 'modal',
+            filename = TIF.output
+            );
+        SR.aggregated <- terra::rast(TIF.output);
+        cat('\nSR.aggregated\n');
+        print( SR.aggregated   );
+    } else {
+        SR.aggregated <- SR.input;
+        }
+
+    png(
+        filename = PNG.output,
+        res      = 300,
+        width    =  12,
+        height   =  10,
+        units    = 'in'
+        );
+    terra::plot(
+        x     = SR.aggregated,
+        colNA = colour.NA
+        );
+    dev.off();
+
+    list.grid.info <- extract.grid.from.SpatRaster(
+        SR.input = SR.aggregated
+        );
+
+    get.nearest.grid.point_save.shape.files(
+        list.grid.info    = list.grid.info,
+        shape.file.prefix = SHP.prefix
+        );
+
+    return( NULL );
+
+    }
