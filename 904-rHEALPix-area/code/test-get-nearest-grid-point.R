@@ -59,8 +59,9 @@ test_get.nearest.grid.point <- function(
         SF.poi            = SF.epsg.4326.ottawa,
         SR.target         = SR.utm.zone,
         half.side.length  = 150,
-        save.shape.files  = TRUE,
-        shape.file.prefix = "vertex"
+        point.type        = 'vertex',
+        shape.file.prefix = 'vertex',
+        save.shape.files  = TRUE
         );
 
     cat("\nSFC.grid.point\n");
@@ -70,8 +71,9 @@ test_get.nearest.grid.point <- function(
         SF.poi            = SF.epsg.4326.ottawa,
         SR.target         = SR.utm.zone,
         half.side.length  = 150,
-        save.shape.files  = TRUE,
-        shape.file.prefix = "centroid"
+        point.type        = 'centroid',
+        shape.file.prefix = 'centroid',
+        save.shape.files  = TRUE
         );
 
     cat("\nSFC.grid.point\n");
