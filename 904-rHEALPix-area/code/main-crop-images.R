@@ -127,9 +127,9 @@ assess.resampling(
     DF.coltab          = DF.coltab,
     data.directory     = data.directory,
     data.snapshot      = data.snapshot,
-    x.ncell            = 1800,
-    y.ncell            = 1800,
-    crosstab.precision =    7,
+    x.ncell            = 180, # 1800,
+    y.ncell            = 180, # 1800,
+    crosstab.precision =   7,
     output.directory   = "output-resampling"
     );
 

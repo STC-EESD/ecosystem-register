@@ -24,8 +24,8 @@ assess.resampling <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    # for ( row.index in c(5,6) ) {
-    for ( row.index in seq(1,nrow(DF.aoi)) ) {
+    # for ( row.index in seq(1,nrow(DF.aoi)) ) {
+    for ( row.index in c(5,6) ) {
 
         temp.aoi      <- DF.aoi[row.index,'aoi'      ];
         temp.utm.zone <- DF.aoi[row.index,'utmzone'  ];
