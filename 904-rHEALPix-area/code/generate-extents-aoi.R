@@ -21,8 +21,8 @@ generate.extents.aoi <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    # for ( row.index in seq(1,nrow(DF.aoi)) ) {
-    for ( row.index in c(5,6) ) {
+    # for ( row.index in c(5,6) ) {
+    for ( row.index in seq(1,nrow(DF.aoi)) ) {
 
         temp.aoi      <- DF.aoi[row.index,'aoi'      ];
         temp.utm.zone <- DF.aoi[row.index,'utmzone'  ];
@@ -115,23 +115,23 @@ generate.extents.aoi <- function(
         dev.off();
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        generate.extents.aoi_extent(
-            input.raster     = SR.cropped, # aoi.raster,
-            utm.zone         = temp.utm.zone,
-            aoi              = temp.aoi,
-            proj4string      = terra::crs(x = SR.cropped, proj = TRUE),
-            map.projection   = "original",
-            output.directory = output.directory
-            );
+        # generate.extents.aoi_extent(
+        #     input.raster     = SR.cropped, # aoi.raster,
+        #     utm.zone         = temp.utm.zone,
+        #     aoi              = temp.aoi,
+        #     proj4string      = terra::crs(x = SR.cropped, proj = TRUE),
+        #     map.projection   = "original",
+        #     output.directory = output.directory
+        #     );
 
-        generate.extents.aoi_extent(
-            input.raster     = SR.cropped, # aoi.raster,
-            utm.zone         = temp.utm.zone,
-            aoi              = temp.aoi,
-            proj4string      = proj4string.rHEALPix,
-            map.projection   = "rHEALPix-planar",
-            output.directory = output.directory
-            );
+        # generate.extents.aoi_extent(
+        #     input.raster     = SR.cropped, # aoi.raster,
+        #     utm.zone         = temp.utm.zone,
+        #     aoi              = temp.aoi,
+        #     proj4string      = proj4string.rHEALPix,
+        #     map.projection   = "rHEALPix-planar",
+        #     output.directory = output.directory
+        #     );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         terra::cellSize(

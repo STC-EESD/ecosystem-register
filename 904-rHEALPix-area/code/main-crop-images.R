@@ -23,6 +23,7 @@ setwd( output.directory );
 ##################################################
 require(jsonlite);
 require(sf);
+require(stringr);
 require(terra);
 
 # source supporting R code
@@ -67,6 +68,14 @@ colour.NA <- 'black';
 DF.aoi <- read.csv(
     file = file.path(code.directory,"aoi-semi-decadal-land-use-time-series.csv")
     );
+DF.aoi[,'utmzone'] <- stringr::str_pad(
+    string = as.character(DF.aoi[,'utmzone']),
+    pad    = "0",
+    side   = "left",
+    width  = 2,
+    );
+print( str(DF.aoi) );
+print( DF.aoi );
 
 test_get.nearest.grid.point(
     DF.aoi           = DF.aoi,
@@ -101,16 +110,16 @@ test_terra.aggregate(
 #     output.directory = "output-utm-zones"
 #     );
 
-# generate.extents.aoi(
-#     DF.aoi             = DF.aoi,
-#     DF.coltab          = DF.coltab,
-#     data.directory     = data.directory,
-#     data.snapshot      = data.snapshot,
-#     x.ncell            = 1000,
-#     y.ncell            = 1000,
-#     crosstab.precision =    7,
-#     output.directory   = "output-aoi"
-#     );
+generate.extents.aoi(
+    DF.aoi             = DF.aoi,
+    DF.coltab          = DF.coltab,
+    data.directory     = data.directory,
+    data.snapshot      = data.snapshot,
+    x.ncell            = 30, # 1000,
+    y.ncell            = 30, # 1000,
+    crosstab.precision =  7,
+    output.directory   = "output-aoi"
+    );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
