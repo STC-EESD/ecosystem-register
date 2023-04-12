@@ -59,6 +59,7 @@ data.snapshot <-"2023-04-05.01";
 proj4string.rHEALPix <- "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50";
 proj4string.epsg4326 <- "+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs";
 WKT.NAD_1983_Albers  <- 'PROJCS["NAD_1983_Albers",GEOGCS["GCS_North_American_1983",DATUM["D_North_American_1983",SPHEROID["GRS_1980",6378137.0,298.257222101]],PRIMEM["Greenwich",0.0],UNIT["Degree",0.0174532925199433]],PROJECTION["Albers"],PARAMETER["False_Easting",0.0],PARAMETER["False_Northing",0.0],PARAMETER["Central_Meridian",-91.867],PARAMETER["Standard_Parallel_1",49.0],PARAMETER["Standard_Parallel_2",77.0],PARAMETER["Latitude_Of_Origin",63.5],UNIT["Meter",1.0]]'
+# temp.SpatRaster <- terra::project(x = my.SpatRaster, y = WKT.NAD_1983_Albers, method = "mode", res = 60)
 
 # NDVI.colour.palette <- rev(grDevices::terrain.colors(50));
 NDVI.colour.palette   <- grDevices::colorRampPalette(colors = c("gray25","green3"))(51);
