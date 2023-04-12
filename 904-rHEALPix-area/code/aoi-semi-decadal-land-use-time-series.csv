@@ -1,12 +1,9 @@
-aoi,utmzone,longitude,latitude
-vancouver,10,-123.113889,49.261111
-edmonton,12,-113.490278,53.534444
-regina,13,-104.606667,50.454722
-winnipeg,14,-97.146389,49.884444
-toronto,17,-79.373333,43.741667
-ottawa,18,-75.695,45.424722
-quebec,19,-71.208056,46.813889
-halifax,20,-63.590556,44.6475
-fredericton,19,-66.643056,45.963611
-stjohns,22,-52.796944,47.482222
-charlottetown,20,-63.134722,46.240278
+aoi,utmzone,longitude,latitude,xdist_km,ydist_km,description
+terrace,09,-128.6032,54.5182,100,100,"Terrace, BC - an alpine area in the mountains, with forest cover as well. An alternative to Dawson City as suggested by Mark but is not covered by the dataset."
+ghostlake,11,-114.7643,51.2081,100,100,"Ghost Lake, AB - approximately the midpoint between Canmore and Calgary. Prairie region that includes agriculture, transitions into the mountains."
+saskatoon,13,-106.6702,52.1579,100,100,"Saskatoon, SK - located in the Prairie Pothole Region -- surrounding area has pockets of temporary, seasonal, and even permanent wetlands.https://www.saskatoon.ca/business-development/development-regulation/developers-homebuilders/wetland-policy"
+churchill,15,-94.1696,58.7679,100,100,"Churchill, MB - on the coast of Hudson Bay. Located approximately  in the middle of the country."
+ottawa,18,-75.7343075,45.4058766,100,100,"Ottawa (Tunney’s Pasture :D).  Familiar area to most of us, combination of built-up, agriculture, natural & semi-natural, rivers."
+torngat,20,-64.173416,59.126872,100,100,"Torngat Mountains National Park; NE corner of coverage, tundra and coastal features"
+boreal,20,-64.8918558,55.0459621,100,100,"Boreal – tundra transitional area (very little built-up, if any: 130 km NE of Schefferville) , with some oddly linear boundaries between some classes."
+halifax,20,-63.6360012,44.6918826,100,100,"Halifax. East-coast, southern area of extent.  Part of prototype Register extent."
