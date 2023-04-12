@@ -28,6 +28,7 @@ require(terra);
 
 # source supporting R code
 code.files <- c(
+    "assess-resampling.R",
     "extract-grid-from-SpatRaster.R",
     "generate-rasters-provincial.R",
     "generate-rasters-utm-zones.R",
@@ -77,12 +78,12 @@ DF.aoi[,'utmzone'] <- stringr::str_pad(
 print( str(DF.aoi) );
 print( DF.aoi );
 
-test_get.nearest.grid.point(
-    DF.aoi           = DF.aoi,
-    data.directory   = data.directory,
-    data.snapshot    = data.snapshot,
-    output.directory = "test-get-nearest-grid-points"
-    );
+# test_get.nearest.grid.point(
+#     DF.aoi           = DF.aoi,
+#     data.directory   = data.directory,
+#     data.snapshot    = data.snapshot,
+#     output.directory = "test-get-nearest-grid-points"
+#     );
 
 # test_get.sub.spatraster(
 #     DF.aoi           = DF.aoi,
@@ -91,15 +92,15 @@ test_get.nearest.grid.point(
 #     output.directory = "test-terra-aggregate"
 #     );
 
-test_terra.aggregate(
-    DF.aoi           = DF.aoi,
-    data.directory   = data.directory,
-    data.snapshot    = data.snapshot,
-    point.type       = 'vertex',
-    x.ncell          = 12,
-    y.ncell          = 12,
-    output.directory = "test-terra-aggregate"
-    );
+# test_terra.aggregate(
+#     DF.aoi           = DF.aoi,
+#     data.directory   = data.directory,
+#     data.snapshot    = data.snapshot,
+#     point.type       = 'vertex',
+#     x.ncell          = 12,
+#     y.ncell          = 12,
+#     output.directory = "test-terra-aggregate"
+#     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # generate.rasters.utm.zones(
@@ -110,7 +111,18 @@ test_terra.aggregate(
 #     output.directory = "output-utm-zones"
 #     );
 
-generate.extents.aoi(
+# generate.extents.aoi(
+#     DF.aoi             = DF.aoi,
+#     DF.coltab          = DF.coltab,
+#     data.directory     = data.directory,
+#     data.snapshot      = data.snapshot,
+#     x.ncell            = 30, # 1000,
+#     y.ncell            = 30, # 1000,
+#     crosstab.precision =  7,
+#     output.directory   = "output-aoi"
+#     );
+
+assess.resampling(
     DF.aoi             = DF.aoi,
     DF.coltab          = DF.coltab,
     data.directory     = data.directory,
@@ -118,7 +130,7 @@ generate.extents.aoi(
     x.ncell            = 30, # 1000,
     y.ncell            = 30, # 1000,
     crosstab.precision =  7,
-    output.directory   = "output-aoi"
+    output.directory   = "output-resampling"
     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
