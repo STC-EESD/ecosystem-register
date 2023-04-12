@@ -69,7 +69,7 @@ assess.resampling <- function(
         print( SF.nearest.grid.point   );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        output.stem <- paste0("original-",temp.utm.zone,"-",temp.aoi);
+        output.stem <- paste0(temp.aoi,"-original");
         output.tiff <- paste0(output.stem,".tiff");
         output.png  <- paste0(output.stem,".png" );
 
@@ -90,6 +90,29 @@ assess.resampling <- function(
             );
         terra::plot(
             x     = SR.cropped,
+            colNA = colour.NA
+            );
+        dev.off();
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        output.stem <- paste0(temp.aoi,"-collapsed");
+        output.tiff <- paste0(output.stem,".tiff");
+        output.png  <- paste0(output.stem,".png" );
+
+        SR.collapsed <- collapse.classes.AAFC.SDLU(
+            SR.input   = SR.cropped,
+            TIF.output = output.tiff
+            );
+
+        png(
+            filename = output.png,
+            res      = 300,
+            width    =  12,
+            height   =  10,
+            units    = "in"
+            );
+        terra::plot(
+            x     = SR.collapsed,
             colNA = colour.NA
             );
         dev.off();
