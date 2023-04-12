@@ -29,6 +29,7 @@ require(terra);
 # source supporting R code
 code.files <- c(
     "assess-resampling.R",
+    "collapse-classes.R",
     "extract-grid-from-SpatRaster.R",
     "generate-rasters-provincial.R",
     "generate-rasters-utm-zones.R",
