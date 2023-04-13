@@ -97,7 +97,15 @@ test_SpatRaster.to.polygons <- function(
     print( str(list.output[['SF.polygons']])   );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    
+    sfarrow::st_write_parquet(
+        dsn = "SF-multipolygons.parquet",
+        obj = list.output[['SF.multipolygons']]
+        );
+
+    sfarrow::st_write_parquet(
+        dsn = "SF-polygons.parquet",
+        obj = list.output[['SF.polygons']]
+        );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     base::setwd(original.directory);
