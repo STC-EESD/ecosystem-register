@@ -86,7 +86,8 @@ test_SpatRaster.to.polygons <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     list.output <- SpatRaster.to.polygons(
-        input.SpatRaster = SR.cropped
+        input.SpatRaster = SR.cropped,
+        factor.colnames  = 'LU2010'
         );
 
     cat("\nstr(list.output[['SF.multipolygons']])\n");
