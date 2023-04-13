@@ -37,7 +37,9 @@ code.files <- c(
     "get-aci-crop-classification.R",
     "get-nearest-grid-point.R",
     "get-sub-spatraster.R",
+    "SpatRaster-to-polygons.R",
     "test-get-nearest-grid-point.R",
+    "test-SpatRaster-to-polygons.R",
     "test-terra-aggregate.R"
     );
 
@@ -105,6 +107,16 @@ print( DF.aoi );
 #     output.directory = "test-terra-aggregate"
 #     );
 
+test_SpatRaster.to.polygons(
+    DF.aoi           = DF.aoi,
+    data.directory   = data.directory,
+    data.snapshot    = data.snapshot,
+    point.type       = 'vertex',
+    x.ncell          = 180,
+    y.ncell          = 180,
+    output.directory = "test-SpatRaster-to-polygons"
+    );
+
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # generate.rasters.utm.zones(
 #     DF.coltab        = DF.coltab,
@@ -125,16 +137,16 @@ print( DF.aoi );
 #     output.directory   = "output-aoi"
 #     );
 
-assess.resampling(
-    DF.aoi             = DF.aoi,
-    DF.coltab          = DF.coltab,
-    data.directory     = data.directory,
-    data.snapshot      = data.snapshot,
-    x.ncell            = 180, # 1800,
-    y.ncell            = 180, # 1800,
-    crosstab.precision =   7,
-    output.directory   = "output-resampling"
-    );
+# assess.resampling(
+#     DF.aoi             = DF.aoi,
+#     DF.coltab          = DF.coltab,
+#     data.directory     = data.directory,
+#     data.snapshot      = data.snapshot,
+#     x.ncell            = 180, # 1800,
+#     y.ncell            = 180, # 1800,
+#     crosstab.precision =   7,
+#     output.directory   = "output-resampling"
+#     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
