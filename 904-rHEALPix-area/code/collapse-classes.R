@@ -11,11 +11,22 @@ collapse.classes.AAFC.SDLU <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     terra::app(
         x        = SR.input,
-        fun      = collapse.classes.AAFC.SDLU_inner,
+        fun      = collapse.classes.AAFC.SDLU_reclassify,
         filename = TIF.output
         );
     SR.output <- terra::rast(TIF.output);
     terra::coltab(SR.output) <- collapse.classes.AAFC.SDLU_get.DF.coltab();
+    levels(SR.output) <- c(
+        "unknown",
+        "built-up and artificial surfaces",
+        "cropland",
+        "inland water bodies",
+        "treed areas",
+        "grassland and shrubland",
+        "wetland",
+        "permanent snow and ice",
+        "other natural and semi-natural"
+        );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
@@ -25,7 +36,7 @@ collapse.classes.AAFC.SDLU <- function(
     }
 
 ##################################################
-collapse.classes.AAFC.SDLU_inner <- function(x) {
+collapse.classes.AAFC.SDLU_reclassify <- function(x) {
     dplyr::case_when(
         x %in% c(21,22,24,25,28,29,81,82,84,85,88,89) ~ 1,
         x %in% c(51,55) ~ 2,
