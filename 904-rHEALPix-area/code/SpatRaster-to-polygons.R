@@ -87,7 +87,7 @@ SpatRaster.to.polygons_row.to.polygons <- function(
     retained.colnames <- base::setdiff(base::colnames(DF.rows),'deleteme');
     DF.rows <- base::as.data.frame(DF.rows[,retained.colnames]);
     base::colnames(DF.rows) <- retained.colnames;
-    SF.output <- base::cbind(DF.rows,SF.polygons);
+    SF.output <- sf::st_as_sf(base::cbind(DF.rows,SF.polygons));
     return( SF.output );
     }
 
