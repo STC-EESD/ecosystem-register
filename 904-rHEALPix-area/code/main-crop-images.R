@@ -23,6 +23,7 @@ setwd( output.directory );
 ##################################################
 require(jsonlite);
 require(sf);
+require(sfarrow);
 require(stringr);
 require(terra);
 
