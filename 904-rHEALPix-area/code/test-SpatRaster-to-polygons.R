@@ -85,11 +85,15 @@ test_SpatRaster.to.polygons <- function(
     print( SR.cropped   );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    SF.polygons <- SpatRaster.to.polygons(
+    list.output <- SpatRaster.to.polygons(
         input.SpatRaster = SR.cropped
         );
-    cat("\nSF.polygons\n");
-    print( SF.polygons   );
+
+    cat("\nlist.output[['SF.multipolygons']]\n");
+    print( list.output[['SF.multipolygons']]   );
+
+    cat("\nhead(list.output[['SF.polygons']])\n");
+    print( head(list.output[['SF.polygons']])   );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     base::setwd(original.directory);
