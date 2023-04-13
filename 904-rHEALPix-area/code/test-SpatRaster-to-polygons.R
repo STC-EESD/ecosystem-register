@@ -93,11 +93,11 @@ test_SpatRaster.to.polygons <- function(
     cat("\nstr(list.output[['SF.multipolygons']])\n");
     print( str(list.output[['SF.multipolygons']])   );
 
-    cat("\nlist.output[['SF.multipolygons']]\n");
-    print( list.output[['SF.multipolygons']]   );
-
     cat("\nstr(list.output[['SF.polygons']])\n");
     print( str(list.output[['SF.polygons']])   );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     base::setwd(original.directory);
