@@ -20,11 +20,13 @@ if [[ "${OSTYPE}" =~ .*"linux".* ]]; then
   # cp ${HOME}/.gee_environment_variables ${outputDIR}/code/gee_environment_variables.txt
   pythonBinDIR=${GEE_ENV_DIR}/bin
   RBinDIR=${pythonBinDIR}
+  RTerraBinDIR=${TERRA_ENV_DIR}/bin
 else
   pythonBinDIR=`which python`
   pythonBinDIR=${pythonBinDIR//\/python/}
   RBinDIR=`which R`
   RBinDIR=${RBinDIR//\/R/}
+  RTerraBinDIR=${RBinDIR}
 fi
 
 ########################################################
