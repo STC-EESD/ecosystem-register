@@ -21,6 +21,8 @@ generate.extents.aoi <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    SF.aoi.polygons <- NULL;
+
     # for ( row.index in c(5,6) ) {
     for ( row.index in seq(1,nrow(DF.aoi)) ) {
 
@@ -115,6 +117,22 @@ generate.extents.aoi <- function(
         dev.off();
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        SR.extent <- terra::ext(SR.cropped);
+        SV.extent <- terra::as.polygons(SR.extent);
+        SF.extent <- sf::st_as_sf(SV.extent);
+        sf::st_crs(SF.extent) <- terra::crs(x = SR.cropped, proj = TRUE);
+        SF.extent <- sf::st_transform(
+            x   = SF.extent,
+            crs = sf::st_crs("epsg:4326")
+            );
+
+        if ( is.null(SF.aoi.polygons) ) {
+            SF.aoi.polygons <- SF.extent;
+        } else {
+            SF.aoi.polygons <- rbind(SF.aoi.polygons,SF.extent);
+            }
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         # generate.extents.aoi_extent(
         #     input.raster     = SR.cropped, # aoi.raster,
         #     utm.zone         = temp.utm.zone,
@@ -134,34 +152,40 @@ generate.extents.aoi <- function(
         #     );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        terra::cellSize(
-            x         = SR.cropped,
-            filename  = "tmp-cellSize.tiff"
-            );
-        SR.cellsizes <- terra::rast("tmp-cellSize.tiff");
+        # terra::cellSize(
+        #     x         = SR.cropped,
+        #     filename  = "tmp-cellSize.tiff"
+        #     );
+        # SR.cellsizes <- terra::rast("tmp-cellSize.tiff");
 
-        DF.crosstab  <- terra::crosstab(
-            x      = c(SR.cellsizes,SR.cropped),
-            digits = crosstab.precision
-            );
+        # DF.crosstab  <- terra::crosstab(
+        #     x      = c(SR.cellsizes,SR.cropped),
+        #     digits = crosstab.precision
+        #     );
 
-        cat("\nstr(DF.crosstab)\n");
-        print( str(DF.crosstab)   );
-        cat("\nutils::head(x = DF.crosstab, n = 20L)\n");
-        print( utils::head(x = DF.crosstab, n = 20L)   );
+        # cat("\nstr(DF.crosstab)\n");
+        # print( str(DF.crosstab)   );
+        # cat("\nutils::head(x = DF.crosstab, n = 20L)\n");
+        # print( utils::head(x = DF.crosstab, n = 20L)   );
 
-        output.csv <- file.path(
-            output.directory,
-            paste0("xtab-",temp.utm.zone,"-",temp.aoi,".csv")
-            );
-        write.csv(
-            file = output.csv, 
-            x    = DF.crosstab
-            );
+        # output.csv <- file.path(
+        #     output.directory,
+        #     paste0("xtab-",temp.utm.zone,"-",temp.aoi,".csv")
+        #     );
+        # write.csv(
+        #     file = output.csv, 
+        #     x    = DF.crosstab
+        #     );
 
-        base::file.remove("tmp-cellSize.tiff");
+        # base::file.remove("tmp-cellSize.tiff");
 
         }
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    sf::st_write(
+        obj = SF.aoi.polygons,
+        dsn = file.path(output.directory,"SF-aoi-polygons.shp")
+        );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));

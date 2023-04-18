@@ -108,15 +108,15 @@ print( DF.aoi );
 #     output.directory = "test-terra-aggregate"
 #     );
 
-test_SpatRaster.to.polygons(
-    DF.aoi           = DF.aoi,
-    data.directory   = data.directory,
-    data.snapshot    = data.snapshot,
-    point.type       = 'vertex',
-    x.ncell          = 180,
-    y.ncell          = 180,
-    output.directory = "test-SpatRaster-to-polygons"
-    );
+# test_SpatRaster.to.polygons(
+#     DF.aoi           = DF.aoi,
+#     data.directory   = data.directory,
+#     data.snapshot    = data.snapshot,
+#     point.type       = 'vertex',
+#     x.ncell          = 180,
+#     y.ncell          = 180,
+#     output.directory = "test-SpatRaster-to-polygons"
+#     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # generate.rasters.utm.zones(
@@ -127,16 +127,16 @@ test_SpatRaster.to.polygons(
 #     output.directory = "output-utm-zones"
 #     );
 
-# generate.extents.aoi(
-#     DF.aoi             = DF.aoi,
-#     DF.coltab          = DF.coltab,
-#     data.directory     = data.directory,
-#     data.snapshot      = data.snapshot,
-#     x.ncell            = 30, # 1000,
-#     y.ncell            = 30, # 1000,
-#     crosstab.precision =  7,
-#     output.directory   = "output-aoi"
-#     );
+generate.extents.aoi(
+    DF.aoi             = DF.aoi,
+    DF.coltab          = DF.coltab,
+    data.directory     = data.directory,
+    data.snapshot      = data.snapshot,
+    x.ncell            = 30, # 1000,
+    y.ncell            = 30, # 1000,
+    crosstab.precision =  7,
+    output.directory   = "output-aoi"
+    );
 
 # assess.resampling(
 #     DF.aoi             = DF.aoi,
