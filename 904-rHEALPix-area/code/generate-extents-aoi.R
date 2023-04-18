@@ -202,6 +202,7 @@ generate.extents.aoi <- function(
     if ( nchar(system.file(package='tmap')) > 0 ) {
         generate.extents.aoi_generate.map(
             SF.provinces     = SF.provinces,
+            SF.aoi.polygons  = SF.aoi.polygons,
             SF.aoi.points    = SF.aoi.points,
             output.directory = output.directory
             );
@@ -217,17 +218,22 @@ generate.extents.aoi <- function(
 ##################################################
 generate.extents.aoi_generate.map <- function(
     SF.provinces     = NULL,
+    SF.aoi.polygons  = NULL,
     SF.aoi.points    = NULL,
     output.directory = NULL
     ) {
 
 
     my.tmap <- tmap::tm_shape(SF.provinces) + tmap::tm_borders();
-    my.tmap <- my.tmap + tmap::tm_shape(SF.aoi.points) + tmap::tm_dots( # tmap::tm_bubbles(
-        size  = 5,
+    my.tmap <- my.tmap + tmap::tm_shape(SF.aoi.polygons) + tmap::tm_sf(
         col   = "orange",
         alpha = 0.5
         );
+    # my.tmap <- my.tmap + tmap::tm_shape(SF.aoi.points) + tmap::tm_dots( # tmap::tm_bubbles(
+    #     size  = 5,
+    #     col   = "orange",
+    #     alpha = 0.5
+    #     );
     my.tmap <- my.tmap + tmap::tm_layout(
         legend.position   = c("right","bottom"),
         legend.title.size = 1.0,
