@@ -57,7 +57,8 @@ is.macOS <- grepl(x = sessionInfo()[['platform']], pattern = 'apple', ignore.cas
 n.cores  <- ifelse(test = is.macOS, yes = 2, no = parallel::detectCores() - 1);
 cat(paste0("\n# n.cores = ",n.cores,"\n"));
 
-data.snapshot <-"2023-04-05.01";
+data.snapshot            <- "2023-04-05.01";
+data.snapshot.boundaries <- "2022-12-19.01";
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 proj4string.rHEALPix <- "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50";
@@ -83,6 +84,15 @@ DF.aoi[,'utmzone'] <- stringr::str_pad(
     );
 print( str(DF.aoi) );
 print( DF.aoi );
+
+SF.canada <- sf::st_read(
+    dsn = file.path(data.directory,data.snapshot.boundaries,"lpr_000a21a_e","lpr_000a21a_e.shp")
+    );
+SF.provinces <- SF.canada;
+SF.provinces$PRUID <- as.integer(SF.provinces$PRUID);
+SF.provinces <- SF.provinces[SF.provinces$PRUID < 60,]
+cat("\nstr(SF.provinces)\n");
+print( str(SF.provinces)   );
 
 # test_get.nearest.grid.point(
 #     DF.aoi           = DF.aoi,
@@ -129,6 +139,7 @@ print( DF.aoi );
 
 generate.extents.aoi(
     DF.aoi             = DF.aoi,
+    SF.provinces       = SF.provinces,
     DF.coltab          = DF.coltab,
     data.directory     = data.directory,
     data.snapshot      = data.snapshot,

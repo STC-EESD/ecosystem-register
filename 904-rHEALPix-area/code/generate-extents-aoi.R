@@ -1,6 +1,7 @@
 
 generate.extents.aoi <- function(
     DF.aoi               = NULL,
+    SF.provinces         = NULL,
     DF.coltab            = NULL,
     data.directory       = NULL,
     data.snapshot        = NULL,
@@ -21,6 +22,7 @@ generate.extents.aoi <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    SF.aoi.points   <- NULL;
     SF.aoi.polygons <- NULL;
 
     # for ( row.index in c(5,6) ) {
@@ -125,11 +127,14 @@ generate.extents.aoi <- function(
             x   = SF.extent,
             crs = sf::st_crs("epsg:4326")
             );
+        SF.point <- sf::st_cast(x = SF.extent, to = "POINT");
 
         if ( is.null(SF.aoi.polygons) ) {
             SF.aoi.polygons <- SF.extent;
+            SF.aoi.points   <- SF.point;
         } else {
             SF.aoi.polygons <- rbind(SF.aoi.polygons,SF.extent);
+            SF.aoi.points   <- rbind(SF.aoi.points,  SF.point );
             }
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -187,6 +192,18 @@ generate.extents.aoi <- function(
         dsn = file.path(output.directory,"SF-aoi-polygons.shp")
         );
 
+    sf::st_write(
+        obj = SF.aoi.points,
+        dsn = file.path(output.directory,"SF-aoi-points.shp")
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    generate.extents.aoi_generate.map(
+        SF.provinces     = SF.provinces,
+        SF.aoi.points    = SF.aoi.points,
+        output.directory = output.directory
+        );
+
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
     cat("\n### ~~~~~~~~~~~~~~~~~~~~ ###\n");
@@ -195,6 +212,42 @@ generate.extents.aoi <- function(
     }
 
 ##################################################
+generate.extents.aoi_generate.map <- function(
+    SF.provinces     = NULL,
+    SF.aoi.points    = NULL,
+    output.directory = NULL
+    ) {
+
+
+    my.tmap <- tmap::tm_shape(SF.provinces) + tmap::tm_borders();
+    my.tmap <- my.tmap + tmap::tm_shape(SF.aoi.points) + tmap::tm_dots( # tmap::tm_bubbles(
+        size  = 5,
+        col   = "orange",
+        alpha = 0.5
+        );
+    my.tmap <- my.tmap + tmap::tm_layout(
+        legend.position   = c("right","bottom"),
+        legend.title.size = 1.0,
+        legend.text.size  = 0.8
+        );
+
+    # cat("\nstr(my.tmap)\n");
+    # print( str(my.tmap)   );
+
+    PNG.output <- paste0("plot-aoi-map.png");
+    tmap::tmap_save(
+        tm       = my.tmap,
+        filename = file.path(output.directory,PNG.output),
+        width    = 16,
+        # height =  8,
+        units    = "in",
+        dpi      = 300
+        );
+
+    return( NULL );
+
+    }
+
 generate.extents.aoi_extent <- function(
     input.raster       = NULL,
     utm.zone           = NULL,
