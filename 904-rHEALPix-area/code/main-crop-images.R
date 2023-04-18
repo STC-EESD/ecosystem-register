@@ -147,6 +147,7 @@ generate.extents.aoi(
     x.ncell            = 30, # 1000,
     y.ncell            = 30, # 1000,
     crosstab.precision =  7,
+    colour.NA          = 'black',
     output.directory   = "output-aoi"
     );
 

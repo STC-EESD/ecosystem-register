@@ -8,6 +8,7 @@ generate.extents.aoi <- function(
     x.ncell              = 1000,
     y.ncell              = 1000,
     crosstab.precision   =    4,
+    colour.NA            = 'black',
     proj4string.rHEALPix = "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50",
     output.directory     = "output-aoi"
     ) {
