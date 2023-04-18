@@ -199,11 +199,13 @@ generate.extents.aoi <- function(
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    generate.extents.aoi_generate.map(
-        SF.provinces     = SF.provinces,
-        SF.aoi.points    = SF.aoi.points,
-        output.directory = output.directory
-        );
+    if ( nchar(system.file(package='tmap')) > 0 ) {
+        generate.extents.aoi_generate.map(
+            SF.provinces     = SF.provinces,
+            SF.aoi.points    = SF.aoi.points,
+            output.directory = output.directory
+            );
+        }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
