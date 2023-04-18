@@ -94,6 +94,7 @@ SF.provinces <- SF.provinces[SF.provinces$PRUID < 60,]
 cat("\nstr(SF.provinces)\n");
 print( str(SF.provinces)   );
 
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 # test_get.nearest.grid.point(
 #     DF.aoi           = DF.aoi,
 #     data.directory   = data.directory,
