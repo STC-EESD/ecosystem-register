@@ -69,5 +69,12 @@ ${RBinDIR}/R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFo
 # sleep 2
 
 ##################################################
+# myRscript=${codeDIR}/main-resample.R
+# stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
+# stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
+# ${RTerraBinDIR}/R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
+# sleep 2
+
+##################################################
 exit
 
