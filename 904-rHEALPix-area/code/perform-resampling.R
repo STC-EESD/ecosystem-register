@@ -38,6 +38,7 @@ perform.resampling <- function(
         perform.resampling_single.aoi(
             tiff.aoi           = temp.tiff,
             original.directory = original.directory,
+            directory.aoi      = directory.aoi,
             output.directory   = output.directory
             );
         }
@@ -170,7 +171,10 @@ perform.resampling <- function(
 perform.resampling_single.aoi <- function(
     tiff.aoi           = NULL,
     original.directory = NULL,
-    output.directory   = NULL
+    directory.aoi      = NULL,
+    output.directory   = NULL,
+    aggregation.factor = 2,
+    colour.NA          = 'black'
     ) {
 
     temp.directory <- gsub(
@@ -192,8 +196,40 @@ perform.resampling_single.aoi <- function(
         dir.create(path = temp.directory, recursive = TRUE);
         }
 
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     setwd(temp.directory);
 
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    SR.original <- terra::rast(
+        file.path(original.directory,directory.aoi,tiff.aoi)
+        );
+
+    TIF.output <- "temp.tiff";
+    terra::aggregate(
+        x        = SR.original,
+        fact     = aggregation.factor,
+        fun      = 'modal',
+        filename = TIF.output
+        );
+    SR.aggregated <- terra::rast(TIF.output);
+    cat('\nSR.aggregated\n');
+    print( SR.aggregated   );
+
+    PNG.output <- "temp.png"
+    png(
+        filename = PNG.output,
+        res      = 300,
+        width    =  12,
+        height   =  10,
+        units    = 'in'
+        );
+    terra::plot(
+        x     = SR.aggregated,
+        colNA = colour.NA
+        );
+    dev.off();
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     setwd(original.directory);
 
     }
