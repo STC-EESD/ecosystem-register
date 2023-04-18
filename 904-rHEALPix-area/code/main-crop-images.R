@@ -29,7 +29,6 @@ require(terra);
 
 # source supporting R code
 code.files <- c(
-    # "assess-resampling.R",
     "collapse-classes.R",
     "extract-grid-from-SpatRaster.R",
     "generate-rasters-provincial.R",
@@ -38,11 +37,12 @@ code.files <- c(
     "get-aci-crop-classification.R",
     "get-nearest-grid-point.R",
     "get-sub-spatraster.R",
-    "perform-resampling.R",
     "SpatRaster-to-polygons.R",
     "test-get-nearest-grid-point.R",
     "test-SpatRaster-to-polygons.R",
     "test-terra-aggregate.R"
+    # "assess-resampling.R",
+    # "perform-resampling.R"
     );
 
 for ( code.file in code.files ) {
@@ -151,31 +151,6 @@ generate.extents.aoi(
     colour.NA          = 'black',
     output.directory   = "output-aoi"
     );
-
-# perform.resampling(
-#     directory.aoi    = "output-aoi",
-#     output.directory = "output-resampling"
-#     # DF.aoi             = DF.aoi,
-#     # SF.provinces       = SF.provinces,
-#     # DF.coltab          = DF.coltab,
-#     # data.directory     = data.directory,
-#     # data.snapshot      = data.snapshot,
-#     # x.ncell            = 30, # 1000,
-#     # y.ncell            = 30, # 1000,
-#     # crosstab.precision =  7,
-#     # colour.NA          = 'black'
-#     );
-
-# assess.resampling(
-#     DF.aoi             = DF.aoi,
-#     DF.coltab          = DF.coltab,
-#     data.directory     = data.directory,
-#     data.snapshot      = data.snapshot,
-#     x.ncell            = 180, # 1800,
-#     y.ncell            = 180, # 1800,
-#     crosstab.precision =   7,
-#     output.directory   = "output-resampling"
-#     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 

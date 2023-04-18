@@ -29,20 +29,17 @@ require(terra);
 
 # source supporting R code
 code.files <- c(
-    # "assess-resampling.R",
     "collapse-classes.R",
-    "extract-grid-from-SpatRaster.R",
-    "generate-rasters-provincial.R",
-    "generate-rasters-utm-zones.R",
-    "generate-extents-aoi.R",
     "get-aci-crop-classification.R",
-    "get-nearest-grid-point.R",
-    "get-sub-spatraster.R",
-    "perform-resampling.R",
-    "SpatRaster-to-polygons.R",
-    "test-get-nearest-grid-point.R",
-    "test-SpatRaster-to-polygons.R",
-    "test-terra-aggregate.R"
+    "perform-resampling.R"
+    # "assess-resampling.R",
+    # "get-nearest-grid-point.R",
+    # "get-sub-spatraster.R",
+    # "extract-grid-from-SpatRaster.R",
+    # "generate-rasters-provincial.R",
+    # "generate-rasters-utm-zones.R",
+    # "generate-extents-aoi.R",
+    # "SpatRaster-to-polygons.R"
     );
 
 for ( code.file in code.files ) {
@@ -74,108 +71,12 @@ NDVI.values           <- seq(-1,1,0.04);
 colour.NA <- 'black';
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-# DF.aoi <- read.csv(
-#     file = file.path(code.directory,"aoi-semi-decadal-land-use-time-series.csv")
-#     );
-# DF.aoi[,'utmzone'] <- stringr::str_pad(
-#     string = as.character(DF.aoi[,'utmzone']),
-#     pad    = "0",
-#     side   = "left",
-#     width  = 2,
-#     );
-# print( str(DF.aoi) );
-# print( DF.aoi );
-
-# SF.canada <- sf::st_read(
-#     dsn = file.path(data.directory,data.snapshot.boundaries,"lpr_000a21a_e","lpr_000a21a_e.shp")
-#     );
-# SF.provinces <- SF.canada;
-# SF.provinces$PRUID <- as.integer(SF.provinces$PRUID);
-# SF.provinces <- SF.provinces[SF.provinces$PRUID < 60,]
-# cat("\nstr(SF.provinces)\n");
-# print( str(SF.provinces)   );
-
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-# test_get.nearest.grid.point(
-#     DF.aoi           = DF.aoi,
-#     data.directory   = data.directory,
-#     data.snapshot    = data.snapshot,
-#     output.directory = "test-get-nearest-grid-points"
-#     );
-
-# test_get.sub.spatraster(
-#     DF.aoi           = DF.aoi,
-#     data.directory   = data.directory,
-#     data.snapshot    = data.snapshot,
-#     output.directory = "test-terra-aggregate"
-#     );
-
-# test_terra.aggregate(
-#     DF.aoi           = DF.aoi,
-#     data.directory   = data.directory,
-#     data.snapshot    = data.snapshot,
-#     point.type       = 'vertex',
-#     x.ncell          = 12,
-#     y.ncell          = 12,
-#     output.directory = "test-terra-aggregate"
-#     );
-
-# test_SpatRaster.to.polygons(
-#     DF.aoi           = DF.aoi,
-#     data.directory   = data.directory,
-#     data.snapshot    = data.snapshot,
-#     point.type       = 'vertex',
-#     x.ncell          = 180,
-#     y.ncell          = 180,
-#     output.directory = "test-SpatRaster-to-polygons"
-#     );
-
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-# generate.rasters.utm.zones(
-#     DF.coltab        = DF.coltab,
-#     data.directory   = data.directory,
-#     data.snapshot    = data.snapshot,
-#     colour.NA        = colour.NA,
-#     output.directory = "output-utm-zones"
-#     );
-
-# generate.extents.aoi(
-#     DF.aoi             = DF.aoi,
-#     SF.provinces       = SF.provinces,
-#     DF.coltab          = DF.coltab,
-#     data.directory     = data.directory,
-#     data.snapshot      = data.snapshot,
-#     x.ncell            = 30, # 1000,
-#     y.ncell            = 30, # 1000,
-#     crosstab.precision =  7,
-#     colour.NA          = 'black',
-#     output.directory   = "output-aoi"
-#     );
-
 perform.resampling(
-    directory.aoi    = "output-aoi",
-    output.directory = "output-resampling"
-    # DF.aoi             = DF.aoi,
-    # SF.provinces       = SF.provinces,
-    # DF.coltab          = DF.coltab,
-    # data.directory     = data.directory,
-    # data.snapshot      = data.snapshot,
-    # x.ncell            = 30, # 1000,
-    # y.ncell            = 30, # 1000,
-    # crosstab.precision =  7,
-    # colour.NA          = 'black'
+    directory.aoi       = "output-aoi",
+    output.directory    = "output-resampling",
+    WKT.NAD_1983_Albers = WKT.NAD_1983_Albers,
+    colour.NA           = 'black'
     );
-
-# assess.resampling(
-#     DF.aoi             = DF.aoi,
-#     DF.coltab          = DF.coltab,
-#     data.directory     = data.directory,
-#     data.snapshot      = data.snapshot,
-#     x.ncell            = 180, # 1800,
-#     y.ncell            = 180, # 1800,
-#     crosstab.precision =   7,
-#     output.directory   = "output-resampling"
-#     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 
