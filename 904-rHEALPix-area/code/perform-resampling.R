@@ -1,15 +1,9 @@
 
 perform.resampling <- function(
-    directory.aoi = NULL,
-    # DF.aoi               = NULL,
-    # DF.coltab            = NULL,
-    # data.directory       = NULL,
-    # data.snapshot        = NULL,
-    # x.ncell              = 1000,
-    # y.ncell              = 1000,
-    # crosstab.precision   =    4,
-    # proj4string.rHEALPix = "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50",
-    output.directory = "output-resampling"
+    directory.aoi       = NULL,
+    output.directory    = "output-resampling",
+    WKT.NAD_1983_Albers = NULL,
+    colour.NA           = 'black'
     ) {
 
     thisFunctionName <- "perform.resampling";
@@ -204,32 +198,64 @@ perform.resampling_single.aoi <- function(
         file.path(original.directory,directory.aoi,tiff.aoi)
         );
 
-    TIF.output <- "temp.tiff";
-    terra::aggregate(
-        x        = SR.original,
-        fact     = aggregation.factor,
-        fun      = 'modal',
-        filename = TIF.output
-        );
-    SR.aggregated <- terra::rast(TIF.output);
-    cat('\nSR.aggregated\n');
-    print( SR.aggregated   );
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    aggregation.factors <- c(1,2,3);
+    collapsed.first     <- c(TRUE,FALSE);
+    for ( temp.factor in aggregation.factors ) {
+        
+        output.stem <- paste0("aggregated-f",temp.factor);
+        TIF.output  <- paste0(output.stem,".tiff");
+        PNG.output  <- paste0(output.stem,".png" );
 
-    PNG.output <- "temp.png"
+        terra::aggregate(
+            x        = SR.original,
+            fact     = aggregation.factor,
+            fun      = 'modal',
+            filename = TIF.output
+            );
+        SR.aggregated <- terra::rast(TIF.output);
+
+        png(
+            filename = PNG.output,
+            res      = 300,
+            width    =  12,
+            height   =  10,
+            units    = 'in'
+            );
+        terra::plot(
+            x     = SR.aggregated,
+            colNA = colour.NA
+            );
+        dev.off();
+
+        }
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    terra::project(
+        x        = SR.original,
+        y        = terra::crs(SR.original),
+        filename = "projected-100.tiff",
+        method   = 'mode',
+        res      = 100
+        );
+    SR.projected <- terra::rast("projected-100.tiff");
+    levels(SR.projected) <- levels(SR.original);
+
     png(
-        filename = PNG.output,
+        filename = "projected-100.png",
         res      = 300,
         width    =  12,
         height   =  10,
         units    = 'in'
         );
     terra::plot(
-        x     = SR.aggregated,
+        x     = SR.projected,
         colNA = colour.NA
         );
     dev.off();
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     setwd(original.directory);
+    return( NULL );
 
     }
