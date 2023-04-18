@@ -29,7 +29,7 @@ require(terra);
 
 # source supporting R code
 code.files <- c(
-    "assess-resampling.R",
+    # "assess-resampling.R",
     "collapse-classes.R",
     "extract-grid-from-SpatRaster.R",
     "generate-rasters-provincial.R",
@@ -38,6 +38,7 @@ code.files <- c(
     "get-aci-crop-classification.R",
     "get-nearest-grid-point.R",
     "get-sub-spatraster.R",
+    "perform-resampling.R",
     "SpatRaster-to-polygons.R",
     "test-get-nearest-grid-point.R",
     "test-SpatRaster-to-polygons.R",
@@ -138,17 +139,31 @@ print( str(SF.provinces)   );
 #     output.directory = "output-utm-zones"
 #     );
 
-generate.extents.aoi(
-    DF.aoi             = DF.aoi,
-    SF.provinces       = SF.provinces,
-    DF.coltab          = DF.coltab,
-    data.directory     = data.directory,
-    data.snapshot      = data.snapshot,
-    x.ncell            = 30, # 1000,
-    y.ncell            = 30, # 1000,
-    crosstab.precision =  7,
-    colour.NA          = 'black',
-    output.directory   = "output-aoi"
+# generate.extents.aoi(
+#     DF.aoi             = DF.aoi,
+#     SF.provinces       = SF.provinces,
+#     DF.coltab          = DF.coltab,
+#     data.directory     = data.directory,
+#     data.snapshot      = data.snapshot,
+#     x.ncell            = 30, # 1000,
+#     y.ncell            = 30, # 1000,
+#     crosstab.precision =  7,
+#     colour.NA          = 'black',
+#     output.directory   = "output-aoi"
+#     );
+
+perform.resampling(
+    directory.aoi    = "output-aoi",
+    output.directory = "output-resampling"
+    # DF.aoi             = DF.aoi,
+    # SF.provinces       = SF.provinces,
+    # DF.coltab          = DF.coltab,
+    # data.directory     = data.directory,
+    # data.snapshot      = data.snapshot,
+    # x.ncell            = 30, # 1000,
+    # y.ncell            = 30, # 1000,
+    # crosstab.precision =  7,
+    # colour.NA          = 'black'
     );
 
 # assess.resampling(
