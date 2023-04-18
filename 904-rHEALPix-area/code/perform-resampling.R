@@ -35,7 +35,7 @@ perform.resampling <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     for ( temp.tiff in tiff.files ) {
-        perform.resampling_inner(
+        perform.resampling_single.aoi(
             tiff.aoi           = temp.tiff,
             original.directory = original.directory,
             output.directory   = output.directory
@@ -167,7 +167,7 @@ perform.resampling <- function(
     }
 
 ##################################################
-perform.resampling_inner <- function(
+perform.resampling_single.aoi <- function(
     tiff.aoi           = NULL,
     original.directory = NULL,
     output.directory   = NULL
