@@ -139,32 +139,32 @@ print( str(SF.provinces)   );
 #     output.directory = "output-utm-zones"
 #     );
 
-# generate.extents.aoi(
-#     DF.aoi             = DF.aoi,
-#     SF.provinces       = SF.provinces,
-#     DF.coltab          = DF.coltab,
-#     data.directory     = data.directory,
-#     data.snapshot      = data.snapshot,
-#     x.ncell            = 30, # 1000,
-#     y.ncell            = 30, # 1000,
-#     crosstab.precision =  7,
-#     colour.NA          = 'black',
-#     output.directory   = "output-aoi"
-#     );
-
-perform.resampling(
-    directory.aoi    = "output-aoi",
-    output.directory = "output-resampling"
-    # DF.aoi             = DF.aoi,
-    # SF.provinces       = SF.provinces,
-    # DF.coltab          = DF.coltab,
-    # data.directory     = data.directory,
-    # data.snapshot      = data.snapshot,
-    # x.ncell            = 30, # 1000,
-    # y.ncell            = 30, # 1000,
-    # crosstab.precision =  7,
-    # colour.NA          = 'black'
+generate.extents.aoi(
+    DF.aoi             = DF.aoi,
+    SF.provinces       = SF.provinces,
+    DF.coltab          = DF.coltab,
+    data.directory     = data.directory,
+    data.snapshot      = data.snapshot,
+    x.ncell            = 30, # 1000,
+    y.ncell            = 30, # 1000,
+    crosstab.precision =  7,
+    colour.NA          = 'black',
+    output.directory   = "output-aoi"
     );
+
+# perform.resampling(
+#     directory.aoi    = "output-aoi",
+#     output.directory = "output-resampling"
+#     # DF.aoi             = DF.aoi,
+#     # SF.provinces       = SF.provinces,
+#     # DF.coltab          = DF.coltab,
+#     # data.directory     = data.directory,
+#     # data.snapshot      = data.snapshot,
+#     # x.ncell            = 30, # 1000,
+#     # y.ncell            = 30, # 1000,
+#     # crosstab.precision =  7,
+#     # colour.NA          = 'black'
+#     );
 
 # assess.resampling(
 #     DF.aoi             = DF.aoi,
