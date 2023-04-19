@@ -71,7 +71,7 @@ NDVI.values           <- seq(-1,1,0.04);
 colour.NA <- 'black';
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-DF.coltab.SDLU <- read.csv(file.path(code.directory,"classes-SDLU.csv"));
+DF.coltab.SDLU <- read.csv(file.path(code.directory,"classes-collapsed-SDLU.csv"));
 DF.coltab.SDLU[,'col'] <- toupper(DF.coltab.SDLU[,'col']);
 DF.coltab.SDLU <- cbind(
     DF.coltab.SDLU,
