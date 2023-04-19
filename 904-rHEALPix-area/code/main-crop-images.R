@@ -55,7 +55,8 @@ my.seed <- 7654321;
 set.seed(my.seed);
 
 is.macOS <- grepl(x = sessionInfo()[['platform']], pattern = 'apple', ignore.case = TRUE);
-n.cores  <- ifelse(test = is.macOS, yes = 2, no = parallel::detectCores() - 1);
+n.cores  <- ifelse(test = is.macOS, yes =  2, no = parallel::detectCores() - 1);
+n.cells  <- ifelse(test = is.macOS, yes = 30, no = 1800);
 cat(paste0("\n# n.cores = ",n.cores,"\n"));
 
 data.snapshot            <- "2023-04-05.01";
@@ -145,8 +146,8 @@ generate.extents.aoi(
     DF.coltab          = DF.coltab,
     data.directory     = data.directory,
     data.snapshot      = data.snapshot,
-    x.ncell            = 30, # 1000,
-    y.ncell            = 30, # 1000,
+    x.ncell            = n.cells, # 30, # 1000,
+    y.ncell            = n.cells, # 30, # 1000,
     crosstab.precision =  7,
     colour.NA          = 'black',
     output.directory   = "output-aoi"
