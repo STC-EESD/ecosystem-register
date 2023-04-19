@@ -1,7 +1,8 @@
 
 collapse.classes.AAFC.SDLU <- function(
-    SR.input   = NULL,
-    TIF.output = NULL
+    SR.input       = NULL,
+    DF.coltab.SDLU = NULL,
+    TIF.output     = NULL
     ) {
 
     thisFunctionName <- "collapse.classes.AAFC.SDLU";
@@ -9,35 +10,64 @@ collapse.classes.AAFC.SDLU <- function(
     cat(paste0("\n",thisFunctionName,"() starts.\n\n"));
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    TIF.temp <- paste0(stringi::stri_rand_strings(n = 1, length = 10),".tiff"); 
+    TIF.temp <- paste0(stringi::stri_rand_strings(n = 1, length = 10),".tiff");
     terra::app(
+        filename = TIF.temp,
         x        = SR.input,
-        fun      = collapse.classes.AAFC.SDLU_reclassify,
-        filename = TIF.temp
+        fun      = collapse.classes.AAFC.SDLU_reclassify
         );
     SR.output <- terra::rast(TIF.temp);
 
+    levels(SR.output)        <- DF.coltab.SDLU[,c('value','category')];
+    terra::coltab(SR.output) <- DF.coltab.SDLU[,c('value','col'     )];
+
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    terra::coltab(SR.output) <- collapse.classes.AAFC.SDLU_get.DF.coltab();
-    levels(SR.output) <- c(
-        "unknown",
-        "built-up and artificial surfaces",
-        "cropland",
-        "inland water bodies",
-        "treed areas",
-        "grassland and shrubland",
-        "wetland",
-        "permanent snow and ice",
-        "other natural and semi-natural"
-        );
+    cat("\nlevels(SR.output)\n");
+    print( levels(SR.output)   );
+
+    cat("\nhas.colors(SR.output)\n");
+    print( has.colors(SR.output)   );
+
+    cat("\nterra::coltab(SR.output)\n");
+    print( terra::coltab(SR.output)   );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # terra::aggregate(
+    #     filename = TIF.output,
+    #     x        = SR.output,
+    #     fact     = 1,
+    #     fun      = 'modal'
+    #     );
+
+    # terra::app(
+    #     filename = TIF.output,
+    #     x        = SR.output,
+    #     fun      = function(x) { return(x) }
+    #     );
+    # SR.output <- terra::rast(TIF.output);
+
+    # cat("\nlevels(SR.output)\n");
+    # print( levels(SR.output)   );
+
+    # cat("\nhas.colors(SR.output)\n");
+    # print( has.colors(SR.output)   );
+
+    # cat("\nterra::coltab(SR.output)\n");
+    # print( terra::coltab(SR.output)   );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     terra::writeRaster(
         x         = SR.output,
         filename  = TIF.output,
-        overwrite = TRUE
+        overwrite = FALSE
         );
     SR.output <- terra::rast(TIF.output);
+
+    cat("\nhas.colors(SR.output)\n");
+    print( has.colors(SR.output)   );
+
+    cat("\nterra::coltab(SR.output)\n");
+    print( terra::coltab(SR.output)   );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     file.remove(TIF.temp);
@@ -45,7 +75,7 @@ collapse.classes.AAFC.SDLU <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
     cat("\n### ~~~~~~~~~~~~~~~~~~~~ ###\n");
-    return( SR.output );
+    return( NULL );
 
     }
 
