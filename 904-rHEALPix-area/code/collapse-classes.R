@@ -10,7 +10,12 @@ collapse.classes.AAFC.SDLU <- function(
     cat(paste0("\n",thisFunctionName,"() starts.\n\n"));
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    TIF.temp <- paste0(stringi::stri_rand_strings(n = 1, length = 10),".tiff");
+    random.string <- paste(
+        sample(x = c(LETTERS,letters), size = 10, replace = TRUE),
+        collapse = ""
+        );
+    TIF.temp <- paste0(random.string,".tiff");
+
     terra::app(
         filename = TIF.temp,
         x        = SR.input,
