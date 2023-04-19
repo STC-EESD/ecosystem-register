@@ -71,10 +71,23 @@ NDVI.values           <- seq(-1,1,0.04);
 colour.NA <- 'black';
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+DF.coltab.SDLU <- read.csv(file.path(code.directory,"classes-SDLU.csv"));
+DF.coltab.SDLU[,'col'] <- toupper(DF.coltab.SDLU[,'col']);
+DF.coltab.SDLU <- cbind(
+    DF.coltab.SDLU,
+    t(grDevices::col2rgb(col = DF.coltab.SDLU[,'col']))
+    );
+cat("\nstr(DF.coltab.SDLU)\n");
+print( str(DF.coltab.SDLU)   );
+cat("\nDF.coltab.SDLU\n");
+print( DF.coltab.SDLU   );
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 perform.resampling(
     directory.aoi       = "output-aoi",
     output.directory    = "output-resampling",
     WKT.NAD_1983_Albers = WKT.NAD_1983_Albers,
+    DF.coltab.SDLU      = DF.coltab.SDLU,
     colour.NA           = 'black'
     );
 
