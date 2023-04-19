@@ -131,7 +131,11 @@ perform.resampling_resample.reproject <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     # just to capture levels and colours
-    TIF.temp <- paste0(stringi::stri_rand_strings(n = 1, length = 10),".tiff");
+    random.string <- paste(
+        sample(x = c(LETTERS,letters), size = 10, replace = TRUE),
+        collapse = ""
+        );
+    TIF.temp <- paste0(random.string,".tiff");
     terra::aggregate(
         x        = SR.original.collapsed,
         fact     = 2,
