@@ -9,12 +9,13 @@ collapse.classes.AAFC.SDLU <- function(
     cat(paste0("\n",thisFunctionName,"() starts.\n\n"));
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    TIF.temp <- paste0(stringi::stri_rand_strings(n = 1, length = 10),".tiff"); 
     terra::app(
         x        = SR.input,
         fun      = collapse.classes.AAFC.SDLU_reclassify,
-        filename = TIF.output
+        filename = TIF.temp
         );
-    SR.output <- terra::rast(TIF.output);
+    SR.output <- terra::rast(TIF.temp);
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     terra::coltab(SR.output) <- collapse.classes.AAFC.SDLU_get.DF.coltab();
@@ -37,6 +38,9 @@ collapse.classes.AAFC.SDLU <- function(
         overwrite = TRUE
         );
     SR.output <- terra::rast(TIF.output);
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    file.remove(TIF.temp);
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
