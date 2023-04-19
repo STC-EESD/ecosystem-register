@@ -114,7 +114,9 @@ perform.resampling_resample.reproject <- function(
     dev.off();
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    aggregation.factors <- c(1,2,3);
+    # congruent downsampling
+
+    aggregation.factors <- c(2,3);
     for ( temp.factor in aggregation.factors ) {
 
         TIF.aggregated <- paste0(cumulative.stem,"-aggregated-f",temp.factor,".tiff");
@@ -144,6 +146,42 @@ perform.resampling_resample.reproject <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # incongruent downsampling
+
+    spatial.resolutions <- c(100);
+    for ( temp.resolution in spatial.resolutions ) {
+        
+        TIF.reprojected <- paste0(cumulative.stem,"-downsampled-mode-",temp.resolution,".tiff");
+        PNG.reprojected <- paste0(cumulative.stem,"-downsampled-mode-",temp.resolution,".png" );
+
+        terra::project(
+            x        = SR.original.collapsed,
+            y        = terra::crs(SR.original.collapsed),
+            filename = TIF.reprojected,
+            method   = 'mode',
+            res      = temp.resolution
+            );
+        SR.reprojected <- terra::rast(TIF.reprojected);
+        levels(SR.reprojected) <- levels(SR.original);
+
+        png(
+            filename = PNG.reprojected,
+            res      = 300,
+            width    =  12,
+            height   =  10,
+            units    = 'in'
+            );
+        terra::plot(
+            x     = SR.reprojected,
+            colNA = colour.NA
+            );
+        dev.off();
+
+        }
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # reproject to Albers by mode
+
     spatial.resolutions <- c(30,100);
     for ( temp.resolution in spatial.resolutions ) {
         
@@ -176,6 +214,8 @@ perform.resampling_resample.reproject <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # reproject to Albers by neareste neighbour
+
     spatial.resolutions <- c(30);
     for ( temp.resolution in spatial.resolutions ) {
         
