@@ -3,6 +3,7 @@ perform.resampling <- function(
     directory.aoi       = NULL,
     output.directory    = "output-resampling",
     WKT.NAD_1983_Albers = NULL,
+    DF.coltab.SDLU      = NULL,
     colour.NA           = 'black'
     ) {
 
@@ -34,6 +35,7 @@ perform.resampling <- function(
             original.directory  = original.directory,
             directory.aoi       = directory.aoi,
             WKT.NAD_1983_Albers = WKT.NAD_1983_Albers,
+            DF.coltab.SDLU      = DF.coltab.SDLU,
             output.directory    = output.directory
             );
         }
@@ -54,6 +56,7 @@ perform.resampling_resample.reproject <- function(
     original.directory  = NULL,
     directory.aoi       = NULL,
     WKT.NAD_1983_Albers = NULL,
+    DF.coltab.SDLU      = NULL,
     output.directory    = NULL,
     aggregation.factor  = 2,
     colour.NA           = 'black'
@@ -86,6 +89,12 @@ perform.resampling_resample.reproject <- function(
         file.path(original.directory,directory.aoi,tiff.aoi)
         );
 
+    cat("\nhas.colors(SR.original)\n");
+    print( has.colors(SR.original)   );
+
+    cat("\nterra::coltab(SR.original)\n");
+    print( terra::coltab(SR.original)   );
+
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cumulative.stem <- "original-collapsed";
 
@@ -93,12 +102,19 @@ perform.resampling_resample.reproject <- function(
     TIF.original.collapsed <- paste0(cumulative.stem,".tiff");
     PNG.original.collapsed <- paste0(cumulative.stem,".png" );
 
-    # SR.original.collapsed <- SR.original;
     collapse.classes.AAFC.SDLU(
-        SR.input   = SR.original,
-        TIF.output = TIF.original.collapsed
+        SR.input       = SR.original,
+        DF.coltab.SDLU = DF.coltab.SDLU,
+        TIF.output     = TIF.original.collapsed
         );
     SR.original.collapsed <- terra::rast(TIF.original.collapsed);
+    terra::coltab(SR.original.collapsed) <- DF.coltab.SDLU[,c('value','col')];
+
+    cat("\nhas.colors(SR.original.collapsed)\n");
+    print( has.colors(SR.original.collapsed)   );
+
+    cat("\nterra::coltab(SR.original.collapsed)\n");
+    print( terra::coltab(SR.original.collapsed)   );
 
     png(
         filename = PNG.original.collapsed,
@@ -114,6 +130,20 @@ perform.resampling_resample.reproject <- function(
     dev.off();
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # just to capture levels and colours
+    TIF.temp <- paste0(stringi::stri_rand_strings(n = 1, length = 10),".tiff");
+    terra::aggregate(
+        x        = SR.original.collapsed,
+        fact     = 2,
+        fun      = 'modal',
+        filename = TIF.temp
+        );
+    SR.temp <- terra::rast(TIF.temp);
+    temp.levels <- levels(SR.temp);
+    temp.coltab <- terra::coltab(SR.temp);
+    file.remove(TIF.temp);
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     # congruent downsampling
 
     aggregation.factors <- c(2,3);
@@ -124,7 +154,7 @@ perform.resampling_resample.reproject <- function(
 
         terra::aggregate(
             x        = SR.original.collapsed,
-            fact     = aggregation.factor,
+            fact     = temp.factor,
             fun      = 'modal',
             filename = TIF.aggregated
             );
@@ -162,7 +192,8 @@ perform.resampling_resample.reproject <- function(
             res      = temp.resolution
             );
         SR.reprojected <- terra::rast(TIF.reprojected);
-        levels(SR.reprojected) <- levels(SR.original.collapsed);
+        levels(SR.reprojected) <- temp.levels;
+        terra::coltab(SR.reprojected) <- temp.coltab;
 
         png(
             filename = PNG.reprojected,
@@ -196,7 +227,8 @@ perform.resampling_resample.reproject <- function(
             res      = temp.resolution
             );
         SR.reprojected <- terra::rast(TIF.reprojected);
-        levels(SR.reprojected) <- levels(SR.original.collapsed);
+        levels(SR.reprojected) <- temp.levels;
+        terra::coltab(SR.reprojected) <- temp.coltab;
 
         png(
             filename = PNG.reprojected,
@@ -214,7 +246,7 @@ perform.resampling_resample.reproject <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    # reproject to Albers by neareste neighbour
+    # reproject to Albers by nearest neighbour
 
     spatial.resolutions <- c(30);
     for ( temp.resolution in spatial.resolutions ) {
@@ -230,7 +262,8 @@ perform.resampling_resample.reproject <- function(
             res      = temp.resolution
             );
         SR.reprojected <- terra::rast(TIF.reprojected);
-        levels(SR.reprojected) <- levels(SR.original.collapsed);
+        levels(SR.reprojected) <- temp.levels;
+        terra::coltab(SR.reprojected) <- temp.coltab;
 
         png(
             filename = PNG.reprojected,
