@@ -93,7 +93,8 @@ collapse.classes.AAFC.SDLU_reclassify <- function(x) {
         x %in% c(41,42,43,44,47,48,49) ~ 4,
         x %in% c(61,62) ~ 5,
         x %in% c(71) ~ 6,
-        .default = 7
+        x %in% c(91) ~ 8,
+        .default = 0
         );
     }
 
