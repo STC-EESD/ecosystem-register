@@ -93,12 +93,12 @@ perform.resampling_resample.reproject <- function(
     TIF.original.collapsed <- paste0(cumulative.stem,".tiff");
     PNG.original.collapsed <- paste0(cumulative.stem,".png" );
 
+    # SR.original.collapsed <- SR.original;
     collapse.classes.AAFC.SDLU(
         SR.input   = SR.original,
         TIF.output = TIF.original.collapsed
         );
-    # SR.original.collapsed <- terra::rast(TIF.original.collapsed);
-    SR.original.collapsed <- SR.original;
+    SR.original.collapsed <- terra::rast(TIF.original.collapsed);
 
     png(
         filename = PNG.original.collapsed,
@@ -162,7 +162,7 @@ perform.resampling_resample.reproject <- function(
             res      = temp.resolution
             );
         SR.reprojected <- terra::rast(TIF.reprojected);
-        levels(SR.reprojected) <- levels(SR.original);
+        levels(SR.reprojected) <- levels(SR.original.collapsed);
 
         png(
             filename = PNG.reprojected,
@@ -196,7 +196,7 @@ perform.resampling_resample.reproject <- function(
             res      = temp.resolution
             );
         SR.reprojected <- terra::rast(TIF.reprojected);
-        levels(SR.reprojected) <- levels(SR.original);
+        levels(SR.reprojected) <- levels(SR.original.collapsed);
 
         png(
             filename = PNG.reprojected,
@@ -230,7 +230,7 @@ perform.resampling_resample.reproject <- function(
             res      = temp.resolution
             );
         SR.reprojected <- terra::rast(TIF.reprojected);
-        levels(SR.reprojected) <- levels(SR.original);
+        levels(SR.reprojected) <- levels(SR.original.collapsed);
 
         png(
             filename = PNG.reprojected,
