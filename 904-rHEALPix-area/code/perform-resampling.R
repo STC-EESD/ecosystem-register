@@ -29,127 +29,14 @@ perform.resampling <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     for ( temp.tiff in tiff.files ) {
-        perform.resampling_single.aoi(
-            tiff.aoi           = temp.tiff,
-            original.directory = original.directory,
-            directory.aoi      = directory.aoi,
-            output.directory   = output.directory
+        perform.resampling_resample.reproject(
+            tiff.aoi            = temp.tiff,
+            original.directory  = original.directory,
+            directory.aoi       = directory.aoi,
+            WKT.NAD_1983_Albers = WKT.NAD_1983_Albers,
+            output.directory    = output.directory
             );
         }
-
-    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    # for ( row.index in seq(1,nrow(DF.aoi)) ) {
-    # for ( row.index in c(5,6) ) {
-
-    #     temp.aoi      <- DF.aoi[row.index,'aoi'      ];
-    #     temp.utm.zone <- DF.aoi[row.index,'utmzone'  ];
-    #     temp.lon      <- DF.aoi[row.index,'longitude'];
-    #     temp.lat      <- DF.aoi[row.index,'latitude' ];
-
-    #     cat("\n### aoi:",temp.aoi,", UTM Zone:",temp.utm.zone,"\n");
-
-    #     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    #     temp.directory <- file.path(output.directory,temp.aoi);
-    #     if ( !dir.exists(paths = temp.directory) ) {
-    #         dir.create(path = temp.directory, recursive = TRUE);
-    #         }
-    #     setwd(temp.directory);
-
-    #     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    #     DF.point <- DF.aoi[row.index,];
-    #     SF.epsg.4326.point <- sf::st_as_sf(
-    #         x      = DF.point,
-    #         crs    = sf::st_crs(4326),
-    #         coords = c("longitude","latitude")
-    #         );
-
-    #     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    #     SR.utm.zone <- assess.resampling_get.SpatRaster.UTM(
-    #         data.directory = data.directory,
-    #         data.snapshot  = data.snapshot,
-    #         utm.zone       = temp.utm.zone
-    #         );
-    #     cat("\nSR.utm.zone\n");
-    #     print( SR.utm.zone   );
-
-    #     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    #     SF.nearest.grid.point <- get.nearest.grid.point(
-    #         SF.poi     = SF.epsg.4326.point,
-    #         SR.target  = SR.utm.zone,
-    #         point.type = 'vertex'
-    #         );
-
-    #     cat("\nSF.nearest.grid.point\n");
-    #     print( SF.nearest.grid.point   );
-
-    #     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    #     output.stem <- paste0(temp.aoi,"-original");
-    #     output.tiff <- paste0(output.stem,".tiff");
-    #     output.png  <- paste0(output.stem,".png" );
-
-    #     SR.cropped <- get.sub.spatraster(
-    #         SF.grid.centre = SF.nearest.grid.point,
-    #         SR.origin      = SR.utm.zone,
-    #         x.ncell        = x.ncell,
-    #         y.ncell        = y.ncell,
-    #         TIF.output     = output.tiff
-    #         );
-
-    #     png(
-    #         filename = output.png,
-    #         res      = 300,
-    #         width    =  12,
-    #         height   =  10,
-    #         units    = "in"
-    #         );
-    #     terra::plot(
-    #         x     = SR.cropped,
-    #         colNA = colour.NA
-    #         );
-    #     dev.off();
-
-    #     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    #     output.stem <- paste0(temp.aoi,"-collapsed");
-    #     output.tiff <- paste0(output.stem,".tiff");
-    #     output.png  <- paste0(output.stem,".png" );
-
-    #     SR.collapsed <- collapse.classes.AAFC.SDLU(
-    #         SR.input   = SR.cropped,
-    #         TIF.output = output.tiff
-    #         );
-
-    #     png(
-    #         filename = output.png,
-    #         res      = 300,
-    #         width    =  12,
-    #         height   =  10,
-    #         units    = "in"
-    #         );
-    #     terra::plot(
-    #         x     = SR.collapsed,
-    #         colNA = colour.NA
-    #         );
-    #     dev.off();
-
-    #     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    #     for ( aggregation.factor in seq(1,3) ) {
-    #         temp.stem <- paste0("aggregated-f",aggregation.factor);
-    #         assess.resampling_aggregate.crosstab(
-    #             aoi                = temp.aoi,
-    #             SR.input           = SR.cropped,
-    #             aggregation.factor = aggregation.factor,
-    #             crosstab.precision = crosstab.precision,
-    #             TIF.output         = paste0(temp.stem,'.tiff'),
-    #             PNG.output         = paste0(temp.stem,'.png' ),
-    #             CSV.crosstab       = paste0(temp.stem,'-crosstab.csv')
-    #             );
-    #         }
-
-    #     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    #     setwd(original.directory);
-
-    #     }
-
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     setwd(original.directory);
@@ -162,13 +49,14 @@ perform.resampling <- function(
     }
 
 ##################################################
-perform.resampling_single.aoi <- function(
-    tiff.aoi           = NULL,
-    original.directory = NULL,
-    directory.aoi      = NULL,
-    output.directory   = NULL,
-    aggregation.factor = 2,
-    colour.NA          = 'black'
+perform.resampling_resample.reproject <- function(
+    tiff.aoi            = NULL,
+    original.directory  = NULL,
+    directory.aoi       = NULL,
+    WKT.NAD_1983_Albers = NULL,
+    output.directory    = NULL,
+    aggregation.factor  = 2,
+    colour.NA           = 'black'
     ) {
 
     temp.directory <- gsub(
@@ -199,24 +87,49 @@ perform.resampling_single.aoi <- function(
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    cumulative.stem <- "original-collapsed";
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    TIF.original.collapsed <- paste0(cumulative.stem,".tiff");
+    PNG.original.collapsed <- paste0(cumulative.stem,".png" );
+
+    collapse.classes.AAFC.SDLU(
+        SR.input   = SR.original,
+        TIF.output = TIF.original.collapsed
+        );
+    # SR.original.collapsed <- terra::rast(TIF.original.collapsed);
+    SR.original.collapsed <- SR.original;
+
+    png(
+        filename = PNG.original.collapsed,
+        res      = 300,
+        width    =  12,
+        height   =  10,
+        units    = 'in'
+        );
+    terra::plot(
+        x     = SR.original.collapsed,
+        colNA = colour.NA
+        );
+    dev.off();
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     aggregation.factors <- c(1,2,3);
-    collapsed.first     <- c(TRUE,FALSE);
     for ( temp.factor in aggregation.factors ) {
-        
-        output.stem <- paste0("aggregated-f",temp.factor);
-        TIF.output  <- paste0(output.stem,".tiff");
-        PNG.output  <- paste0(output.stem,".png" );
+
+        TIF.aggregated <- paste0(cumulative.stem,"-aggregated-f",temp.factor,".tiff");
+        PNG.aggregated <- paste0(cumulative.stem,"-aggregated-f",temp.factor,".png" );
 
         terra::aggregate(
-            x        = SR.original,
+            x        = SR.original.collapsed,
             fact     = aggregation.factor,
             fun      = 'modal',
-            filename = TIF.output
+            filename = TIF.aggregated
             );
-        SR.aggregated <- terra::rast(TIF.output);
+        SR.aggregated <- terra::rast(TIF.aggregated);
 
         png(
-            filename = PNG.output,
+            filename = PNG.aggregated,
             res      = 300,
             width    =  12,
             height   =  10,
@@ -231,28 +144,76 @@ perform.resampling_single.aoi <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    terra::project(
-        x        = SR.original,
-        y        = terra::crs(SR.original),
-        filename = "projected-100.tiff",
-        method   = 'mode',
-        res      = 100
-        );
-    SR.projected <- terra::rast("projected-100.tiff");
-    levels(SR.projected) <- levels(SR.original);
+    spatial.resolutions <- c(30,100);
+    for ( temp.resolution in spatial.resolutions ) {
+        
+        TIF.reprojected <- paste0(cumulative.stem,"-reprojected-mode-",temp.resolution,".tiff");
+        PNG.reprojected <- paste0(cumulative.stem,"-reprojected-mode-",temp.resolution,".png" );
 
-    png(
-        filename = "projected-100.png",
-        res      = 300,
-        width    =  12,
-        height   =  10,
-        units    = 'in'
-        );
-    terra::plot(
-        x     = SR.projected,
-        colNA = colour.NA
-        );
-    dev.off();
+        terra::project(
+            x        = SR.original.collapsed,
+            y        = terra::crs(WKT.NAD_1983_Albers),
+            filename = TIF.reprojected,
+            method   = 'mode',
+            res      = temp.resolution
+            );
+        SR.reprojected <- terra::rast(TIF.reprojected);
+        levels(SR.reprojected) <- levels(SR.original);
+
+        png(
+            filename = PNG.reprojected,
+            res      = 300,
+            width    =  12,
+            height   =  10,
+            units    = 'in'
+            );
+        terra::plot(
+            x     = SR.reprojected,
+            colNA = colour.NA
+            );
+        dev.off();
+
+        }
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    spatial.resolutions <- c(30);
+    for ( temp.resolution in spatial.resolutions ) {
+        
+        TIF.reprojected <- paste0(cumulative.stem,"-reprojected-near-",temp.resolution,".tiff");
+        PNG.reprojected <- paste0(cumulative.stem,"-reprojected-near-",temp.resolution,".png" );
+
+        terra::project(
+            x        = SR.original.collapsed,
+            y        = terra::crs(WKT.NAD_1983_Albers),
+            filename = TIF.reprojected,
+            method   = 'near',
+            res      = temp.resolution
+            );
+        SR.reprojected <- terra::rast(TIF.reprojected);
+        levels(SR.reprojected) <- levels(SR.original);
+
+        png(
+            filename = PNG.reprojected,
+            res      = 300,
+            width    =  12,
+            height   =  10,
+            units    = 'in'
+            );
+        terra::plot(
+            x     = SR.reprojected,
+            colNA = colour.NA
+            );
+        dev.off();
+
+        }
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    rm(list = c(
+        "SR.original",
+        "SR.original.collapsed",
+        "SR.aggregated",
+        "SR.projected"
+        ));
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     setwd(original.directory);
