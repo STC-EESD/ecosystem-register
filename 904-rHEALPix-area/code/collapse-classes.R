@@ -15,6 +15,8 @@ collapse.classes.AAFC.SDLU <- function(
         filename = TIF.output
         );
     SR.output <- terra::rast(TIF.output);
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     terra::coltab(SR.output) <- collapse.classes.AAFC.SDLU_get.DF.coltab();
     levels(SR.output) <- c(
         "unknown",
@@ -27,6 +29,14 @@ collapse.classes.AAFC.SDLU <- function(
         "permanent snow and ice",
         "other natural and semi-natural"
         );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    terra::writeRaster(
+        x         = SR.output,
+        filename  = TIF.output,
+        overwrite = TRUE
+        );
+    SR.output <- terra::rast(TIF.output);
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
