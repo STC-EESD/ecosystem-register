@@ -1,13 +1,13 @@
 
-perform.resampling <- function(
+perform.resampling.reprojection <- function(
     directory.aoi       = NULL,
-    output.directory    = "output-resampling",
+    output.directory    = "output-resample-reproject",
     WKT.NAD_1983_Albers = NULL,
     DF.coltab.SDLU      = NULL,
     colour.NA           = 'black'
     ) {
 
-    thisFunctionName <- "perform.resampling";
+    thisFunctionName <- "perform.resampling.reprojection";
     cat("\n### ~~~~~~~~~~~~~~~~~~~~ ###");
     cat(paste0("\n",thisFunctionName,"() starts.\n\n"));
 

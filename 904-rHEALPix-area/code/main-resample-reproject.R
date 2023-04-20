@@ -31,7 +31,7 @@ require(terra);
 code.files <- c(
     "collapse-classes.R",
     "get-aci-crop-classification.R",
-    "perform-resampling.R"
+    "perform-resampling-reprojection.R"
     );
 
 for ( code.file in code.files ) {
@@ -75,9 +75,9 @@ cat("\nDF.coltab.SDLU\n");
 print( DF.coltab.SDLU   );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-perform.resampling(
+perform.resampling.reprojection(
     directory.aoi       = "output-aoi",
-    output.directory    = "output-resampling",
+    output.directory    = "output-resample-reproject",
     WKT.NAD_1983_Albers = WKT.NAD_1983_Albers,
     DF.coltab.SDLU      = DF.coltab.SDLU,
     colour.NA           = 'black'
