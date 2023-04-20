@@ -219,6 +219,7 @@ compute.metrics_single.geotiff <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     base::file.remove(TIF.cellSize);
     base::remove(list = c(
+        "SR.input",
         "SR.cellsizes",
         "DF.crosstab",
         "DF.area"
