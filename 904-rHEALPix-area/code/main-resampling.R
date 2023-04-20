@@ -32,14 +32,6 @@ code.files <- c(
     "collapse-classes.R",
     "get-aci-crop-classification.R",
     "perform-resampling.R"
-    # "assess-resampling.R",
-    # "get-nearest-grid-point.R",
-    # "get-sub-spatraster.R",
-    # "extract-grid-from-SpatRaster.R",
-    # "generate-rasters-provincial.R",
-    # "generate-rasters-utm-zones.R",
-    # "generate-extents-aoi.R",
-    # "SpatRaster-to-polygons.R"
     );
 
 for ( code.file in code.files ) {

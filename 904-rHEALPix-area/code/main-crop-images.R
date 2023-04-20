@@ -41,8 +41,6 @@ code.files <- c(
     "test-get-nearest-grid-point.R",
     "test-SpatRaster-to-polygons.R",
     "test-terra-aggregate.R"
-    # "assess-resampling.R",
-    # "perform-resampling.R"
     );
 
 for ( code.file in code.files ) {
