@@ -18,7 +18,12 @@ generate.extents.aoi <- function(
     cat(paste0("\n",thisFunctionName,"() starts.\n\n"));
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    if ( !dir.exists(paths = output.directory) ) {
+    if ( dir.exists(paths = output.directory) ) {
+        cat("The directory",output.directory,"already exists; do nothing ...");
+        cat(paste0("\n",thisFunctionName,"() quits."));
+        cat("\n### ~~~~~~~~~~~~~~~~~~~~ ###\n");
+        return( NULL );
+    } else {
         dir.create(path = output.directory, recursive = TRUE);
         }
 
@@ -137,53 +142,6 @@ generate.extents.aoi <- function(
             SF.aoi.polygons <- rbind(SF.aoi.polygons,SF.extent);
             SF.aoi.points   <- rbind(SF.aoi.points,  SF.point );
             }
-
-        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        # generate.extents.aoi_extent(
-        #     input.raster     = SR.cropped, # aoi.raster,
-        #     utm.zone         = temp.utm.zone,
-        #     aoi              = temp.aoi,
-        #     proj4string      = terra::crs(x = SR.cropped, proj = TRUE),
-        #     map.projection   = "original",
-        #     output.directory = output.directory
-        #     );
-
-        # generate.extents.aoi_extent(
-        #     input.raster     = SR.cropped, # aoi.raster,
-        #     utm.zone         = temp.utm.zone,
-        #     aoi              = temp.aoi,
-        #     proj4string      = proj4string.rHEALPix,
-        #     map.projection   = "rHEALPix-planar",
-        #     output.directory = output.directory
-        #     );
-
-        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-        # terra::cellSize(
-        #     x         = SR.cropped,
-        #     filename  = "tmp-cellSize.tiff"
-        #     );
-        # SR.cellsizes <- terra::rast("tmp-cellSize.tiff");
-
-        # DF.crosstab  <- terra::crosstab(
-        #     x      = c(SR.cellsizes,SR.cropped),
-        #     digits = crosstab.precision
-        #     );
-
-        # cat("\nstr(DF.crosstab)\n");
-        # print( str(DF.crosstab)   );
-        # cat("\nutils::head(x = DF.crosstab, n = 20L)\n");
-        # print( utils::head(x = DF.crosstab, n = 20L)   );
-
-        # output.csv <- file.path(
-        #     output.directory,
-        #     paste0("xtab-",temp.utm.zone,"-",temp.aoi,".csv")
-        #     );
-        # write.csv(
-        #     file = output.csv, 
-        #     x    = DF.crosstab
-        #     );
-
-        # base::file.remove("tmp-cellSize.tiff");
 
         }
 
