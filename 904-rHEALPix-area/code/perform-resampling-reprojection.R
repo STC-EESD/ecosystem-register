@@ -193,16 +193,28 @@ perform.resampling_resample.reproject <- function(
         TIF.reprojected <- paste0(cumulative.stem,"-downsampled-mode-",temp.resolution,".tiff");
         PNG.reprojected <- paste0(cumulative.stem,"-downsampled-mode-",temp.resolution,".png" );
 
+        random.string <- paste(
+            sample(x = c(LETTERS,letters), size = 10, replace = TRUE),
+            collapse = ""
+            );
+        TIF.temp <- paste0("tmp-",random.string,".tiff");
+
         terra::project(
             x        = SR.original.collapsed,
             y        = terra::crs(SR.original.collapsed),
-            filename = TIF.reprojected,
+            filename = TIF.temp,
             method   = 'mode',
             res      = temp.resolution
             );
-        SR.reprojected <- terra::rast(TIF.reprojected);
+        SR.reprojected <- terra::rast(TIF.temp);
         levels(SR.reprojected) <- temp.levels;
         terra::coltab(SR.reprojected) <- temp.coltab;
+
+        terra::writeRaster(
+            x         =  SR.reprojected,
+            filename  = TIF.reprojected,
+            overwrite = TRUE
+            );
 
         png(
             filename = PNG.reprojected,
@@ -216,6 +228,8 @@ perform.resampling_resample.reproject <- function(
             colNA = colour.NA
             );
         dev.off();
+
+        base::file.remove(TIF.temp);
 
         }
 
@@ -228,16 +242,28 @@ perform.resampling_resample.reproject <- function(
         TIF.reprojected <- paste0(cumulative.stem,"-reprojected-mode-",temp.resolution,".tiff");
         PNG.reprojected <- paste0(cumulative.stem,"-reprojected-mode-",temp.resolution,".png" );
 
+        random.string <- paste(
+            sample(x = c(LETTERS,letters), size = 10, replace = TRUE),
+            collapse = ""
+            );
+        TIF.temp <- paste0("tmp-",random.string,".tiff");
+
         terra::project(
             x        = SR.original.collapsed,
             y        = terra::crs(WKT.NAD_1983_Albers),
-            filename = TIF.reprojected,
+            filename = TIF.temp,
             method   = 'mode',
             res      = temp.resolution
             );
-        SR.reprojected <- terra::rast(TIF.reprojected);
+        SR.reprojected <- terra::rast(TIF.temp);
         levels(SR.reprojected) <- temp.levels;
         terra::coltab(SR.reprojected) <- temp.coltab;
+
+        terra::writeRaster(
+            x         =  SR.reprojected,
+            filename  = TIF.reprojected,
+            overwrite = TRUE
+            );
 
         png(
             filename = PNG.reprojected,
@@ -251,6 +277,8 @@ perform.resampling_resample.reproject <- function(
             colNA = colour.NA
             );
         dev.off();
+
+        base::file.remove(TIF.temp);
 
         }
 
@@ -263,16 +291,28 @@ perform.resampling_resample.reproject <- function(
         TIF.reprojected <- paste0(cumulative.stem,"-reprojected-near-",temp.resolution,".tiff");
         PNG.reprojected <- paste0(cumulative.stem,"-reprojected-near-",temp.resolution,".png" );
 
+        random.string <- paste(
+            sample(x = c(LETTERS,letters), size = 10, replace = TRUE),
+            collapse = ""
+            );
+        TIF.temp <- paste0("tmp-",random.string,".tiff");
+
         terra::project(
             x        = SR.original.collapsed,
             y        = terra::crs(WKT.NAD_1983_Albers),
-            filename = TIF.reprojected,
+            filename = TIF.temp,
             method   = 'near',
             res      = temp.resolution
             );
-        SR.reprojected <- terra::rast(TIF.reprojected);
+        SR.reprojected <- terra::rast(TIF.temp);
         levels(SR.reprojected) <- temp.levels;
         terra::coltab(SR.reprojected) <- temp.coltab;
+
+        terra::writeRaster(
+            x         =  SR.reprojected,
+            filename  = TIF.reprojected,
+            overwrite = TRUE
+            );
 
         png(
             filename = PNG.reprojected,
@@ -286,6 +326,8 @@ perform.resampling_resample.reproject <- function(
             colNA = colour.NA
             );
         dev.off();
+
+        base::file.remove(TIF.temp);
 
         }
 
