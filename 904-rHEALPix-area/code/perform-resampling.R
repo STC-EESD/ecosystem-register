@@ -15,7 +15,12 @@ perform.resampling <- function(
     original.directory <- normalizePath(getwd());
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    if ( !dir.exists(paths = output.directory) ) {
+    if ( dir.exists(paths = output.directory) ) {
+        cat("The directory",output.directory,"already exists; do nothing ...");
+        cat(paste0("\n",thisFunctionName,"() quits."));
+        cat("\n### ~~~~~~~~~~~~~~~~~~~~ ###\n");
+        return( NULL );
+    } else {
         dir.create(path = output.directory, recursive = TRUE);
         }
 
