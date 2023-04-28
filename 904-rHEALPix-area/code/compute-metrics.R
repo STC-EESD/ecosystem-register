@@ -32,7 +32,7 @@ compute.metrics <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     for ( aoi.directory in aoi.directories ) {
-        compute.metrics_aoi(
+        compute.metrics_area.by.landcover(
             original.directory           = original.directory,
             directory.resample.reproject = directory.resample.reproject,
             aoi.directory                = aoi.directory,
@@ -67,7 +67,7 @@ compute.metrics <- function(
     }
 
 ##################################################
-compute.metrics_aoi <- function(
+compute.metrics_area.by.landcover <- function(
     original.directory           = NULL,
     directory.resample.reproject = NULL,
     aoi.directory                = NULL,
@@ -91,7 +91,7 @@ compute.metrics_aoi <- function(
     tiff.files     <- list.files(path = tiff.directory, pattern = "\\.tiff$");
 
     for ( temp.tiff in tiff.files ) {
-        compute.metrics_single.geotiff(
+        compute.metrics_crosstab(
             aoi.directory      = aoi.directory,
             tiff.directory     = tiff.directory,
             tiff.file          = temp.tiff,
@@ -104,7 +104,7 @@ compute.metrics_aoi <- function(
 
     CSV.area.files <- list.files(pattern = "-area\\.csv$");
     for ( temp.csv in CSV.area.files ) {
-        DF.temp <- read.csv(file = temp.csv);
+        DF.temp     <- read.csv(file = temp.csv);
         DF.aoi.area <- rbind(DF.aoi.area,DF.temp);
         }
 
@@ -120,7 +120,7 @@ compute.metrics_aoi <- function(
 
     }
 
-compute.metrics_single.geotiff <- function(
+compute.metrics_crosstab <- function(
     aoi.directory      = NULL,
     tiff.directory     = NULL,
     tiff.file          = NULL,
