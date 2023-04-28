@@ -53,8 +53,8 @@ compute.metrics <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     temp.statistics <- c(
-        'area'
-        # 'polygon-statistics'
+        'area',
+        'polygon-statistics'
         );
 
     for ( temp.statistic in temp.statistics  ) {
@@ -133,17 +133,17 @@ compute.metrics_polygon.statistics <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    DF.aoi.area <- data.frame();
+    DF.output <- data.frame();
 
     CSV.area.files <- list.files(pattern = "-area\\.csv$");
     for ( temp.csv in CSV.area.files ) {
-        DF.temp     <- read.csv(file = temp.csv);
-        DF.aoi.area <- rbind(DF.aoi.area,DF.temp);
+        DF.temp   <- read.csv(file = temp.csv);
+        DF.output <- rbind(DF.output,DF.temp);
         }
 
     write.csv(
-        file      = paste0("area-",aoi.directory,".csv"), 
-        x         = DF.aoi.area,
+        file      = paste0("polygon-statistics-",aoi.directory,".csv"), 
+        x         = DF.output,
         row.names = FALSE
         );
 
