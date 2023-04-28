@@ -32,13 +32,13 @@ compute.metrics <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     for ( aoi.directory in aoi.directories ) {
-        compute.metrics_area.by.landcover(
-            original.directory           = original.directory,
-            directory.resample.reproject = directory.resample.reproject,
-            aoi.directory                = aoi.directory,
-            output.directory             = output.directory,
-            crosstab.precision           = crosstab.precision
-            );
+        # compute.metrics_area.by.landcover(
+        #     original.directory           = original.directory,
+        #     directory.resample.reproject = directory.resample.reproject,
+        #     aoi.directory                = aoi.directory,
+        #     output.directory             = output.directory,
+        #     crosstab.precision           = crosstab.precision
+        #     );
         compute.metrics_polygon.statistics(
             original.directory           = original.directory,
             directory.resample.reproject = directory.resample.reproject,
@@ -53,7 +53,7 @@ compute.metrics <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     temp.statistics <- c(
-        'area',
+        # 'area',
         'polygon-statistics'
         );
 
@@ -124,25 +124,27 @@ compute.metrics_polygon.statistics <- function(
     tiff.files     <- list.files(path = tiff.directory, pattern = "\\.tiff$");
 
     for ( temp.tiff in tiff.files ) {
-        compute.metrics_crosstab(
-            aoi.directory      = aoi.directory,
-            tiff.directory     = tiff.directory,
-            tiff.file          = temp.tiff,
-            crosstab.precision = crosstab.precision
+        compute.metrics_SpatRaster.to.polygons(
+            aoi.directory  = aoi.directory,
+            tiff.directory = tiff.directory,
+            tiff.file      = temp.tiff
             );
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    DF.output <- data.frame();
-
-    CSV.area.files <- list.files(pattern = "-area\\.csv$");
-    for ( temp.csv in CSV.area.files ) {
-        DF.temp   <- read.csv(file = temp.csv);
-        DF.output <- rbind(DF.output,DF.temp);
+    DF.output <- NULL;
+    PQT.area.files <- list.files(pattern = "-polygons\\.parquet$");
+    for ( temp.parquet in PQT.area.files ) {
+        if ( is.null(DF.output) ) {
+            DF.output <- sf::st_drop_geometry(sfarrow::st_read_parquet(dsn = temp.parquet));
+        } else {
+            DF.temp   <- sf::st_drop_geometry(sfarrow::st_read_parquet(dsn = temp.parquet));
+            DF.output <- rbind(DF.output,DF.temp);
+            }
         }
 
     write.csv(
-        file      = paste0("polygon-statistics-",aoi.directory,".csv"), 
+        file      = paste0('polygon-statistics-',aoi.directory,'.csv'), 
         x         = DF.output,
         row.names = FALSE
         );
@@ -150,6 +152,157 @@ compute.metrics_polygon.statistics <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     setwd(original.directory);
     return( NULL );
+
+    }
+
+compute.metrics_SpatRaster.to.polygons <- function(
+    aoi.directory  = NULL,
+    tiff.directory = NULL,
+    tiff.file      = NULL
+    ) {
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    PQT.polygons <- gsub(
+        x           = tiff.file,
+        pattern     = "\\.tiff",
+        replacement = '-polygons.parquet'
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    SR.input <- terra::rast(file.path(tiff.directory,tiff.file));
+    list.output <- SpatRaster.to.polygons(
+        input.SpatRaster = SR.input,
+        factor.colnames  = 'LU2010'
+        );
+
+    cat("\nstr(list.output[['SF.multipolygons']])\n");
+    print( str(list.output[['SF.multipolygons']])   );
+
+    cat("\nstr(list.output[['SF.polygons']])\n");
+    print( str(list.output[['SF.polygons']])   );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    SF.polygons <- list.output[['SF.polygons']]
+    SF.polygons[,'aoi'] <- aoi.directory;
+    SF.polygons[,'treatment'] <- gsub(
+        x           = tiff.file,
+        pattern     = "\\.tiff",
+        replacement = ""
+        );
+
+    reordered.colnames <- c('aoi','treatment',setdiff(colnames(SF.polygons),c('aoi','treatment')));
+    SF.polygons <- SF.polygons[,reordered.colnames];
+
+    sfarrow::st_write_parquet(
+        dsn = PQT.polygons,
+        obj = SF.polygons
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    base::remove(list = c(
+        'SR.input',
+        'list.output'
+        ));
+    return( NULL );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # CSV.crosstab <- gsub(
+    #     x           = tiff.file,
+    #     pattern     = "\\.tiff",
+    #     replacement = "-xtab.csv"
+    #     );
+
+    # CSV.area <- gsub(
+    #     x           = tiff.file,
+    #     pattern     = "\\.tiff",
+    #     replacement = "-area.csv"
+    #     );
+
+    # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # random.string <- paste(
+    #     sample(x = c(LETTERS,letters), size = 10, replace = TRUE),
+    #     collapse = ""
+    #     );
+
+    # TIF.cellSize <- paste0("tmp-cellSize-",random.string,".tiff");
+    # terra::cellSize(
+    #     x         = SR.input,
+    #     filename  = TIF.cellSize
+    #     );
+    # SR.cellsizes <- terra::rast(TIF.cellSize);
+
+    # DF.crosstab  <- terra::crosstab(
+    #     x      = c(SR.cellsizes,SR.input),
+    #     digits = crosstab.precision
+    #     );
+
+    # cat("\nstr(DF.crosstab)\n");
+    # print( str(DF.crosstab)   );
+    # cat("\nutils::head(x = DF.crosstab, n = 20L)\n");
+    # print( utils::head(x = DF.crosstab, n = 20L)   );
+
+    # write.csv(
+    #     file = CSV.crosstab, 
+    #     x    =  DF.crosstab
+    #     );
+
+    # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # DF.area <- as.data.frame(DF.crosstab);
+    # colnames(DF.area) <- gsub(
+    #     x           = colnames(DF.area),
+    #     pattern     = "^area$",
+    #     replacement = "pixel.area"
+    #     ); 
+    # colnames(DF.area) <- gsub(
+    #     x           = colnames(DF.area),
+    #     pattern     = "^Freq$",
+    #     replacement = "n.pixels"
+    #     ); 
+    # DF.area[,'pixel.area'] <- as.numeric(as.character(DF.area[,'pixel.area']));
+    # DF.area[,'total.area'] <- DF.area[,'n.pixels'] * DF.area[,'pixel.area'];
+
+    # cat("\nstr(DF.area)\n");
+    # print( str(DF.area)   );
+
+    # DF.area <- DF.area %>%
+    #     dplyr::select( category, n.pixels , total.area ) %>%
+    #     dplyr::group_by( category ) %>%
+    #     dplyr::summarize( n.pixels = sum(n.pixels) , total.area.m2 = sum(total.area) );
+    # DF.area <- as.data.frame(DF.area);
+    # DF.area[,'aoi'] <- aoi.directory;
+    # DF.area[,'treatment'] <- gsub(
+    #     x           = tiff.file,
+    #     pattern     = "\\.tiff",
+    #     replacement = ""
+    #     );
+
+    # reordered.colnames <- c('aoi','treatment',setdiff(colnames(DF.area),c('aoi','treatment')));
+    # DF.area <- DF.area[,reordered.colnames];
+
+    # cat("\nstr(DF.area)\n");
+    # print( str(DF.area)   );
+
+    # cat("\nhead(DF.area)\n");
+    # print( head(DF.area)   );
+
+    # write.csv(
+    #     file      = CSV.area, 
+    #     x         =  DF.area,
+    #     row.names = FALSE
+    #     );
+
+    # ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # base::file.remove(TIF.cellSize);
+    # base::remove(list = c(
+    #     "SR.input",
+    #     "SR.cellsizes",
+    #     "DF.crosstab",
+    #     "DF.area"
+    #     ));
+    # return( NULL );
 
     }
 
@@ -313,3 +466,4 @@ compute.metrics_crosstab <- function(
     return( NULL );
 
     }
+

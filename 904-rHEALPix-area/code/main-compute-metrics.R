@@ -29,7 +29,8 @@ require(terra);
 
 # source supporting R code
 code.files <- c(
-    "compute-metrics.R"
+    'compute-metrics.R',
+    'SpatRaster-to-polygons.R'
     );
 
 for ( code.file in code.files ) {

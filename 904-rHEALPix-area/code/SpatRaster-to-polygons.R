@@ -22,18 +22,26 @@ SpatRaster.to.polygons <- function(
             }
         }
 
+    # cat("\nstr(SF.multipolygons)\n");
+    # print( str(SF.multipolygons)   );
+
+    # cat("\nSF.multipolygons\n");
+    # print( SF.multipolygons   );
+
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SF.polygons <- SpatRaster.to.polygons_row.to.polygons(
         SF.multipolygons = SF.multipolygons,
         row.index        = 1
         );
 
-    for ( row.index in seq(2,nrow(SF.multipolygons)) ) {
-        SF.temp <- SpatRaster.to.polygons_row.to.polygons(
-            SF.multipolygons = SF.multipolygons,
-            row.index        = row.index
-            );
-        SF.polygons <- rbind(SF.polygons,SF.temp);
+    if ( nrow(SF.multipolygons) > 1 ) {
+        for ( row.index in seq(2,nrow(SF.multipolygons)) ) {
+            SF.temp <- SpatRaster.to.polygons_row.to.polygons(
+                SF.multipolygons = SF.multipolygons,
+                row.index        = row.index
+                );
+            SF.polygons <- rbind(SF.polygons,SF.temp);
+            }
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
