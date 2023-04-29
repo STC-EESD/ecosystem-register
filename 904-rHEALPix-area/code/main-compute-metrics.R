@@ -30,7 +30,12 @@ require(terra);
 # source supporting R code
 code.files <- c(
     'compute-metrics.R',
-    'SpatRaster-to-polygons.R'
+    'SpatRaster-to-polygons.R',
+    ### ~~~~~ ###
+    'collapse-classes.R',
+    'get-nearest-grid-point.R',
+    'get-sub-spatraster.R',
+    'test-SpatRaster-to-polygons.R'
     );
 
 for ( code.file in code.files ) {
@@ -62,6 +67,24 @@ NDVI.values           <- seq(-1,1,0.04);
 colour.NA <- 'black';
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+# compute.metrics(
+#     directory.resample.reproject = "output-resample-reproject",
+#     output.directory             = "output-metrics"
+#     );
+
+### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+DF.aoi <- read.csv(
+    file = file.path(code.directory,"aoi-semi-decadal-land-use-time-series.csv")
+    );
+DF.aoi[,'utmzone'] <- stringr::str_pad(
+    string = as.character(DF.aoi[,'utmzone']),
+    pad    = "0",
+    side   = "left",
+    width  = 2,
+    );
+print( str(DF.aoi) );
+print( DF.aoi );
+
 DF.coltab.SDLU <- read.csv(file.path(code.directory,"classes-collapsed-SDLU.csv"));
 DF.coltab.SDLU[,'col'] <- toupper(DF.coltab.SDLU[,'col']);
 DF.coltab.SDLU <- cbind(
@@ -73,10 +96,17 @@ print( str(DF.coltab.SDLU)   );
 cat("\nDF.coltab.SDLU\n");
 print( DF.coltab.SDLU   );
 
-### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-compute.metrics(
-    directory.resample.reproject = "output-resample-reproject",
-    output.directory             = "output-metrics"
+test_SpatRaster.to.polygons(
+    DF.aoi            = DF.aoi,
+    DF.coltab.SDLU    = DF.coltab.SDLU,
+    data.directory    = data.directory,
+    data.snapshot     = data.snapshot,
+    point.type        = 'vertex', # 'centroid'
+    x.ncell           = 180, # 6,
+    y.ncell           = 180, # 6,
+    save.shape.files  = FALSE,
+    shape.file.prefix = NULL,
+    output.directory  = 'test-SpatRaster-to-polygons'
     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###

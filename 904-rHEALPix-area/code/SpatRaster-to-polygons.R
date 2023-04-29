@@ -46,11 +46,13 @@ SpatRaster.to.polygons <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SF.multipolygons <- SpatRaster.to.polygons_add.area.column(
-        SF.input = SF.multipolygons
+        SF.input = SF.multipolygons,
+        SR.input = input.SpatRaster
         );
 
     SF.polygons <- SpatRaster.to.polygons_add.area.column(
-        SF.input = SF.polygons
+        SF.input = SF.polygons,
+        SR.input = input.SpatRaster
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -100,11 +102,13 @@ SpatRaster.to.polygons_row.to.polygons <- function(
     }
 
 SpatRaster.to.polygons_add.area.column <- function(
-    SF.input = NULL
+    SF.input = NULL,
+    SR.input = NULL
     ) {
     SF.output <- SF.input;
-    SF.output[,'area']    <- sf::st_area(SF.output[,'geometry']);
-    SF.output[,'area_m2'] <- unlist(sf::st_drop_geometry(SF.output[,'area']));
+    SF.output[,'area']     <- sf::st_area(SF.output[,'geometry']);
+    SF.output[,'area_m2']  <- unlist(sf::st_drop_geometry(SF.output[,'area']));
+    SF.output[,'n.pixels'] <- SF.output[,'area_m2'] / prod( terra::res(SR.input) );
     return( SF.output );
     }
 
