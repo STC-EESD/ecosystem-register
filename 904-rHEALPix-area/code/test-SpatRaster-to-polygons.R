@@ -161,7 +161,6 @@ test_SpatRaster.to.polygons <- function(
         filename  = TIF.cropped,
         overwrite = FALSE
         );
-    SR.cropped <- terra::rast(TIF.cropped);
 
     files.to.remove <- list.files(pattern = TIF.temp);
     file.remove(files.to.remove);
