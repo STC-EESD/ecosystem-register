@@ -86,6 +86,7 @@ compute.metrics_rbind <- function(
     for ( aoi.directory in aoi.directories ) {
         temp.dir  <- file.path(original.directory,output.directory,aoi.directory);
         temp.csv  <- file.path(temp.dir,paste0(temp.statistic,"-",aoi.directory,".csv"));
+        cat('\ntemp.csv:',temp.csv,'\n')
         DF.temp   <- read.csv(file = temp.csv);
         DF.output <- rbind(DF.output,DF.temp);
         }
@@ -132,15 +133,11 @@ compute.metrics_polygon.statistics <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    DF.output <- NULL;
-    PQT.area.files <- list.files(pattern = "-polygons\\.parquet$");
-    for ( temp.parquet in PQT.area.files ) {
-        if ( is.null(DF.output) ) {
-            DF.output <- sf::st_drop_geometry(sfarrow::st_read_parquet(dsn = temp.parquet));
-        } else {
-            DF.temp   <- sf::st_drop_geometry(sfarrow::st_read_parquet(dsn = temp.parquet));
-            DF.output <- rbind(DF.output,DF.temp);
-            }
+    DF.output <- data.frame();
+    CSV.polygon.statistics.files <- list.files(pattern = "-polygon-statistics\\.csv$");
+    for ( temp.csv in CSV.polygon.statistics.files ) {
+        DF.temp   <- read.csv(file = temp.csv);
+        DF.output <- rbind(DF.output,DF.temp);
         }
 
     write.csv(
@@ -168,6 +165,24 @@ compute.metrics_SpatRaster.to.polygons <- function(
         replacement = '-polygons.parquet'
         );
 
+    PQT.multipolygons <- gsub(
+        x           = tiff.file,
+        pattern     = "\\.tiff",
+        replacement = "-multipolygons.parquet"
+        );
+
+    PQT.polygons <- gsub(
+        x           = tiff.file,
+        pattern     = "\\.tiff",
+        replacement = "-polygons.parquet"
+        );
+
+    CSV.polygon.statistics <- gsub(
+        x           = tiff.file,
+        pattern     = "\\.tiff",
+        replacement = "-polygon-statistics.csv"
+        );
+
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SR.input <- terra::rast(file.path(tiff.directory,tiff.file));
     list.output <- SpatRaster.to.polygons(
@@ -182,20 +197,127 @@ compute.metrics_SpatRaster.to.polygons <- function(
     print( str(list.output[['SF.polygons']])   );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    SF.polygons <- list.output[['SF.polygons']]
-    SF.polygons[,'aoi'] <- aoi.directory;
-    SF.polygons[,'treatment'] <- gsub(
+    # SF.polygons <- list.output[['SF.polygons']]
+    # SF.polygons[,'aoi'] <- aoi.directory;
+    # SF.polygons[,'treatment'] <- gsub(
+    #     x           = tiff.file,
+    #     pattern     = "\\.tiff",
+    #     replacement = ""
+    #     );
+
+    # reordered.colnames <- c('aoi','treatment',setdiff(colnames(SF.polygons),c('aoi','treatment')));
+    # SF.polygons <- SF.polygons[,reordered.colnames];
+
+    # sfarrow::st_write_parquet(
+    #     dsn = PQT.polygons,
+    #     obj = SF.polygons
+    #     );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    sfarrow::st_write_parquet(
+        dsn = PQT.multipolygons,
+        obj = list.output[['SF.multipolygons']]
+        );
+
+    sfarrow::st_write_parquet(
+        dsn = PQT.polygons,
+        obj = list.output[['SF.polygons']]
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # terra::writeRaster(
+    #     x         = SR.cropped,
+    #     filename  = TIF.cropped,
+    #     overwrite = FALSE
+    #     );
+
+    # files.to.remove <- list.files(pattern = TIF.temp);
+    # file.remove(files.to.remove);
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    SF.polygons <- list.output[['SF.polygons']];
+
+    DF.all.area.classes <- stats::aggregate(
+        x    = as.formula("area_m2 ~ category"), # area_m2 ~ category,
+        data = sf::st_drop_geometry(SF.polygons[,c('category','area_m2')]),
+        FUN  = function(x) {return(c(
+                n.polygons = length(x),
+                total      = sum(x),
+                meean      = mean(x),
+                min        = min(x),
+                quantile(x = x, prob = c(0.25,0.50,0.75,0.95)),
+                max        = max(x)
+            ))}
+        );
+    DF.all.area.classes[,'n.pixels.class'] <- 'all.n.pixels.classes';
+
+    leading.colnames    <- c('category','n.pixels.class');
+    reordered.colnames  <- c(leading.colnames,setdiff(colnames(DF.all.area.classes),leading.colnames));
+    DF.all.area.classes <- DF.all.area.classes[,reordered.colnames];
+
+    SF.polygons[,'n.pixels.class'] <- '9 <= n.pixels';
+    SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.pixels'])) < 9,'n.pixels.class'] <- '4 <= n.pixels < 9';
+    SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.pixels'])) < 4,'n.pixels.class'] <- 'n.pixels < 4';
+
+    DF.by.area.class <- stats::aggregate(
+        x    = as.formula("area_m2 ~ category + n.pixels.class"), # area_m2 ~ category + n.pixels.class,
+        data = sf::st_drop_geometry(SF.polygons[,c('category','n.pixels.class','area_m2')]),
+        FUN  = function(x) {return(c(
+                n.polygons = length(x),
+                total      = sum(x),
+                meean      = mean(x),
+                min        = min(x),
+                quantile(x = x, prob = c(0.25,0.50,0.75,0.95)),
+                max        = max(x)
+            ))}
+        );
+
+    DF.polygon.statistics <- rbind(DF.all.area.classes,DF.by.area.class);
+
+    CSV.temp <- paste0(paste(sample(x = c(LETTERS,letters), size = 10), collapse = ""),'.csv');
+    write.csv(
+        file      = CSV.temp,
+        x         = DF.polygon.statistics,
+        row.names = FALSE
+        );
+    DF.polygon.statistics <- read.csv(file = CSV.temp);
+    file.remove(CSV.temp);
+    colnames(DF.polygon.statistics) <- gsub(
+        x           = colnames(DF.polygon.statistics),
+        pattern     = "^area_m2.n.polygons$",
+        replacement = "n.polygons"
+        );
+    colnames(DF.polygon.statistics) <- gsub(
+        x           = colnames(DF.polygon.statistics),
+        pattern     = "\\.$",
+        replacement = "%"
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    DF.polygon.statistics[,'aoi'] <- aoi.directory;
+    DF.polygon.statistics[,'treatment'] <- gsub(
         x           = tiff.file,
         pattern     = "\\.tiff",
         replacement = ""
         );
 
-    reordered.colnames <- c('aoi','treatment',setdiff(colnames(SF.polygons),c('aoi','treatment')));
-    SF.polygons <- SF.polygons[,reordered.colnames];
+    reordered.colnames <- c('aoi','treatment',setdiff(colnames(DF.polygon.statistics),c('aoi','treatment')));
+    DF.polygon.statistics <- DF.polygon.statistics[,reordered.colnames];
 
-    sfarrow::st_write_parquet(
-        dsn = PQT.polygons,
-        obj = SF.polygons
+    write.csv(
+        file      = CSV.polygon.statistics,
+        x         =  DF.polygon.statistics,
+        row.names = FALSE
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
