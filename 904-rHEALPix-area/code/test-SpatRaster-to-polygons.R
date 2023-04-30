@@ -218,6 +218,11 @@ test_SpatRaster.to.polygons <- function(
         pattern     = "^area_m2.n.polygons$",
         replacement = "n.polygons"
         );
+    colnames(DF.polygon.statistics) <- gsub(
+        x           = colnames(DF.polygon.statistics),
+        pattern     = "\\.$",
+        replacement = "%"
+        );
 
     write.csv(
         file      = 'DF-polygon-statistics.csv',
