@@ -205,6 +205,16 @@ test_SpatRaster.to.polygons <- function(
 
     DF.polygon.statistics <- rbind(DF.all.area.classes,DF.by.area.class);
 
+    # DF.polygon.statistics <- cbind(
+    #     DF.polygon.statistics[,setdiff(colnames(DF.polygon.statistics),'area_m2')],
+    #     DF.polygon.statistics[,'area_m2']
+    #     );
+    # colnames(DF.polygon.statistics) <- gsub(
+    #     x           = colnames(DF.polygon.statistics),
+    #     pattern     = "^area_m2.n.polygons$",
+    #     replacement = "n.polygons"
+    #     );
+
     write.csv(
         file      = 'DF-polygon-statistics.csv',
         x         = DF.polygon.statistics,
