@@ -107,8 +107,11 @@ SpatRaster.to.polygons_add.area.column <- function(
     ) {
     SF.output <- SF.input;
     SF.output[,'area']     <- sf::st_area(SF.output[,'geometry']);
-    SF.output[,'area_m2']  <- unlist(sf::st_drop_geometry(SF.output[,'area']));
-    SF.output[,'n.pixels'] <- SF.output[,'area_m2'] / prod( terra::res(SR.input) );
+    SF.output[,'area_m2']  <- base::unlist(sf::st_drop_geometry(SF.output[,'area']));
+    SF.output[,'n.pixels'] <- base::round(
+        x      = base::unlist(sf::st_drop_geometry(SF.output[,'area_m2'])) / base::prod( terra::res(SR.input) ),
+        digits = 0
+        );
     return( SF.output );
     }
 

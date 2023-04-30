@@ -174,14 +174,24 @@ test_SpatRaster.to.polygons <- function(
         FUN  = function(x) {return(c(
                 n.polygons = length(x),
                 meean      = mean(x),
-                quantile(x = x, prob = c(0.00,0.25,0.50,0.75,0.95,1.00))
+                min        = min(x),
+                quantile(x = x, prob = c(0.25,0.50,0.75,0.95)),
+                max        = max(x)
             ))}
         );
     DF.all.area.classes[,'n.pixels.class'] <- 'all.n.pixels.classes';
 
-    SF.polygons[,'n.pixels.class'] <- 'n.pixels < 4';
-    SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.pixels'])) >= 4,'n.pixels.class'] <- '4 <= n.pixels < 9';
-    SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.pixels'])) >= 9,'n.pixels.class'] <- '9 <= n.pixels';
+    leading.colnames    <- c('category','n.pixels.class');
+    reordered.colnames  <- c(leading.colnames,setdiff(colnames(DF.all.area.classes),leading.colnames));
+    DF.all.area.classes <- DF.all.area.classes[,reordered.colnames];
+
+    # SF.polygons[,'n.pixels.class'] <- 'n.pixels < 4';
+    # SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.pixels'])) >= 4,'n.pixels.class'] <- '4 <= n.pixels < 9';
+    # SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.pixels'])) >= 9,'n.pixels.class'] <- '9 <= n.pixels';
+
+    SF.polygons[,'n.pixels.class'] <- '9 <= n.pixels';
+    SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.pixels'])) < 9,'n.pixels.class'] <- '4 <= n.pixels < 9';
+    SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.pixels'])) < 4,'n.pixels.class'] <- 'n.pixels < 4';
 
     DF.by.area.class <- stats::aggregate(
         x    = as.formula("area_m2 ~ category + n.pixels.class"), # area_m2 ~ category + n.pixels.class,
@@ -189,7 +199,9 @@ test_SpatRaster.to.polygons <- function(
         FUN  = function(x) {return(c(
                 n.polygons = length(x),
                 meean      = mean(x),
-                quantile(x = x, prob = c(0.00,0.25,0.50,0.75,0.95,1.00))
+                min        = min(x),
+                quantile(x = x, prob = c(0.25,0.50,0.75,0.95)),
+                max        = max(x)
             ))}
         );
 
