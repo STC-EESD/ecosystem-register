@@ -166,6 +166,42 @@ test_SpatRaster.to.polygons <- function(
     file.remove(files.to.remove);
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    SF.polygons <- list.output[['SF.polygons']];
+
+    DF.all.area.classes <- stats::aggregate(
+        x    = as.formula("area_m2 ~ category"), # area_m2 ~ category,
+        data = sf::st_drop_geometry(SF.polygons[,c('category','area_m2')]),
+        FUN  = function(x) {return(c(
+                n.polygons = length(x),
+                meean      = mean(x),
+                quantile(x = x, prob = c(0.00,0.25,0.50,0.75,0.95,1.00))
+            ))}
+        );
+    DF.all.area.classes[,'n.pixels.class'] <- 'all.n.pixels.classes';
+
+    SF.polygons[,'n.pixels.class'] <- 'n.pixels < 4';
+    SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.pixels'])) >= 4,'n.pixels.class'] <- '4 <= n.pixels < 9';
+    SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.pixels'])) >= 9,'n.pixels.class'] <- '9 <= n.pixels';
+
+    DF.by.area.class <- stats::aggregate(
+        x    = as.formula("area_m2 ~ category + n.pixels.class"), # area_m2 ~ category + n.pixels.class,
+        data = sf::st_drop_geometry(SF.polygons[,c('category','n.pixels.class','area_m2')]),
+        FUN  = function(x) {return(c(
+                n.polygons = length(x),
+                meean      = mean(x),
+                quantile(x = x, prob = c(0.00,0.25,0.50,0.75,0.95,1.00))
+            ))}
+        );
+
+    DF.polygon.statistics <- rbind(DF.all.area.classes,DF.by.area.class);
+
+    write.csv(
+        file      = 'DF-polygon-statistics.csv',
+        x         = DF.polygon.statistics,
+        row.names = FALSE
+        );
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     base::setwd(original.directory);
     cat('\nbase::getwd()\n');
     print( base::getwd()   );
