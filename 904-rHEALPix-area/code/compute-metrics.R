@@ -53,7 +53,7 @@ compute.metrics <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     temp.statistics <- c(
-        # 'area',
+        'area',
         'polygon-statistics'
         );
 
