@@ -2,7 +2,8 @@
 compute.metrics <- function(
     directory.resample.reproject = NULL,
     output.directory             = "output-metrics",
-    crosstab.precision           = 7
+    crosstab.precision           = 7,
+    fundamental.pixel.area       = 30L * 30L
     ) {
 
     thisFunctionName <- "compute.metrics";
@@ -44,7 +45,7 @@ compute.metrics <- function(
             directory.resample.reproject = directory.resample.reproject,
             aoi.directory                = aoi.directory,
             output.directory             = output.directory,
-            crosstab.precision           = crosstab.precision
+            fundamental.pixel.area       = fundamental.pixel.area
             );
         }
 
@@ -106,7 +107,7 @@ compute.metrics_polygon.statistics <- function(
     directory.resample.reproject = NULL,
     aoi.directory                = NULL,
     output.directory             = NULL,
-    crosstab.precision           = NULL
+    fundamental.pixel.area       = NULL
     ) {
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -121,10 +122,11 @@ compute.metrics_polygon.statistics <- function(
     tiff.files     <- list.files(path = tiff.directory, pattern = "\\.tiff$");
 
     for ( temp.tiff in tiff.files ) {
-        compute.metrics_SpatRaster.to.polygons(
-            aoi.directory  = aoi.directory,
-            tiff.directory = tiff.directory,
-            tiff.file      = temp.tiff
+        compute.metrics_SpatRaster.polygon.statistics(
+            aoi.directory          = aoi.directory,
+            tiff.directory         = tiff.directory,
+            tiff.file              = temp.tiff,
+            fundamental.pixel.area = fundamental.pixel.area
             );
         }
 
@@ -148,10 +150,11 @@ compute.metrics_polygon.statistics <- function(
 
     }
 
-compute.metrics_SpatRaster.to.polygons <- function(
-    aoi.directory  = NULL,
-    tiff.directory = NULL,
-    tiff.file      = NULL
+compute.metrics_SpatRaster.polygon.statistics <- function(
+    aoi.directory          = NULL,
+    tiff.directory         = NULL,
+    tiff.file              = NULL,
+    fundamental.pixel.area = NULL
     ) {
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -182,8 +185,9 @@ compute.metrics_SpatRaster.to.polygons <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SR.input <- terra::rast(file.path(tiff.directory,tiff.file));
     list.output <- SpatRaster.to.polygons(
-        input.SpatRaster = SR.input,
-        factor.colnames  = 'LU2010'
+        input.SpatRaster       = SR.input,
+        factor.colnames        = 'LU2010',
+        fundamental.pixel.area = fundamental.pixel.area
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
