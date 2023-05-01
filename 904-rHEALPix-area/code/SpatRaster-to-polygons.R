@@ -9,6 +9,8 @@ SpatRaster.to.polygons <- function(
     cat("\n### ~~~~~~~~~~~~~~~~~~~~ ###");
     cat(paste0("\n",thisFunctionName,"() starts.\n\n"));
 
+    print('C-1');
+
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     input.SpatVector <- terra::as.polygons(input.SpatRaster);
     SF.multipolygons <- sf::st_as_sf(input.SpatVector);
@@ -23,6 +25,8 @@ SpatRaster.to.polygons <- function(
             }
         }
 
+    print('C-2');
+
     # cat("\nstr(SF.multipolygons)\n");
     # print( str(SF.multipolygons)   );
 
@@ -35,6 +39,8 @@ SpatRaster.to.polygons <- function(
         row.index        = 1
         );
 
+    print('C-3');
+
     if ( nrow(SF.multipolygons) > 1 ) {
         for ( row.index in seq(2,nrow(SF.multipolygons)) ) {
             SF.temp <- SpatRaster.to.polygons_row.to.polygons(
@@ -45,6 +51,8 @@ SpatRaster.to.polygons <- function(
             }
         }
 
+    print('C-4');
+
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SF.multipolygons <- SpatRaster.to.polygons_add.area.column(
         SF.input     = SF.multipolygons,
@@ -52,26 +60,36 @@ SpatRaster.to.polygons <- function(
         fund.px.area = fund.px.area
         );
 
+    print('C-5');
+
     SF.polygons <- SpatRaster.to.polygons_add.area.column(
         SF.input     = SF.polygons,
         SR.input     = input.SpatRaster,
         fund.px.area = fund.px.area
         );
 
+    print('C-6');
+
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SF.multipolygons <- SpatRaster.to.polygons_reorder.columns(
         SF.input = SF.multipolygons
         );
 
+    print('C-7');
+
     SF.polygons <- SpatRaster.to.polygons_reorder.columns(
         SF.input = SF.polygons
         );
+
+    print('C-8');
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     list.output <- list(
         SF.multipolygons = SF.multipolygons,
         SF.polygons      = SF.polygons
         );
+
+    print('C-9');
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     cat(paste0("\n",thisFunctionName,"() quits."));
@@ -85,22 +103,28 @@ SpatRaster.to.polygons_row.to.polygons <- function(
     SF.multipolygons = NULL,
     row.index        = NULL
     ) {
+    print('D-1');
     SF.polygons <- sf::st_cast(
         x  = SF.multipolygons[row.index,"geometry"],
         to = "POLYGON"
         );
+    print('D-2');
     DF.selected.row <- sf::st_drop_geometry(SF.multipolygons[row.index,]);
+    print('D-3');
     DF.rows <- base::data.frame(deleteme = base::rep(x = NA, times = base::nrow(SF.polygons)));
+    print('D-4');
     for ( temp.colname in base::colnames(DF.selected.row) ) {
         DF.rows[,temp.colname] <- base::rep(
             x     = DF.selected.row[1,temp.colname],
             times = base::nrow(SF.polygons)
             );
         }
+    print('D-5');
     retained.colnames <- base::setdiff(base::colnames(DF.rows),'deleteme');
     DF.rows <- base::as.data.frame(DF.rows[,retained.colnames]);
     base::colnames(DF.rows) <- retained.colnames;
     SF.output <- sf::st_as_sf(base::cbind(DF.rows,SF.polygons));
+    print('D-6');
     return( SF.output );
     }
 
@@ -109,17 +133,23 @@ SpatRaster.to.polygons_add.area.column <- function(
     SR.input     = NULL,
     fund.px.area = NULL
     ) {
+    print('E-1');
     SF.output <- SF.input;
+    print('E-2');
     SF.output[,'area']      <- sf::st_area(SF.output[,'geometry']);
+    print('E-3');
     SF.output[,'area_m2']   <- base::unlist(sf::st_drop_geometry(SF.output[,'area']));
+    print('E-4');
     SF.output[,'n.intr.px'] <- base::round(
         x      = base::unlist(sf::st_drop_geometry(SF.output[,'area_m2'])) / base::prod( terra::res(SR.input) ),
         digits = 0
         );
+    print('E-5');
     SF.output[,'n.fund.px'] <- base::round(
         x      = base::unlist(sf::st_drop_geometry(SF.output[,'area_m2'])) / fund.px.area,
         digits = 0
         );
+    print('E-6');
     return( SF.output );
     }
 
