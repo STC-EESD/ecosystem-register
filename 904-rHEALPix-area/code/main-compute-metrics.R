@@ -23,7 +23,6 @@ setwd( output.directory );
 ##################################################
 require(sf);
 require(sfarrow);
-require(stringr);
 require(terra);
 
 # source supporting R code
