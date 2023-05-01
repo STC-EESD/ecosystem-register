@@ -1,8 +1,8 @@
 
 SpatRaster.to.polygons <- function(
-    input.SpatRaster       = NULL,
-    factor.colnames        = NULL,
-    fundamental.pixel.area = base::prod( terra::res(input.SpatRaster) )
+    input.SpatRaster = NULL,
+    factor.colnames  = NULL,
+    fund.px.area     = base::prod( terra::res(input.SpatRaster) )
     ) {
 
     thisFunctionName <- "SpatRaster.to.polygons";
@@ -47,15 +47,15 @@ SpatRaster.to.polygons <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SF.multipolygons <- SpatRaster.to.polygons_add.area.column(
-        SF.input               = SF.multipolygons,
-        SR.input               = input.SpatRaster,
-        fundamental.pixel.area = fundamental.pixel.area
+        SF.input     = SF.multipolygons,
+        SR.input     = input.SpatRaster,
+        fund.px.area = fund.px.area
         );
 
     SF.polygons <- SpatRaster.to.polygons_add.area.column(
-        SF.input               = SF.polygons,
-        SR.input               = input.SpatRaster,
-        fundamental.pixel.area = fundamental.pixel.area
+        SF.input     = SF.polygons,
+        SR.input     = input.SpatRaster,
+        fund.px.area = fund.px.area
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -105,15 +105,19 @@ SpatRaster.to.polygons_row.to.polygons <- function(
     }
 
 SpatRaster.to.polygons_add.area.column <- function(
-    SF.input               = NULL,
-    SR.input               = NULL,
-    fundamental.pixel.area = NULL
+    SF.input     = NULL,
+    SR.input     = NULL,
+    fund.px.area = NULL
     ) {
     SF.output <- SF.input;
-    SF.output[,'area']     <- sf::st_area(SF.output[,'geometry']);
-    SF.output[,'area_m2']  <- base::unlist(sf::st_drop_geometry(SF.output[,'area']));
-    SF.output[,'n.pixels'] <- base::round(
-        x      = base::unlist(sf::st_drop_geometry(SF.output[,'area_m2'])) / fundamental.pixel.area,
+    SF.output[,'area']      <- sf::st_area(SF.output[,'geometry']);
+    SF.output[,'area_m2']   <- base::unlist(sf::st_drop_geometry(SF.output[,'area']));
+    SF.output[,'n.intr.px'] <- base::round(
+        x      = base::unlist(sf::st_drop_geometry(SF.output[,'area_m2'])) / base::prod( terra::res(SR.input) ),
+        digits = 0
+        );
+    SF.output[,'n.fund.px'] <- base::round(
+        x      = base::unlist(sf::st_drop_geometry(SF.output[,'area_m2'])) / fund.px.area,
         digits = 0
         );
     return( SF.output );

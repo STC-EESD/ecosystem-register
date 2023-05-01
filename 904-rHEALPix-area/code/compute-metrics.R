@@ -1,9 +1,9 @@
 
 compute.metrics <- function(
     directory.resample.reproject = NULL,
-    output.directory             = "output-metrics",
-    crosstab.precision           = 7,
-    fundamental.pixel.area       = 30L * 30L
+    output.directory   = "output-metrics",
+    crosstab.precision = 7,
+    fund.px.area       = 30L * 30L
     ) {
 
     thisFunctionName <- "compute.metrics";
@@ -45,7 +45,7 @@ compute.metrics <- function(
             directory.resample.reproject = directory.resample.reproject,
             aoi.directory                = aoi.directory,
             output.directory             = output.directory,
-            fundamental.pixel.area       = fundamental.pixel.area
+            fund.px.area                 = fund.px.area
             );
         }
 
@@ -107,7 +107,7 @@ compute.metrics_polygon.statistics <- function(
     directory.resample.reproject = NULL,
     aoi.directory                = NULL,
     output.directory             = NULL,
-    fundamental.pixel.area       = NULL
+    fund.px.area                 = NULL
     ) {
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -123,10 +123,10 @@ compute.metrics_polygon.statistics <- function(
 
     for ( temp.tiff in tiff.files ) {
         compute.metrics_SpatRaster.polygon.statistics(
-            aoi.directory          = aoi.directory,
-            tiff.directory         = tiff.directory,
-            tiff.file              = temp.tiff,
-            fundamental.pixel.area = fundamental.pixel.area
+            aoi.directory  = aoi.directory,
+            tiff.directory = tiff.directory,
+            tiff.file      = temp.tiff,
+            fund.px.area   = fund.px.area
             );
         }
 
@@ -151,10 +151,10 @@ compute.metrics_polygon.statistics <- function(
     }
 
 compute.metrics_SpatRaster.polygon.statistics <- function(
-    aoi.directory          = NULL,
-    tiff.directory         = NULL,
-    tiff.file              = NULL,
-    fundamental.pixel.area = NULL
+    aoi.directory  = NULL,
+    tiff.directory = NULL,
+    tiff.file      = NULL,
+    fund.px.area   = NULL
     ) {
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -185,9 +185,9 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SR.input <- terra::rast(file.path(tiff.directory,tiff.file));
     list.output <- SpatRaster.to.polygons(
-        input.SpatRaster       = SR.input,
-        factor.colnames        = 'LU2010',
-        fundamental.pixel.area = fundamental.pixel.area
+        input.SpatRaster = SR.input,
+        factor.colnames  = 'LU2010',
+        fund.px.area     = fund.px.area
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -208,34 +208,36 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
         x    = as.formula("area_m2 ~ category"), # area_m2 ~ category,
         data = sf::st_drop_geometry(SF.polygons[,c('category','area_m2')]),
         FUN  = function(x) {return(c(
-                n.polygons = length(x),
-                total      = sum(x),
-                meean      = mean(x),
-                min        = min(x),
-                quantile(x = x, prob = c(0.25,0.50,0.75,0.95)),
-                max        = max(x)
+                n.polygons = base::length(x),
+                n.fund.px  = base::round(x = sum(x) / fund.px.area, digits = 0),
+                total      = base::sum(x),
+                meean      = base::mean(x),
+                min        = base::min(x),
+                stats::quantile(x = x, prob = c(0.25,0.50,0.75,0.95)),
+                max        = base::max(x)
             ))}
         );
-    DF.all.area.classes[,'n.pixels.class'] <- 'all.n.pixels.classes';
+    DF.all.area.classes[,'px.size.class'] <- 'all.px.size.classes';
 
-    leading.colnames    <- c('category','n.pixels.class');
+    leading.colnames    <- c('category','px.size.class');
     reordered.colnames  <- c(leading.colnames,setdiff(colnames(DF.all.area.classes),leading.colnames));
     DF.all.area.classes <- DF.all.area.classes[,reordered.colnames];
 
-    SF.polygons[,'n.pixels.class'] <- '9 <= n.pixels';
-    SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.pixels'])) < 9,'n.pixels.class'] <- '4 <= n.pixels < 9';
-    SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.pixels'])) < 4,'n.pixels.class'] <- 'n.pixels < 4';
+    SF.polygons[,'px.size.class'] <- '9 <= n.fund.px';
+    SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.fund.px'])) < 9,'px.size.class'] <- '4 <= n.fund.px < 9';
+    SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.fund.px'])) < 4,'px.size.class'] <- 'n.fund.px < 4';
 
     DF.by.area.class <- stats::aggregate(
-        x    = as.formula("area_m2 ~ category + n.pixels.class"), # area_m2 ~ category + n.pixels.class,
-        data = sf::st_drop_geometry(SF.polygons[,c('category','n.pixels.class','area_m2')]),
+        x    = as.formula("area_m2 ~ category + px.size.class"), # area_m2 ~ category + px.size.class,
+        data = sf::st_drop_geometry(SF.polygons[,c('category','px.size.class','area_m2')]),
         FUN  = function(x) {return(c(
-                n.polygons = length(x),
-                total      = sum(x),
-                meean      = mean(x),
-                min        = min(x),
-                quantile(x = x, prob = c(0.25,0.50,0.75,0.95)),
-                max        = max(x)
+                n.polygons = base::length(x),
+                n.fund.px  = base::round(x = sum(x) / fund.px.area, digits = 0),
+                total      = base::sum(x),
+                meean      = base::mean(x),
+                min        = base::min(x),
+                stats::quantile(x = x, prob = c(0.25,0.50,0.75,0.95)),
+                max        = base::max(x)
             ))}
         );
 
@@ -253,6 +255,11 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
         x           = colnames(DF.polygon.statistics),
         pattern     = "^area_m2.n.polygons$",
         replacement = "n.polygons"
+        );
+    colnames(DF.polygon.statistics) <- gsub(
+        x           = colnames(DF.polygon.statistics),
+        pattern     = "^area_m2.n.fund.px$",
+        replacement = "n.fund.px"
         );
     colnames(DF.polygon.statistics) <- gsub(
         x           = colnames(DF.polygon.statistics),
@@ -399,15 +406,15 @@ compute.metrics_crosstab <- function(
     colnames(DF.area) <- gsub(
         x           = colnames(DF.area),
         pattern     = "^Freq$",
-        replacement = "n.pixels"
+        replacement = "n.fund.px"
         ); 
     DF.area[,'pixel.area'] <- as.numeric(as.character(DF.area[,'pixel.area']));
-    DF.area[,'total.area'] <- DF.area[,'n.pixels'] * DF.area[,'pixel.area'];
+    DF.area[,'total.area'] <- DF.area[,'n.fund.px'] * DF.area[,'pixel.area'];
 
     DF.area <- DF.area %>%
-        dplyr::select( category, n.pixels , total.area ) %>%
+        dplyr::select( category, n.fund.px , total.area ) %>%
         dplyr::group_by( category ) %>%
-        dplyr::summarize( n.pixels = sum(n.pixels) , total.area.m2 = sum(total.area) );
+        dplyr::summarize( n.fund.px = sum(n.fund.px) , total.area.m2 = sum(total.area) );
     DF.area <- as.data.frame(DF.area);
     DF.area[,'aoi'] <- aoi.directory;
     DF.area[,'treatment'] <- gsub(

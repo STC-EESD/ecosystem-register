@@ -70,7 +70,7 @@ colour.NA <- 'black';
 compute.metrics(
     directory.resample.reproject = "output-resample-reproject",
     output.directory             = "output-metrics",
-    fundamental.pixel.area       = 30L * 30L
+    fund.px.area                 = 30L * 30L
     );
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
