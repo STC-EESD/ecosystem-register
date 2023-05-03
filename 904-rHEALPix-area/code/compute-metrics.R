@@ -121,14 +121,12 @@ compute.metrics_polygon.statistics <- function(
     tiff.files     <- list.files(path = tiff.directory, pattern = "\\.tiff$");
 
     for ( temp.tiff in tiff.files ) {
-        print('A-1');
         compute.metrics_SpatRaster.polygon.statistics(
             aoi.directory  = aoi.directory,
             tiff.directory = tiff.directory,
             tiff.file      = temp.tiff,
             fund.px.area   = fund.px.area
             );
-        print('A-2');
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
@@ -158,8 +156,6 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
     fund.px.area   = NULL
     ) {
 
-    print('B-1');
-
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     PQT.polygons <- gsub(
         x           = tiff.file,
@@ -185,8 +181,6 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
         replacement = "-polygon-statistics.csv"
         );
 
-    print('B-2');
-
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SR.input <- terra::rast(file.path(tiff.directory,tiff.file));
     list.output <- SpatRaster.to.polygons(
@@ -195,34 +189,27 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
         fund.px.area     = fund.px.area
         );
 
-    print('B-3');
-
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     # sfarrow::st_write_parquet(
     #     dsn = PQT.multipolygons,
     #     obj = list.output[['SF.multipolygons']]
     #     );
 
-    print('B-4');
-
     # sfarrow::st_write_parquet(
     #     dsn = PQT.polygons,
     #     obj = list.output[['SF.polygons']]
     #     );
 
-    print('B-5');
-
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SF.polygons <- list.output[['SF.polygons']];
-
-    print('B-6');
 
     DF.all.pxsize.classes <- stats::aggregate(
         x    = as.formula("pl.area_m2 ~ category"), # area_m2 ~ category,
         data = sf::st_drop_geometry(SF.polygons[,c('category','pl.area_m2')]),
         FUN  = function(x) {return(c(
             n.polygons = base::length(x),
-            n.fund.px  = base::round(x = sum(x) / fund.px.area, digits = 0)
+            n.fund.px  = base::round(x = sum(x) / fund.px.area, digits = 0),
+            total      = base::sum(x)
             ))}
         );
     DF.all.pxsize.classes.gd <- stats::aggregate(
@@ -244,19 +231,13 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
     base::remove(list = c('DF.all.pxsize.classes.gd'));
     DF.all.pxsize.classes[,'px.size.class'] <- 'all.px.size.classes';
 
-    print('B-7');
-
     leading.colnames    <- c('category','px.size.class');
     reordered.colnames  <- c(leading.colnames,setdiff(colnames(DF.all.pxsize.classes),leading.colnames));
     DF.all.pxsize.classes <- DF.all.pxsize.classes[,reordered.colnames];
 
-    print('B-8');
-
     SF.polygons[,'px.size.class'] <- '9 <= n.fund.px';
     SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.fund.px'])) < 9,'px.size.class'] <- '4 <= n.fund.px < 9';
     SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.fund.px'])) < 4,'px.size.class'] <- 'n.fund.px < 4';
-
-    print('B-9');
 
     DF.by.pxsize.class <- stats::aggregate(
         x    = as.formula("pl.area_m2 ~ category + px.size.class"), # area_m2 ~ category + px.size.class,
@@ -283,8 +264,6 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
         by = c('category','px.size.class')
         );
     base::remove(list = c('DF.all.pxsize.classes.gd'));
-
-    print('B-10');
 
     DF.polygon.statistics <- rbind(DF.all.pxsize.classes,DF.by.pxsize.class);
     base::remove(list = c(
@@ -316,8 +295,6 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
         replacement = "%"
         );
 
-    print('B-11');
-
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     DF.polygon.statistics[,'aoi'] <- aoi.directory;
     DF.polygon.statistics[,'treatment'] <- gsub(
@@ -335,8 +312,6 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
         row.names = FALSE
         );
 
-    print('B-12');
-
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     base::remove(list = c(
         'SR.input',
@@ -344,8 +319,6 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
         'list.output',
         'DF.polygon.statistics'
         ));
-
-    print('B-13');
 
     return( NULL );
 
