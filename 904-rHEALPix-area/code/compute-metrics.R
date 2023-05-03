@@ -190,15 +190,16 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
         );
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    # sfarrow::st_write_parquet(
-    #     dsn = PQT.multipolygons,
-    #     obj = list.output[['SF.multipolygons']]
-    #     );
-
-    # sfarrow::st_write_parquet(
-    #     dsn = PQT.polygons,
-    #     obj = list.output[['SF.polygons']]
-    #     );
+    if ( nchar(system.file(package = "sfarrow")) > 0 ) {
+        sfarrow::st_write_parquet(
+            dsn = PQT.multipolygons,
+            obj = list.output[['SF.multipolygons']]
+            );
+        sfarrow::st_write_parquet(
+            dsn = PQT.polygons,
+            obj = list.output[['SF.polygons']]
+            );
+        }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SF.polygons <- list.output[['SF.polygons']];
