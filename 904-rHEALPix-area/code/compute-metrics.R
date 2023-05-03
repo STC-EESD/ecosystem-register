@@ -203,32 +203,11 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     SF.polygons <- list.output[['SF.polygons']];
 
-    DF.all.pxsize.classes <- stats::aggregate(
-        x    = as.formula("pl.area_m2 ~ category"), # area_m2 ~ category,
-        data = sf::st_drop_geometry(SF.polygons[,c('category','pl.area_m2')]),
-        FUN  = function(x) {return(c(
-            n.polygons = base::length(x),
-            n.fund.px  = base::round(x = sum(x) / fund.px.area, digits = 0),
-            total      = base::sum(x)
-            ))}
+    DF.all.pxsize.classes <- compute.metrics_extract.polygon.statistics(
+        SF.input     = SF.polygons,
+        fund.px.area = fund.px.area,
+        pxsize.class = FALSE
         );
-    DF.all.pxsize.classes.gd <- stats::aggregate(
-        x    = as.formula("gd.area_m2 ~ category"), # area_m2 ~ category,
-        data = sf::st_drop_geometry(SF.polygons[,c('category','gd.area_m2')]),
-        FUN  = function(x) {return(c(
-            total      = base::sum(x),
-            meean      = base::mean(x),
-            min        = base::min(x),
-            stats::quantile(x = x, prob = c(0.25,0.50,0.75,0.95)),
-            max        = base::max(x)
-            ))}
-        );
-    DF.all.pxsize.classes <- base::merge(
-        x  = DF.all.pxsize.classes,
-        y  = DF.all.pxsize.classes.gd,
-        by = c('category')
-        );
-    base::remove(list = c('DF.all.pxsize.classes.gd'));
     DF.all.pxsize.classes[,'px.size.class'] <- 'all.px.size.classes';
 
     leading.colnames    <- c('category','px.size.class');
@@ -239,33 +218,14 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
     SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.fund.px'])) < 9,'px.size.class'] <- '4 <= n.fund.px < 9';
     SF.polygons[unlist(sf::st_drop_geometry(SF.polygons[,'n.fund.px'])) < 4,'px.size.class'] <- 'n.fund.px < 4';
 
-    DF.by.pxsize.class <- stats::aggregate(
-        x    = as.formula("pl.area_m2 ~ category + px.size.class"), # area_m2 ~ category + px.size.class,
-        data = sf::st_drop_geometry(SF.polygons[,c('category','px.size.class','pl.area_m2')]),
-        FUN  = function(x) {return(c(
-            n.polygons = base::length(x),
-            n.fund.px  = base::round(x = sum(x) / fund.px.area, digits = 0)
-            ))}
+    DF.by.pxsize.class <- compute.metrics_extract.polygon.statistics(
+        SF.input     = SF.polygons,
+        fund.px.area = fund.px.area,
+        pxsize.class = TRUE
         );
-    DF.by.pxsize.class.gd <- stats::aggregate(
-        x    = as.formula("gd.area_m2 ~ category + px.size.class"), # area_m2 ~ category + px.size.class,
-        data = sf::st_drop_geometry(SF.polygons[,c('category','px.size.class','gd.area_m2')]),
-        FUN  = function(x) {return(c(
-            total      = base::sum(x),
-            meean      = base::mean(x),
-            min        = base::min(x),
-            stats::quantile(x = x, prob = c(0.25,0.50,0.75,0.95)),
-            max        = base::max(x)
-            ))}
-        );
-    DF.by.pxsize.class <- base::merge(
-        x  = DF.by.pxsize.class,
-        y  = DF.by.pxsize.class.gd,
-        by = c('category','px.size.class')
-        );
-    base::remove(list = c('DF.all.pxsize.classes.gd'));
 
     DF.polygon.statistics <- rbind(DF.all.pxsize.classes,DF.by.pxsize.class);
+
     base::remove(list = c(
         'DF.all.pxsize.classes',
         'DF.by.pxsize.class'
@@ -321,6 +281,64 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
         ));
 
     return( NULL );
+
+    }
+
+compute.metrics_extract.polygon.statistics <- function(
+    SF.input     = NULL,
+    fund.px.area = NULL,
+    pxsize.class = FALSE
+    ) {
+
+    aggregation.formula    <- "pl.area_m2 ~ category";
+    aggregation.formula.gd <- "gd.area_m2 ~ category";
+    require.colnames       <- c('category','pl.area_m2');
+    require.colnames.gd    <- c('category','gd.area_m2');
+    by.variables           <- c('category');
+
+    if ( pxsize.class ) {
+        aggregation.formula    <- paste0(aggregation.formula,   " + px.size.class");
+        aggregation.formula.gd <- paste0(aggregation.formula.gd," + px.size.class");
+        require.colnames       <- c(require.colnames,              'px.size.class');
+        require.colnames.gd    <- c(require.colnames.gd,           'px.size.class');
+        by.variables           <- c(by.variables,                  'px.size.class');
+        }
+
+    DF.class <- stats::aggregate(
+        x    = as.formula(aggregation.formula),
+        data = sf::st_drop_geometry(SF.input[,require.colnames]),
+        FUN  = function(x) {return(c(
+            n.polygons = base::length(x),
+            n.fund.px  = base::round(x = sum(x) / fund.px.area, digits = 0),
+            total      = base::sum(x)
+            ))}
+        );
+    DF.class.gd <- stats::aggregate(
+        x    = as.formula(aggregation.formula.gd),
+        data = sf::st_drop_geometry(SF.input[,require.colnames.gd]),
+        FUN  = function(x) {return(c(
+            total      = base::sum(x),
+            meean      = base::mean(x),
+            min        = base::min(x),
+            stats::quantile(x = x, prob = c(0.25,0.50,0.75,0.95)),
+            max        = base::max(x)
+            ))}
+        );
+
+    cat("\nstr(DF.class)\n");
+    print( str(DF.class)   );
+
+    cat("\nstr(DF.class.gd)\n");
+    print( str(DF.class.gd)   );
+
+    DF.class <- base::merge(
+        x  = DF.class,
+        y  = DF.class.gd,
+        by = by.variables
+        );
+    base::remove(list = c('DF.class.gd'));
+
+    return( DF.class );
 
     }
 
