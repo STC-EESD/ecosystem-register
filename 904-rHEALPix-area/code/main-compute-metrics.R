@@ -69,6 +69,7 @@ colour.NA <- 'black';
 compute.metrics(
     directory.resample.reproject = "output-resample-reproject",
     output.directory             = "output-metrics",
+    crosstab.precision           = 7,
     fund.px.area                 = 30L * 30L
     );
 
