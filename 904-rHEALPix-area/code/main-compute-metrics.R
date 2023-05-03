@@ -21,6 +21,7 @@ start.proc.time <- proc.time();
 setwd( output.directory );
 
 ##################################################
+require(lwgeom);
 require(sf);
 require(sfarrow);
 require(terra);

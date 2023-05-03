@@ -219,8 +219,8 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
     print('B-6');
 
     DF.all.area.classes <- stats::aggregate(
-        x    = as.formula("area_m2 ~ category"), # area_m2 ~ category,
-        data = sf::st_drop_geometry(SF.polygons[,c('category','area_m2')]),
+        x    = as.formula("pl.area_m2 ~ category"), # area_m2 ~ category,
+        data = sf::st_drop_geometry(SF.polygons[,c('category','pl.area_m2')]),
         FUN  = function(x) {return(c(
                 n.polygons = base::length(x),
                 n.fund.px  = base::round(x = sum(x) / fund.px.area, digits = 0),
@@ -248,8 +248,8 @@ compute.metrics_SpatRaster.polygon.statistics <- function(
     print('B-9');
 
     DF.by.area.class <- stats::aggregate(
-        x    = as.formula("area_m2 ~ category + px.size.class"), # area_m2 ~ category + px.size.class,
-        data = sf::st_drop_geometry(SF.polygons[,c('category','px.size.class','area_m2')]),
+        x    = as.formula("pl.area_m2 ~ category + px.size.class"), # area_m2 ~ category + px.size.class,
+        data = sf::st_drop_geometry(SF.polygons[,c('category','px.size.class','pl.area_m2')]),
         FUN  = function(x) {return(c(
                 n.polygons = base::length(x),
                 n.fund.px  = base::round(x = sum(x) / fund.px.area, digits = 0),

@@ -54,7 +54,7 @@ SpatRaster.to.polygons <- function(
     print('C-4');
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    SF.multipolygons <- SpatRaster.to.polygons_add.area.column(
+    SF.multipolygons <- SpatRaster.to.polygons_add.area.columns(
         SF.input     = SF.multipolygons,
         SR.input     = input.SpatRaster,
         fund.px.area = fund.px.area
@@ -62,7 +62,7 @@ SpatRaster.to.polygons <- function(
 
     print('C-5');
 
-    SF.polygons <- SpatRaster.to.polygons_add.area.column(
+    SF.polygons <- SpatRaster.to.polygons_add.area.columns(
         SF.input     = SF.polygons,
         SR.input     = input.SpatRaster,
         fund.px.area = fund.px.area
@@ -128,29 +128,33 @@ SpatRaster.to.polygons_row.to.polygons <- function(
     return( SF.output );
     }
 
-SpatRaster.to.polygons_add.area.column <- function(
+SpatRaster.to.polygons_add.area.columns <- function(
     SF.input     = NULL,
     SR.input     = NULL,
     fund.px.area = NULL
     ) {
-    print('E-1');
+
     SF.output <- SF.input;
-    print('E-2');
-    SF.output[,'area']      <- sf::st_area(SF.output[,'geometry']);
-    print('E-3');
-    SF.output[,'area_m2']   <- base::unlist(sf::st_drop_geometry(SF.output[,'area']));
-    print('E-4');
+
+    SF.output <- sf::st_transform(x = SF.output, crs = sf::st_crs("epsg:4326"))
+    SF.output[,'gd.area'   ] <- lwgeom::st_geod_area(SF.output[,'geometry']);
+    SF.output[,'gd.area_m2'] <- base::unlist(sf::st_drop_geometry(SF.output[,'gd.area']));
+    SF.output <- sf::st_transform(x = SF.output, crs = sf::st_crs(SF.input)) 
+
+    SF.output[,'pl.area'   ] <- sf::st_area(SF.output[,'geometry']);
+    SF.output[,'pl.area_m2'] <- base::unlist(sf::st_drop_geometry(SF.output[,'pl.area']));
+
     SF.output[,'n.intr.px'] <- base::round(
-        x      = base::unlist(sf::st_drop_geometry(SF.output[,'area_m2'])) / base::prod( terra::res(SR.input) ),
+        x      = base::unlist(sf::st_drop_geometry(SF.output[,'pl.area_m2'])) / base::prod( terra::res(SR.input) ),
         digits = 0
         );
-    print('E-5');
     SF.output[,'n.fund.px'] <- base::round(
-        x      = base::unlist(sf::st_drop_geometry(SF.output[,'area_m2'])) / fund.px.area,
+        x      = base::unlist(sf::st_drop_geometry(SF.output[,'pl.area_m2'])) / fund.px.area,
         digits = 0
         );
-    print('E-6');
+
     return( SF.output );
+
     }
 
 SpatRaster.to.polygons_reorder.columns <- function(
