@@ -73,14 +73,13 @@ myRscript=${codeDIR}/main-resample-reproject.R
 stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
 stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
 ${RTerraBinDIR}/R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
-# sleep 2
+sleep 2
 
 ##################################################
-# myRscript=${codeDIR}/main-compute-metrics.R
-# stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
-# stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
-# # ${RBinDIR}/R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
-# ${RTerraBinDIR}/R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
+myRscript=${codeDIR}/main-compute-metrics.R
+stdoutFile=${outputDIR}/stdout.R.`basename ${myRscript} .R`
+stderrFile=${outputDIR}/stderr.R.`basename ${myRscript} .R`
+${RTerraBinDIR}/R --no-save --args ${dataDIR} ${codeDIR} ${outputDIR} ${googleDriveFolder} ${resolution} < ${myRscript} > ${stdoutFile} 2> ${stderrFile}
 
 ##################################################
 exit
