@@ -56,8 +56,6 @@ perform.resampling.reprojection <- function(
         perform.resampling.reprojection_collapse.if.applicable(
             tiff.aoi            = temp.tiff,
             original.directory  = original.directory,
-            # directory.aoi       = directory.aoi,
-            # WKT.NAD_1983_Albers = WKT.NAD_1983_Albers,
             DF.coltab.SDLU      = DF.coltab.SDLU,
             output.directory    = output.directory
             );
@@ -77,8 +75,6 @@ perform.resampling.reprojection <- function(
 perform.resampling.reprojection_collapse.if.applicable <- function(
     tiff.aoi            = NULL,
     original.directory  = NULL,
-    # directory.aoi       = NULL,
-    # WKT.NAD_1983_Albers = NULL,
     DF.coltab.SDLU      = NULL,
     output.directory    = NULL,
     colour.NA           = 'black'
@@ -114,7 +110,7 @@ perform.resampling.reprojection_collapse.if.applicable <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     non.collapsed.tiff.files <- grep(
         x       = list.files(pattern = "\\.tiff$"),
-        pattern = "collapsed",
+        pattern = "collapse",
         invert  = TRUE,
         value   = TRUE
         );
@@ -128,48 +124,28 @@ perform.resampling.reprojection_collapse.if.applicable <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     for ( tiff.file in non.collapsed.tiff.files ) {
 
-        cat("\ntiff.file:",tiff.file,"\n");
-
-        print('A-1');
-
         TIF.collapsed <- gsub(
             x           = tiff.file,
             pattern     = "\\.tiff",
-            replacement = "-collapsed.tiff"
+            replacement = "-collapse.tiff"
             );
-
-        print('A-2');
 
         PNG.collapsed <- gsub(
             x           = tiff.file,
             pattern     = "\\.tiff",
-            replacement = "-collapsed.png"
+            replacement = "-collapse.png"
             );
 
-        cat("\nTIF.collapsed:",TIF.collapsed,"\n");
-        cat("\nPNG.collapsed:",PNG.collapsed,"\n");
-
-        print('A-3');
-
         SR.original <- terra::rast(tiff.file);
-
-        print('A-4');
 
         collapse.classes.AAFC.SDLU(
             SR.input       = SR.original,
             DF.coltab.SDLU = DF.coltab.SDLU,
             TIF.output     = TIF.collapsed
             );
-
-        print('A-5');
-
         SF.collapsed <- terra::rast(TIF.collapsed);
 
-        print('A-6');
-
         terra::coltab(SF.collapsed) <- DF.coltab.SDLU[,c('value','col')];
-
-        print('A-7');
 
         png(
             filename = PNG.collapsed,
@@ -183,8 +159,6 @@ perform.resampling.reprojection_collapse.if.applicable <- function(
             colNA = colour.NA
             );
         dev.off();
-
-        print('A-8');
 
         }
 
@@ -251,7 +225,7 @@ perform.resampling.reprojection_resample.reproject <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     if ( collapse ) {
-        cumulative.stem <- "original-collapsed";
+        cumulative.stem <- "original-collapse";
     } else {
         cumulative.stem <- "original";
         }

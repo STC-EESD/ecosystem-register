@@ -117,10 +117,13 @@ compute.metrics_polygon.statistics <- function(
     setwd(temp.directory);
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
-    tiff.directory <- file.path(original.directory,directory.resample.reproject,aoi.directory);
-    tiff.files     <- list.files(path = tiff.directory, pattern = "\\.tiff$");
+    tiff.directory       <- file.path(original.directory,directory.resample.reproject,aoi.directory);
+    collapsed.tiff.files <- list.files(
+        path    = tiff.directory,
+        pattern = "collapse.{0,}\\.tiff$"
+        );
 
-    for ( temp.tiff in tiff.files ) {
+    for ( temp.tiff in collapsed.tiff.files ) {
         compute.metrics_SpatRaster.polygon.statistics(
             aoi.directory  = aoi.directory,
             tiff.directory = tiff.directory,
@@ -364,9 +367,12 @@ compute.metrics_area.by.landcover <- function(
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     tiff.directory <- file.path(original.directory,directory.resample.reproject,aoi.directory);
-    tiff.files     <- list.files(path = tiff.directory, pattern = "\\.tiff$");
+    collapsed.tiff.files <- list.files(
+        path    = tiff.directory,
+        pattern = "collapse.{0,}\\.tiff$"
+        );
 
-    for ( temp.tiff in tiff.files ) {
+    for ( temp.tiff in collapsed.tiff.files ) {
         compute.metrics_crosstab(
             aoi.directory      = aoi.directory,
             tiff.directory     = tiff.directory,
