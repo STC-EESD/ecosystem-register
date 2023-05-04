@@ -458,15 +458,15 @@ compute.metrics_crosstab <- function(
     colnames(DF.area) <- gsub(
         x           = colnames(DF.area),
         pattern     = "^Freq$",
-        replacement = "n.fund.px"
+        replacement = "n.pixels"
         ); 
     DF.area[,'pixel.area'] <- as.numeric(as.character(DF.area[,'pixel.area']));
-    DF.area[,'total.area'] <- DF.area[,'n.fund.px'] * DF.area[,'pixel.area'];
+    DF.area[,'total.area'] <- DF.area[,'n.pixels'] * DF.area[,'pixel.area'];
 
     DF.area <- DF.area %>%
-        dplyr::select( category, n.fund.px , total.area ) %>%
+        dplyr::select( category, n.pixels , total.area ) %>%
         dplyr::group_by( category ) %>%
-        dplyr::summarize( n.fund.px = sum(n.fund.px) , total.area.m2 = sum(total.area) );
+        dplyr::summarize( n.pixels = sum(n.pixels) , total.area.m2 = sum(total.area) );
     DF.area <- as.data.frame(DF.area);
     DF.area[,'aoi'] <- aoi.directory;
     DF.area[,'treatment'] <- gsub(
