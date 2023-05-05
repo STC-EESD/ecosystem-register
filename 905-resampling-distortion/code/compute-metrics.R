@@ -91,6 +91,12 @@ compute.metrics_rbind <- function(
         DF.output <- rbind(DF.output,DF.temp);
         }
 
+    colnames(DF.output) <- base::gsub(
+        x           = colnames(DF.output),
+        pattern     = "\\.$",
+        replacement = "%"
+        );
+
     write.csv(
         file      = CSV.output, 
         x         = DF.output,
