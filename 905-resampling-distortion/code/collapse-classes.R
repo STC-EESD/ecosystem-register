@@ -94,6 +94,7 @@ collapse.classes.AAFC.SDLU_reclassify <- function(x) {
         x %in% c(61,62) ~ 5,
         x %in% c(71) ~ 6,
         x %in% c(91) ~ 8,
+        x %in% c(NA) ~ NA,
         .default = 0
         );
     }
