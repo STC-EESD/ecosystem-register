@@ -378,7 +378,7 @@ perform.resampling.reprojection_resample.reproject <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     # reproject to Albers by mode
 
-    spatial.resolutions <- c(30,100);
+    spatial.resolutions <- c(10,30,100);
     for ( temp.resolution in spatial.resolutions ) {
         
         TIF.reprojected <- paste0(cumulative.stem,"-reprojectMode",temp.resolution,".tiff");
@@ -430,7 +430,7 @@ perform.resampling.reprojection_resample.reproject <- function(
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     # reproject to Albers by nearest neighbour
 
-    spatial.resolutions <- c(30);
+    spatial.resolutions <- c(10,30);
     for ( temp.resolution in spatial.resolutions ) {
         
         TIF.reprojected <- paste0(cumulative.stem,"-reprojectNear",temp.resolution,".tiff");
