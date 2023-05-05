@@ -328,7 +328,7 @@ compute.metrics_extract.polygon.statistics <- function(
         data = sf::st_drop_geometry(SF.input[,require.colnames.gd]),
         FUN  = function(x) {return(c(
             total      = base::sum(x),
-            meean      = base::mean(x),
+            mean       = base::mean(x),
             min        = base::min(x),
             stats::quantile(x = x, prob = c(0.25,0.50,0.75,0.95)),
             max        = base::max(x)
