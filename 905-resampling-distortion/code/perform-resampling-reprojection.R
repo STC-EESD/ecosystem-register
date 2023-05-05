@@ -537,8 +537,6 @@ perform.resampling.reprojection_resample.reproject <- function(
             overwrite = TRUE
             );
 
-        print('A-12');
-
         png(
             filename = PNG.downsampled,
             res      = 300,
