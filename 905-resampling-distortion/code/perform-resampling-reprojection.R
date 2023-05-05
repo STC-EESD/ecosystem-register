@@ -480,11 +480,92 @@ perform.resampling.reprojection_resample.reproject <- function(
         }
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+    # upsample then downsample
+
+    resampling.methods <- c('Near','Mode');
+    for ( temp.method in resampling.methods ) {
+        
+        TIF.downsampled <- paste0(cumulative.stem,"-reproject",temp.method,"10-reproject",temp.method,"100",".tiff");
+        PNG.downsampled <- paste0(cumulative.stem,"-reproject",temp.method,"10-reproject",temp.method,"100",".png" );
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        random.string <- paste(
+            sample(x = c(LETTERS,letters), size = 10, replace = TRUE),
+            collapse = ""
+            );
+        TIF.temp.1 <- paste0("tmp-",random.string,".tiff");
+
+        terra::project(
+            x        = SR.cumulative,
+            y        = terra::crs(WKT.NAD_1983_Albers),
+            filename = TIF.temp.1,
+            method   = tolower(temp.method),
+            res      = 10
+            );
+        SR.upsampled <- terra::rast(TIF.temp.1);
+
+        if ( collapse ) {
+            levels(SR.upsampled) <- temp.levels;
+            terra::coltab(SR.upsampled) <- temp.coltab;
+            }
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        random.string <- paste(
+            sample(x = c(LETTERS,letters), size = 10, replace = TRUE),
+            collapse = ""
+            );
+        TIF.temp.2 <- paste0("tmp-",random.string,".tiff");
+
+        terra::project(
+            x        = SR.upsampled,
+            y        = terra::crs(WKT.NAD_1983_Albers),
+            filename = TIF.temp.2,
+            method   = tolower(temp.method),
+            res      = 100
+            );
+        SR.downsampled <- terra::rast(TIF.temp.2);
+
+        if ( collapse ) {
+            levels(SR.downsampled) <- temp.levels;
+            terra::coltab(SR.downsampled) <- temp.coltab;
+            }
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        terra::writeRaster(
+            x         =  SR.downsampled,
+            filename  = TIF.downsampled,
+            overwrite = TRUE
+            );
+
+        print('A-12');
+
+        png(
+            filename = PNG.downsampled,
+            res      = 300,
+            width    =  12,
+            height   =  10,
+            units    = 'in'
+            );
+        terra::plot(
+            x     = SR.downsampled,
+            colNA = colour.NA
+            );
+        dev.off();
+
+        ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
+        files.to.remove <- list.files(pattern = "tmp-.+\\.tiff");
+        base::file.remove(files.to.remove);
+
+        }
+
+    ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
     rm(list = c(
         "SR.original",
         "SR.cumulative",
         "SR.aggregated",
-        "SR.projected"
+        "SR.projected",
+        "SR.upsampled",
+        "SR.downsampled"
         ));
 
     ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
