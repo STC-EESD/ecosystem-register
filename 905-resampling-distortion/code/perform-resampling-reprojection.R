@@ -297,8 +297,8 @@ perform.resampling.reprojection_resample.reproject <- function(
     aggregation.factors <- c(2,3);
     for ( temp.factor in aggregation.factors ) {
 
-        TIF.aggregated <- paste0(cumulative.stem,"-aggregatedF",temp.factor,".tiff");
-        PNG.aggregated <- paste0(cumulative.stem,"-aggregatedF",temp.factor,".png" );
+        TIF.aggregated <- paste0(cumulative.stem,"-aggregateF",temp.factor,".tiff");
+        PNG.aggregated <- paste0(cumulative.stem,"-aggregateF",temp.factor,".png" );
 
         terra::aggregate(
             x        = SR.cumulative,
@@ -329,8 +329,8 @@ perform.resampling.reprojection_resample.reproject <- function(
     spatial.resolutions <- c(100);
     for ( temp.resolution in spatial.resolutions ) {
         
-        TIF.reprojected <- paste0(cumulative.stem,"-downsampled-mode-",temp.resolution,".tiff");
-        PNG.reprojected <- paste0(cumulative.stem,"-downsampled-mode-",temp.resolution,".png" );
+        TIF.reprojected <- paste0(cumulative.stem,"-downsampleMode",temp.resolution,".tiff");
+        PNG.reprojected <- paste0(cumulative.stem,"-downsampleMode",temp.resolution,".png" );
 
         random.string <- paste(
             sample(x = c(LETTERS,letters), size = 10, replace = TRUE),
@@ -381,8 +381,8 @@ perform.resampling.reprojection_resample.reproject <- function(
     spatial.resolutions <- c(30,100);
     for ( temp.resolution in spatial.resolutions ) {
         
-        TIF.reprojected <- paste0(cumulative.stem,"-reprojected-mode-",temp.resolution,".tiff");
-        PNG.reprojected <- paste0(cumulative.stem,"-reprojected-mode-",temp.resolution,".png" );
+        TIF.reprojected <- paste0(cumulative.stem,"-reprojectMode",temp.resolution,".tiff");
+        PNG.reprojected <- paste0(cumulative.stem,"-reprojectMode",temp.resolution,".png" );
 
         random.string <- paste(
             sample(x = c(LETTERS,letters), size = 10, replace = TRUE),
@@ -433,8 +433,8 @@ perform.resampling.reprojection_resample.reproject <- function(
     spatial.resolutions <- c(30);
     for ( temp.resolution in spatial.resolutions ) {
         
-        TIF.reprojected <- paste0(cumulative.stem,"-reprojected-near-",temp.resolution,".tiff");
-        PNG.reprojected <- paste0(cumulative.stem,"-reprojected-near-",temp.resolution,".png" );
+        TIF.reprojected <- paste0(cumulative.stem,"-reprojectNear",temp.resolution,".tiff");
+        PNG.reprojected <- paste0(cumulative.stem,"-reprojectNear",temp.resolution,".png" );
 
         random.string <- paste(
             sample(x = c(LETTERS,letters), size = 10, replace = TRUE),
