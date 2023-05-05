@@ -1,4 +1,9 @@
 
+my.geod.area <- sf::st_area;
+if ( base::nchar(system.file(package = "lwgeom")) > 0 ) {
+    my.geod.area <- lwgeom::st_geod_area;
+    }
+
 SpatRaster.to.polygons <- function(
     input.SpatRaster = NULL,
     factor.colnames  = NULL,
@@ -113,7 +118,8 @@ SpatRaster.to.polygons_add.area.columns <- function(
     SF.output <- SF.input;
 
     SF.output <- sf::st_transform(x = SF.output, crs = sf::st_crs("epsg:4326"))
-    SF.output[,'gd.area'   ] <- lwgeom::st_geod_area(SF.output[,'geometry']);
+    # SF.output[,'gd.area' ] <- lwgeom::st_geod_area(SF.output[,'geometry']);
+    SF.output[,'gd.area'   ] <- my.geod.area(SF.output[,'geometry']);
     SF.output[,'gd.area_m2'] <- base::unlist(sf::st_drop_geometry(SF.output[,'gd.area']));
     SF.output <- sf::st_transform(x = SF.output, crs = sf::st_crs(SF.input)) 
 
