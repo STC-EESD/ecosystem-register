@@ -485,8 +485,11 @@ perform.resampling.reprojection_resample.reproject <- function(
     resampling.methods <- c('Near','Mode');
     for ( temp.method in resampling.methods ) {
         
-        TIF.downsampled <- paste0(cumulative.stem,"-reproject",temp.method,"10-reproject",temp.method,"100",".tiff");
-        PNG.downsampled <- paste0(cumulative.stem,"-reproject",temp.method,"10-reproject",temp.method,"100",".png" );
+        # TIF.downsampled <- paste0(cumulative.stem,"-reproject",temp.method,"10-reproject",temp.method,"100",".tiff");
+        # PNG.downsampled <- paste0(cumulative.stem,"-reproject",temp.method,"10-reproject",temp.method,"100",".png" );
+
+        TIF.downsampled <- paste0(cumulative.stem,"-reproject",temp.method,"10-aggregateF10",".tiff");
+        PNG.downsampled <- paste0(cumulative.stem,"-reproject",temp.method,"10-aggregateF10",".png" );
 
         ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
         random.string <- paste(
@@ -516,12 +519,18 @@ perform.resampling.reprojection_resample.reproject <- function(
             );
         TIF.temp.2 <- paste0("tmp-",random.string,".tiff");
 
-        terra::project(
+        # terra::project(
+        #     x        = SR.upsampled,
+        #     y        = terra::crs(WKT.NAD_1983_Albers),
+        #     filename = TIF.temp.2,
+        #     method   = tolower(temp.method),
+        #     res      = 100
+        #     );
+        terra::aggregate(
             x        = SR.upsampled,
-            y        = terra::crs(WKT.NAD_1983_Albers),
-            filename = TIF.temp.2,
-            method   = tolower(temp.method),
-            res      = 100
+            fact     = 10,
+            fun      = 'modal',
+            filename = TIF.temp.2
             );
         SR.downsampled <- terra::rast(TIF.temp.2);
 
