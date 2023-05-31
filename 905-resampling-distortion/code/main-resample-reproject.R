@@ -49,6 +49,7 @@ cat(paste0("\n# n.cores = ",n.cores,"\n"));
 
 data.snapshot            <- "2023-04-05.01";
 data.snapshot.boundaries <- "2022-12-19.01";
+data.snapshot.albers     <- "2023-05-31.01";
 
 ### ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ###
 proj4string.rHEALPix <- "+proj=rhealpix -f '%.2f' +ellps=WGS84 +south_square=0 +north_square=0 +lon_0=-50";
@@ -78,7 +79,8 @@ print( DF.coltab.SDLU   );
 perform.resampling.reprojection(
     directory.aoi       = "output-aoi",
     output.directory    = "output-resample-reproject",
-    WKT.NAD_1983_Albers = WKT.NAD_1983_Albers,
+    # WKT.NAD_1983_Albers = WKT.NAD_1983_Albers,
+    WKT.NAD_1983_Albers = file.path(data.directory,data.snapshot.albers,"ESRI-102001-OGC-WKT2.wkt"),
     DF.coltab.SDLU      = DF.coltab.SDLU,
     colour.NA           = 'black'
     );
